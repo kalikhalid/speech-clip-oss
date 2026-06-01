@@ -1,0 +1,78 @@
+# Standalone OSS repo — keep in sync when pushing to kalikhalid/speech-clip-oss
+
+# OS
+.DS_Store
+._*
+
+# Node / SvelteKit / Vite
+node_modules/
+/build
+/dist
+/.svelte-kit
+/package
+*.tsbuildinfo
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# Rust / Tauri
+src-tauri/target/
+src-tauri/gen/schemas/
+
+# Environment (never commit secrets)
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Gemini / IDE clipboard dumps
+.gemini-clipboard/
+
+# Python (branding/export-assets.py only)
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+parakeet-runtime/
+
+# Extra Tauri icon CLI outputs (macOS bundle uses icon.icns + listed PNGs only)
+src-tauri/icons/android/
+src-tauri/icons/ios/
+src-tauri/icons/Square*.png
+src-tauri/icons/StoreLogo.png
+src-tauri/icons/icon.ico
+src-tauri/icons/64x64.png
+
+# Parakeet model bundles (downloaded at runtime to app data dir)
+models/
+*parakeet*.tar.gz
+*.onnx
+
+# Bun (canonical lockfile: package-lock.json)
+.bun/
+bun.lockb
+
+# Editor — commit team recommendations only
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Cursor / agents
+.cursor/
+agent-tools/
+
+# Maintainer-only (Codex for OSS application notes)
+CODEX_FOR_OSS.md
+
+# Misc
+.idea/
+*.swp
+*~
+.cache/
+coverage/
+
+# NOTE: static/*.mp3 UI sounds are intentional — do not ignore *.mp3 here.
