@@ -10,6 +10,20 @@
 :root {
     font-family: var(--font-sans);
     color-scheme: dark;
+
+    /* Dashboard — Speech Clip palette */
+    --dash-bg: #0a0a0c;
+    --dash-bg-elevated: #111114;
+    --dash-bg-card: #111114;
+    --dash-sidebar-bg: #0a0a0c;
+    --dash-border: rgba(255, 255, 255, 0.08);
+    --dash-text: #e8e8ed;
+    --dash-text-muted: #8a8a96;
+    --dash-text-subtle: #6a6a76;
+    --dash-accent: #ff4f00;
+    --dash-accent-hover: #e64800;
+    --dash-accent-muted: rgba(255, 79, 0, 0.1);
+    --dash-brand-orange: #ff4f00;
 }
 
 /* Prevent white overscroll / rubber-band on macOS webviews */
@@ -19,7 +33,7 @@ body {
     margin: 0;
     overflow: hidden;
     overscroll-behavior: none;
-    background-color: #0a0a0c;
+    background-color: var(--dash-bg, #0a0a0c);
 }
 
 body > div {

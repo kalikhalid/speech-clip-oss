@@ -18,7 +18,7 @@
   }
 
   type AppState = "idle" | "recording" | "processing";
-  let state: AppState = $state("idle");
+  let appState: AppState = $state("idle");
   let needsPermission = $state(false);
   let audioContext: AudioContext | null = $state(null);
   let analyser: AnalyserNode | null = null;
@@ -67,7 +67,7 @@
   }
 
   function checkDuration() {
-    if (state !== "recording" || !recordingStartTime) return;
+    if (appState !== "recording" || !recordingStartTime) return;
 
     const elapsed = Date.now() - recordingStartTime;
     if (elapsed >= MAX_DURATION_MS) {
@@ -336,7 +336,7 @@
     // This prevents the microphone indicator from showing immediately
 
     unlistenPressed = await listen("hotkey-pressed", () => {
-      if (state === "idle" && !isCapturingHotkey) startRecording();
+      if (appState === "idle" && !isCapturingHotkey) startRecording();
     });
     overlayListenerCleanups.push(unlistenPressed);
 
@@ -346,7 +346,7 @@
       lastHotkeyReleaseAt = now;
 
       releaseTimestamp = event.payload as number;
-      if (state === "recording") stopRecording();
+      if (appState === "recording") stopRecording();
     });
     overlayListenerCleanups.push(unlistenReleased);
     // Removed hover resize logic as window is now fullscreen
@@ -356,7 +356,7 @@
     overlayListenerCleanups.push(unlistenHover);
 
     unlistenOverlayClick = await listen("overlay-clicked", () => {
-      if (state === "idle" && !isCapturingHotkey) startRecording();
+      if (appState === "idle" && !isCapturingHotkey) startRecording();
     });
     overlayListenerCleanups.push(unlistenOverlayClick);
 
@@ -416,9 +416,9 @@
   });
 
   async function startRecording() {
-    if (state !== "idle" || isProcessingRecording) return;
+    if (appState !== "idle" || isProcessingRecording) return;
 
-    state = "recording";
+    appState = "recording";
     await refreshSoundEffectsSetting();
 
     // STEP 1: Initialize audio pipeline FIRST (if needed)
@@ -428,7 +428,7 @@
       // If initialization failed, abort
       if (!audioContext || !mediaStream || !mediaRecorder) {
         console.error("Failed to initialize audio");
-        state = "idle";
+        appState = "idle";
         return;
       }
     }
@@ -454,7 +454,7 @@
     // STEP 3.5: Small delay to ensure audio buffer is capturing
     await new Promise((resolve) => setTimeout(resolve, 50));
 
-    if (state !== "recording") return;
+    if (appState !== "recording") return;
 
     // STEP 4: Update UI (sequential - after recording started)
     await invoke("resize_overlay", {
@@ -468,7 +468,7 @@
   }
 
   function visualize() {
-    if (state !== "recording" || !analyser) {
+    if (appState !== "recording" || !analyser) {
       barHeights = new Array(config.barCount).fill(config.barMinHeight);
       return;
     }
@@ -507,10 +507,10 @@
   }
 
   async function stopRecording() {
-    if (state !== "recording" || !mediaRecorder || isStoppingRecording) return;
+    if (appState !== "recording" || !mediaRecorder || isStoppingRecording) return;
 
     isStoppingRecording = true;
-    state = "processing";
+    appState = "processing";
     installStatusMessage = "";
     await refreshSoundEffectsSetting();
 
@@ -589,7 +589,7 @@
     releaseTimestamp = null;
 
     // FIRST: Reset state to idle immediately (fixes UI lag)
-    state = "idle";
+    appState = "idle";
     barHeights = new Array(config.barCount).fill(config.barMinHeight);
 
     // Reset visualization
@@ -622,7 +622,7 @@
 
     // Resize back to idle after animation
     setTimeout(() => {
-      if (state === "idle" && !isHovered) {
+      if (appState === "idle" && !isHovered) {
         invoke("resize_overlay", {
           recording: false,
           width: config.idle.width,
@@ -633,8 +633,8 @@
   }
 
   function handleClick() {
-    if (state === "idle") startRecording();
-    else if (state === "recording") stopRecording();
+    if (appState === "idle") startRecording();
+    else if (appState === "recording") stopRecording();
   }
 
   async function handleRequestPermission() {
@@ -682,7 +682,7 @@
     />
   {:else}
     <!-- Shortcut Hint - positioned independently above mini-bar -->
-    {#if showShortcutHint && state === "idle"}
+    {#if showShortcutHint && appState === "idle"}
       <ShortcutHint hotkey={currentHotkey} onDismiss={dismissShortcutHint} />
     {/if}
 
@@ -694,10 +694,10 @@
         onclick={handleClick}
         onkeydown={(e) => (e.key === "Enter" || e.key === " ") && handleClick()}
         class="liquid-bar"
-        class:dictating={state !== "idle"}
+        class:dictating={appState !== "idle"}
         class:hovered={isHovered}
       >
-        {#if state === "idle"}
+        {#if appState === "idle"}
           <div class="idle-content">
             <!-- Empty pill in idle -->
           </div>
@@ -711,7 +711,7 @@
                 cleanup();
               }}
               aria-label="Cancel"
-              disabled={state === "processing"}
+              disabled={appState === "processing"}
             >
               <svg
                 width="6"
@@ -731,7 +731,7 @@
 
             <!-- Waveform (Center) -->
             <div class="waveform">
-              {#if state === "processing"}
+              {#if appState === "processing"}
                 <div class="processing-indicator">
                   <div
                     class="w-3 h-3 border-2 border-white/40 border-t-white rounded-full animate-spin"
@@ -755,7 +755,7 @@
                 stopRecording();
               }}
               aria-label="Stop Recording"
-              disabled={state === "processing"}
+              disabled={appState === "processing"}
             >
               <div
                 style="width: 6px; height: 6px; background: currentColor; border-radius: 1px;"
