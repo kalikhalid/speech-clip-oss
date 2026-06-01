@@ -80,6 +80,9 @@ pub async fn show_overlay(app: AppHandle) -> Result<(), String> {
     window
         .set_ignore_cursor_events(true)
         .map_err(|e| e.to_string())?;
+    window
+        .set_always_on_top(true)
+        .map_err(|e| e.to_string())?;
 
     // Manually set size to full screen (Fake Fullscreen)
     if let Some(monitor) = window.primary_monitor().map_err(|e| e.to_string())? {
@@ -125,22 +128,87 @@ pub async fn resize_overlay(
 pub async fn set_window_size(app: &AppHandle, width: f64, height: f64) -> Result<(), String> {
     let window = app.get_webview_window("main").ok_or("Window not found")?;
 
-    // Guide window must be interactive and not controlled by overlay hover logic.
     HOVER_TRACKING_ACTIVE.store(false, Ordering::Relaxed);
     window
         .set_ignore_cursor_events(false)
         .map_err(|e| e.to_string())?;
-
-    set_window_on_all_spaces(&window)?;
+    // Guide must not float above the macOS accessibility prompt.
+    window
+        .set_always_on_top(false)
+        .map_err(|e| e.to_string())?;
 
     window
         .set_size(tauri::Size::Logical(tauri::LogicalSize { width, height }))
         .map_err(|e| e.to_string())?;
-    window.center().map_err(|e| e.to_string())?;
+
+    center_on_primary_monitor(&window, width, height)?;
+
     window.show().map_err(|e| e.to_string())?;
     window.set_focus().map_err(|e| e.to_string())?;
 
     Ok(())
+}
+
+/// Move the guide window out of the way and drop always-on-top before a system dialog.
+pub async fn step_aside_for_system_dialog(app: &AppHandle) -> Result<(), String> {
+    let window = app.get_webview_window("main").ok_or("Window not found")?;
+
+    window
+        .set_always_on_top(false)
+        .map_err(|e| e.to_string())?;
+
+    let monitor = window
+        .primary_monitor()
+        .map_err(|e| e.to_string())?
+        .ok_or("Primary monitor not found")?;
+
+    let scale = monitor.scale_factor();
+    let monitor_size = monitor.size();
+    let monitor_pos = monitor.position();
+
+    let outer_size = window.outer_size().map_err(|e| e.to_string())?;
+    let width = outer_size.width as f64 / scale;
+    let height = outer_size.height as f64 / scale;
+
+    let screen_w = monitor_size.width as f64 / scale;
+    let screen_h = monitor_size.height as f64 / scale;
+    let origin_x = monitor_pos.x as f64 / scale;
+    let origin_y = monitor_pos.y as f64 / scale;
+
+    const MARGIN: f64 = 24.0;
+    let x = origin_x + screen_w - width - MARGIN;
+    let y = origin_y + screen_h - height - MARGIN;
+
+    window
+        .set_position(tauri::Position::Logical(tauri::LogicalPosition { x, y }))
+        .map_err(|e| e.to_string())
+}
+
+fn center_on_primary_monitor(
+    window: &tauri::WebviewWindow,
+    width: f64,
+    height: f64,
+) -> Result<(), String> {
+    let monitor = window
+        .primary_monitor()
+        .map_err(|e| e.to_string())?
+        .ok_or("Primary monitor not found")?;
+
+    let scale = monitor.scale_factor();
+    let monitor_size = monitor.size();
+    let monitor_pos = monitor.position();
+
+    let screen_w = monitor_size.width as f64 / scale;
+    let screen_h = monitor_size.height as f64 / scale;
+    let origin_x = monitor_pos.x as f64 / scale;
+    let origin_y = monitor_pos.y as f64 / scale;
+
+    let x = origin_x + (screen_w - width) / 2.0;
+    let y = origin_y + (screen_h - height) / 2.0;
+
+    window
+        .set_position(tauri::Position::Logical(tauri::LogicalPosition { x, y }))
+        .map_err(|e| e.to_string())
 }
 
 // Hide recording overlay

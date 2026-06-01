@@ -21,6 +21,8 @@ export const config = {
   barCount: 12,
   barWidth: 2,
   barMinHeight: 3,
-  barMaxHeight: 16,
+  barMaxHeight: 18,
   barGap: 2,
+  // Normalized speech-band level (0–1) required to animate bars
+  voiceActivityThreshold: 0.07,
 };

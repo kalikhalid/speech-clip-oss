@@ -29,10 +29,17 @@
     local_model?: string | null;
   };
 
+  type DictionaryEntry = {
+    from: string;
+    to: string;
+  };
+
   type AppSettings = {
     language: string;
     hotkey: string;
     parakeet_model: string;
+    sound_effects_enabled: boolean;
+    dictionary: DictionaryEntry[];
   };
 
   type SetupStage = {
@@ -48,7 +55,7 @@
     { id: "ready", label: "Ready" },
   ];
 
-  let tab: "overview" | "settings" = $state("overview");
+  let tab: "overview" | "history" | "settings" = $state("overview");
   let parakeetStatus = $state<ParakeetStatus | null>(null);
   let statusLoading = $state(true);
   let installing = $state(false);
@@ -61,13 +68,20 @@
     language: "auto",
     hotkey: "control+`",
     parakeet_model: "parakeet-tdt-0.6b-v3",
+    sound_effects_enabled: true,
+    dictionary: [],
   });
+  let dictionaryFrom = $state("");
+  let dictionaryTo = $state("");
+  let dictionaryError = $state("");
   let hotkeyInput = $state("control+`");
   let hotkeyError = $state("");
   let showHotkeyErrorDetails = $state(false);
   let saveMessage = $state("");
+  let isSaving = $state(false);
 
   let unlistenProgress: (() => void) | null = null;
+  let saveTimer: ReturnType<typeof setTimeout> | null = null;
 
   type HeroState = "loading" | "ready" | "setting-up" | "needs-setup" | "error";
 
@@ -196,20 +210,90 @@
     historyEntries = h.entries ?? [];
   }
 
-  async function saveSettings() {
-    hotkeyError = "";
-    showHotkeyErrorDetails = false;
-    saveMessage = "";
+  async function saveSettings(options?: { quiet?: boolean }): Promise<boolean> {
+    if (saveTimer) {
+      clearTimeout(saveTimer);
+      saveTimer = null;
+    }
+
+    const hotkeyToSave = hotkeyInput.trim();
+    if (!hotkeyToSave) return false;
+
+    isSaving = true;
+    if (!options?.quiet) {
+      saveMessage = "";
+    }
+
     try {
-      if (hotkeyInput !== settings.hotkey) {
-        await invoke("update_hotkey", { hotkey: hotkeyInput });
-        settings.hotkey = hotkeyInput;
+      if (hotkeyToSave !== settings.hotkey) {
+        await invoke("update_hotkey", { hotkey: hotkeyToSave });
+        settings.hotkey = hotkeyToSave;
       }
       await invoke("save_settings", { newSettings: settings });
-      saveMessage = "Settings saved";
-      await refreshStatus();
+      hotkeyError = "";
+      showHotkeyErrorDetails = false;
+      saveMessage = "Saved";
+      return true;
     } catch (e) {
       hotkeyError = String(e);
+      saveMessage = "";
+      hotkeyInput = settings.hotkey;
+      return false;
+    } finally {
+      isSaving = false;
+    }
+  }
+
+  function scheduleSave() {
+    if (saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      saveTimer = null;
+      void saveSettings({ quiet: true });
+    }, 600);
+  }
+
+  async function addDictionaryEntry() {
+    dictionaryError = "";
+    const from = dictionaryFrom.trim();
+    const to = dictionaryTo.trim();
+    if (!from) {
+      dictionaryError = "Enter the spoken phrase or mis-transcription.";
+      return;
+    }
+    if (!to) {
+      dictionaryError = "Enter the replacement text.";
+      return;
+    }
+    if (
+      settings.dictionary.some((e) => e.from.toLowerCase() === from.toLowerCase())
+    ) {
+      dictionaryError = "A rule for this phrase already exists.";
+      return;
+    }
+    settings.dictionary = [...settings.dictionary, { from, to }];
+    dictionaryFrom = "";
+    dictionaryTo = "";
+    await saveSettings({ quiet: true });
+  }
+
+  async function removeDictionaryEntry(index: number) {
+    settings.dictionary = settings.dictionary.filter((_, i) => i !== index);
+    await saveSettings({ quiet: true });
+  }
+
+  function startDictionaryFromHistory(text: string) {
+    dictionaryFrom = text.trim();
+    dictionaryTo = "";
+    dictionaryError = "";
+    tab = "settings";
+  }
+
+  async function toggleSoundEffects() {
+    const previous = settings.sound_effects_enabled;
+    settings.sound_effects_enabled = !previous;
+    const saved = await saveSettings();
+    if (!saved) {
+      settings.sound_effects_enabled = previous;
     }
   }
 
@@ -220,6 +304,11 @@
 
   async function clearHistory() {
     await invoke("clear_all_history");
+    await loadHistory();
+  }
+
+  async function openHistoryTab() {
+    tab = "history";
     await loadHistory();
   }
 
@@ -244,6 +333,7 @@
   });
 
   onDestroy(() => {
+    if (saveTimer) clearTimeout(saveTimer);
     unlistenProgress?.();
   });
 
@@ -300,6 +390,23 @@
           onclick={() => (tab = "overview")}
         >
           Overview
+        </button>
+        <button
+          type="button"
+          class="rounded-md px-4 py-1.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff4f00]/60 {tab ===
+          'history'
+            ? 'bg-[#1a1a1f] text-white shadow-sm'
+            : 'text-[#8a8a96] hover:text-[#c8c8d0]'}"
+          onclick={openHistoryTab}
+        >
+          History
+          {#if historyEntries.length > 0}
+            <span
+              class="ml-1.5 rounded-full bg-white/10 px-1.5 py-0.5 text-[10px] font-normal text-[#a8a8b4]"
+            >
+              {historyEntries.length}
+            </span>
+          {/if}
         </button>
         <button
           type="button"
@@ -585,15 +692,19 @@
           {/if}
         </section>
       {/if}
-
-      <!-- History -->
+    {:else if tab === "history"}
       <section class="rounded-xl border border-white/10 bg-[#111114] p-5">
         <div class="flex items-center justify-between gap-3">
-          <h2 class="text-sm font-semibold text-white">History</h2>
+          <div>
+            <h2 class="text-sm font-semibold text-white">Transcription history</h2>
+            <p class="mt-1 text-xs text-[#6a6a76]">
+              Recent dictations saved on this Mac
+            </p>
+          </div>
           {#if historyEntries.length > 0}
             <button
               type="button"
-              class="text-xs text-[#6a6a76] transition hover:text-red-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/40"
+              class="shrink-0 text-xs text-[#6a6a76] transition hover:text-red-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/40"
               onclick={clearHistory}
             >
               Clear all
@@ -602,9 +713,7 @@
         </div>
 
         {#if historyEntries.length === 0}
-          <div
-            class="mt-8 flex flex-col items-center py-6 text-center"
-          >
+          <div class="mt-8 flex flex-col items-center py-10 text-center">
             <div
               class="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03]"
               aria-hidden="true"
@@ -626,11 +735,11 @@
             <p class="text-sm font-medium text-[#a8a8b4]">No transcriptions yet</p>
             <p class="mt-1 max-w-xs text-xs text-[#6a6a76]">
               Hold your hotkey anywhere on your Mac and speak — text appears in
-              the focused field.
+              the focused field and shows up here.
             </p>
           </div>
         {:else}
-          <ul class="mt-4 space-y-3">
+          <ul class="mt-5 space-y-3">
             {#each historyEntries as entry (entry.id)}
               <li
                 class="group rounded-xl border border-white/8 bg-[#0c0c0f] p-4 transition hover:border-white/15"
@@ -649,14 +758,25 @@
                     {/if}
                     <span>{formatDuration(entry.duration_ms)}</span>
                   </div>
-                  <button
-                    type="button"
-                    class="shrink-0 rounded-md px-2 py-1 text-xs text-[#6a6a76] opacity-0 transition group-hover:opacity-100 hover:bg-white/5 hover:text-red-400 focus:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/40"
-                    onclick={() => deleteEntry(entry.id)}
-                    aria-label="Delete transcription"
+                  <div
+                    class="flex shrink-0 gap-1 opacity-0 transition group-hover:opacity-100 focus-within:opacity-100"
                   >
-                    Delete
-                  </button>
+                    <button
+                      type="button"
+                      class="rounded-md px-2 py-1 text-xs text-[#6a6a76] hover:bg-white/5 hover:text-[#ff4f00] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff4f00]/40"
+                      onclick={() => startDictionaryFromHistory(entry.normalized_text)}
+                    >
+                      Dictionary
+                    </button>
+                    <button
+                      type="button"
+                      class="rounded-md px-2 py-1 text-xs text-[#6a6a76] hover:bg-white/5 hover:text-red-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/40"
+                      onclick={() => deleteEntry(entry.id)}
+                      aria-label="Delete transcription"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
                 <p class="mt-2 text-sm leading-relaxed text-[#d8d8e0]">
                   {entry.normalized_text}
@@ -668,13 +788,7 @@
       </section>
     {:else}
       <!-- Settings -->
-      <form
-        class="space-y-6"
-        onsubmit={(e) => {
-          e.preventDefault();
-          saveSettings();
-        }}
-      >
+      <div class="space-y-6">
         <section class="rounded-xl border border-white/10 bg-[#111114] p-5">
           <h2 class="text-sm font-semibold text-white">Dictation hotkey</h2>
           <p class="mt-1 text-xs text-[#6a6a76]">
@@ -684,6 +798,8 @@
             type="text"
             bind:value={hotkeyInput}
             placeholder="control+`"
+            oninput={scheduleSave}
+            onblur={() => saveSettings()}
             class="mt-3 w-full rounded-lg border border-white/10 bg-[#0a0a0c] px-3 py-2.5 font-mono text-sm text-white placeholder:text-[#4a4a56] focus:border-[#ff4f00]/50 focus:outline-none focus:ring-2 focus:ring-[#ff4f00]/20"
             aria-describedby="hotkey-help"
           />
@@ -713,6 +829,113 @@
         </section>
 
         <section class="rounded-xl border border-white/10 bg-[#111114] p-5">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h2 class="text-sm font-semibold text-white">Sound effects</h2>
+              <p class="mt-1 text-xs text-[#6a6a76]">
+                Play short sounds when recording starts, while processing, and when
+                transcription completes.
+              </p>
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={settings.sound_effects_enabled}
+              aria-label="Enable sound effects"
+              class="relative mt-0.5 h-6 w-11 shrink-0 rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff4f00]/50 {settings.sound_effects_enabled
+                ? 'bg-[#ff4f00]'
+                : 'bg-[#3a3a44]'}"
+              onclick={toggleSoundEffects}
+            >
+              <span
+                class="absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform {settings.sound_effects_enabled
+                  ? 'translate-x-5'
+                  : 'translate-x-0'}"
+              ></span>
+            </button>
+          </div>
+        </section>
+
+        <section class="rounded-xl border border-white/10 bg-[#111114] p-5">
+          <h2 class="text-sm font-semibold text-white">Custom dictionary</h2>
+          <p class="mt-1 text-xs text-[#6a6a76]">
+            Map spoken phrases to exact text after transcription — product names,
+            APIs, casing, or agent mentions (e.g. “bridge mind” → BridgeMind).
+            Processed locally on your Mac.
+          </p>
+
+          {#if settings.dictionary.length > 0}
+            <ul class="mt-4 space-y-2" aria-label="Dictionary rules">
+              {#each settings.dictionary as entry, index (entry.from + entry.to)}
+                <li
+                  class="flex items-center gap-2 rounded-lg border border-white/8 bg-[#0a0a0c] px-3 py-2 text-sm"
+                >
+                  <span
+                    class="min-w-0 flex-1 truncate font-mono text-[#a8a8b4]"
+                    title={entry.from}
+                  >
+                    {entry.from}
+                  </span>
+                  <span class="shrink-0 text-[#4a4a56]" aria-hidden="true">→</span>
+                  <span
+                    class="min-w-0 flex-1 truncate font-mono text-[#e8e8ed]"
+                    title={entry.to}
+                  >
+                    {entry.to}
+                  </span>
+                  <button
+                    type="button"
+                    class="shrink-0 rounded-md px-2 py-1 text-xs text-[#6a6a76] hover:bg-white/5 hover:text-red-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/40"
+                    onclick={() => removeDictionaryEntry(index)}
+                    aria-label="Remove dictionary rule"
+                  >
+                    Remove
+                  </button>
+                </li>
+              {/each}
+            </ul>
+          {:else}
+            <p class="mt-3 text-xs text-[#6a6a76]">
+              No rules yet. Add one below or use Dictionary on a history entry.
+            </p>
+          {/if}
+
+          <div class="mt-4 grid gap-3 sm:grid-cols-2">
+            <label class="block">
+              <span class="text-xs font-medium text-[#8a8a96]">Spoken phrase</span>
+              <input
+                type="text"
+                bind:value={dictionaryFrom}
+                placeholder="bridge mind"
+                class="mt-1 w-full rounded-lg border border-white/10 bg-[#0a0a0c] px-3 py-2 font-mono text-sm text-white placeholder:text-[#4a4a56] focus:border-[#ff4f00]/50 focus:outline-none focus:ring-2 focus:ring-[#ff4f00]/20"
+              />
+            </label>
+            <label class="block">
+              <span class="text-xs font-medium text-[#8a8a96]">Replace with</span>
+              <input
+                type="text"
+                bind:value={dictionaryTo}
+                placeholder="BridgeMind"
+                class="mt-1 w-full rounded-lg border border-white/10 bg-[#0a0a0c] px-3 py-2 font-mono text-sm text-white placeholder:text-[#4a4a56] focus:border-[#ff4f00]/50 focus:outline-none focus:ring-2 focus:ring-[#ff4f00]/20"
+                onkeydown={(e) => {
+                  if (e.key === "Enter") void addDictionaryEntry();
+                }}
+              />
+            </label>
+          </div>
+          {#if dictionaryError}
+            <p class="mt-2 text-xs text-red-300">{dictionaryError}</p>
+          {/if}
+          <button
+            type="button"
+            class="mt-3 rounded-lg border border-white/15 bg-white/[0.03] px-4 py-2 text-sm font-medium text-[#c8c8d0] transition hover:border-white/25 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff4f00]/40"
+            onclick={() => addDictionaryEntry()}
+          >
+            Add rule
+          </button>
+        </section>
+
+        <section class="rounded-xl border border-white/10 bg-[#111114] p-5">
           <h2 class="text-sm font-semibold text-white">Speech model</h2>
           <p class="mt-1 text-xs text-[#6a6a76]">
             Parakeet v3 ONNX bundle (transcribe-rs). Installed automatically on
@@ -729,20 +952,16 @@
           </label>
         </section>
 
-        <div class="flex items-center gap-3">
-          <button
-            type="submit"
-            class="rounded-lg bg-[#ff4f00] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-[#e64800] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff4f00]/60"
-          >
-            Save settings
-          </button>
-          {#if saveMessage}
-            <span class="text-sm text-emerald-400" role="status"
-              >{saveMessage}</span
-            >
-          {/if}
-        </div>
-      </form>
+        {#if isSaving || saveMessage}
+          <p class="text-sm text-[#8a8a96]" role="status">
+            {#if isSaving}
+              Saving…
+            {:else}
+              <span class="text-emerald-400">{saveMessage}</span>
+            {/if}
+          </p>
+        {/if}
+      </div>
     {/if}
   </div>
 </div>

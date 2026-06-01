@@ -7,11 +7,22 @@
   import ShortcutHint from "$lib/components/ShortcutHint.svelte";
   import { config } from "$lib/config";
 
+  // Survives HMR remounts — prevents duplicate hotkey listeners in dev.
+  let overlayListenerCleanups: Array<() => void> = [];
+
+  function teardownOverlayListeners() {
+    for (const cleanup of overlayListenerCleanups) {
+      cleanup();
+    }
+    overlayListenerCleanups = [];
+  }
+
   type AppState = "idle" | "recording" | "processing";
   let state: AppState = $state("idle");
   let needsPermission = $state(false);
   let audioContext: AudioContext | null = $state(null);
-  let analyser: AnalyserNode | null = $state(null);
+  let analyser: AnalyserNode | null = null;
+  let frequencyData: Uint8Array | null = null;
   let animationFrameId: number | null = null;
   let barHeights: number[] = $state(
     new Array(config.barCount).fill(config.barMinHeight),
@@ -19,7 +30,6 @@
   let nextHeights: number[] = new Array(config.barCount).fill(
     config.barMinHeight,
   );
-  let frequencyData: Uint8Array | null = null;
   let mediaStream: MediaStream | null = $state(null);
   let mediaRecorder: MediaRecorder | null = null;
   let audioChunks: Blob[] = [];
@@ -34,11 +44,27 @@
   let unlistenCaptureStart: (() => void) | null = null;
   let unlistenCaptureEnd: (() => void) | null = null;
   let unlistenParakeetInstall: (() => void) | null = null;
+  let unlistenSettingsUpdated: (() => void) | null = null;
   let releaseTimestamp: number | null = null;
   let recordingStartTime: number | null = null;
   let isCapturingHotkey = $state(false);
   let installStatusMessage = $state("");
+  let soundEffectsEnabled = $state(true);
+  let isProcessingRecording = false;
+  let isStoppingRecording = false;
+  let lastHotkeyReleaseAt = 0;
   const MAX_DURATION_MS = 15 * 60 * 1000; // 15 minutes
+
+  async function refreshSoundEffectsSetting() {
+    try {
+      const appSettings = await invoke<{ sound_effects_enabled: boolean }>(
+        "get_settings",
+      );
+      soundEffectsEnabled = appSettings.sound_effects_enabled;
+    } catch (e) {
+      console.warn("Failed to load sound setting:", e);
+    }
+  }
 
   function checkDuration() {
     if (state !== "recording" || !recordingStartTime) return;
@@ -74,7 +100,7 @@
 
   // Helper function to play sound - clones audio for reliable playback
   function playSound(audio: HTMLAudioElement) {
-    if (!audio || !soundsReady) {
+    if (!soundEffectsEnabled || !audio || !soundsReady) {
       return;
     }
     try {
@@ -198,6 +224,31 @@
     }
   }
 
+  function measureVoiceActivity(): number {
+    if (!analyser) return 0;
+
+    if (
+      !frequencyData ||
+      frequencyData.length !== analyser.frequencyBinCount
+    ) {
+      frequencyData = new Uint8Array(analyser.frequencyBinCount);
+    }
+
+    analyser.getByteFrequencyData(frequencyData);
+
+    // Speech band (~150 Hz – 3 kHz) — ignores silence and non-voice noise better than raw RMS
+    const startBin = 1;
+    const endBin = Math.min(20, frequencyData.length - 1);
+    if (endBin <= startBin) return 0;
+
+    let sum = 0;
+    for (let i = startBin; i <= endBin; i++) {
+      sum += frequencyData[i];
+    }
+
+    return sum / (endBin - startBin + 1) / 255;
+  }
+
   // Initialize audio pipeline
   async function initAudioPipeline() {
     try {
@@ -215,10 +266,9 @@
         audioContext = new AudioContext();
       }
 
-      // Create analyser for visualization
       analyser = audioContext.createAnalyser();
-      analyser.fftSize = 64;
-      analyser.smoothingTimeConstant = 0.4;
+      analyser.fftSize = 256;
+      analyser.smoothingTimeConstant = 0.65;
 
       const source = audioContext.createMediaStreamSource(mediaStream);
       source.connect(analyser);
@@ -242,14 +292,16 @@
         if (e.data.size > 0) audioChunks.push(e.data);
       };
 
-      mediaRecorder.onstop = () => processRecording();
-
     } catch (error) {
       console.error("Failed to initialize audio:", error);
     }
   }
 
   onMount(async () => {
+    teardownOverlayListeners();
+
+    await refreshSoundEffectsSetting();
+
     // Preload all sounds in parallel and wait for them to be ready
     try {
       [startSound, endSound, loadingSound] = await Promise.all([
@@ -262,25 +314,22 @@
       console.warn("Failed to preload sounds:", e);
     }
 
-    await invoke("show_overlay");
-
-    // Check accessibility permissions on startup
+    // Check accessibility before overlay — guide mode needs a small centered window
+    let hasPermission = true;
     try {
-      // Don't prompt immediately, check status first
-      const hasPermission = await invoke<boolean>(
+      hasPermission = await invoke<boolean>(
         "check_accessibility_permission",
         { prompt: false },
       );
-
-      if (!hasPermission) {
-        needsPermission = true;
-        await invoke("set_guide_mode", { enable: true });
-
-        // If guide is shown, we do NOT trigger the system dialog automatically anymore
-        // It will be triggered when the user clicks "Open System Settings"
-      }
     } catch (e) {
       console.error("Failed to check accessibility permission:", e);
+    }
+
+    if (!hasPermission) {
+      needsPermission = true;
+      await invoke("set_guide_mode", { enable: true });
+    } else {
+      await invoke("show_overlay");
     }
 
     // DON'T initialize audio here - only when first recording starts
@@ -289,44 +338,66 @@
     unlistenPressed = await listen("hotkey-pressed", () => {
       if (state === "idle" && !isCapturingHotkey) startRecording();
     });
+    overlayListenerCleanups.push(unlistenPressed);
+
     unlistenReleased = await listen("hotkey-released", (event: any) => {
+      const now = Date.now();
+      if (now - lastHotkeyReleaseAt < 400) return;
+      lastHotkeyReleaseAt = now;
+
       releaseTimestamp = event.payload as number;
       if (state === "recording") stopRecording();
     });
+    overlayListenerCleanups.push(unlistenReleased);
     // Removed hover resize logic as window is now fullscreen
     unlistenHover = await listen("hover-changed", (event: any) => {
         isHovered = event.payload as boolean;
     });
+    overlayListenerCleanups.push(unlistenHover);
 
     unlistenOverlayClick = await listen("overlay-clicked", () => {
       if (state === "idle" && !isCapturingHotkey) startRecording();
     });
+    overlayListenerCleanups.push(unlistenOverlayClick);
 
     // Listen for hotkey capture state from dashboard
     unlistenCaptureStart = await listen("hotkey-capture-started", () => {
       isCapturingHotkey = true;
     });
+    overlayListenerCleanups.push(unlistenCaptureStart);
+
     unlistenCaptureEnd = await listen("hotkey-capture-ended", () => {
       isCapturingHotkey = false;
     });
+    overlayListenerCleanups.push(unlistenCaptureEnd);
 
     unlistenParakeetInstall = await listen<{
       message: string;
     }>("parakeet-install-progress", (event) => {
       installStatusMessage = event.payload.message;
     });
+    overlayListenerCleanups.push(unlistenParakeetInstall);
+
+    unlistenSettingsUpdated = await listen<{
+      sound_effects_enabled: boolean;
+    }>("settings-updated", (event) => {
+      soundEffectsEnabled = event.payload.sound_effects_enabled;
+    });
+    overlayListenerCleanups.push(unlistenSettingsUpdated);
 
     checkAndShowShortcutHint();
   });
 
   onDestroy(() => {
-    unlistenPressed?.();
-    unlistenReleased?.();
-    unlistenHover?.();
-    unlistenOverlayClick?.();
-    unlistenCaptureStart?.();
-    unlistenCaptureEnd?.();
-    unlistenParakeetInstall?.();
+    teardownOverlayListeners();
+    unlistenPressed = null;
+    unlistenReleased = null;
+    unlistenHover = null;
+    unlistenOverlayClick = null;
+    unlistenCaptureStart = null;
+    unlistenCaptureEnd = null;
+    unlistenParakeetInstall = null;
+    unlistenSettingsUpdated = null;
 
     // Properly close audio resources on unmount
     if (animationFrameId) {
@@ -345,6 +416,11 @@
   });
 
   async function startRecording() {
+    if (state !== "idle" || isProcessingRecording) return;
+
+    state = "recording";
+    await refreshSoundEffectsSetting();
+
     // STEP 1: Initialize audio pipeline FIRST (if needed)
     if (!audioContext || !mediaStream || !mediaRecorder) {
       await initAudioPipeline();
@@ -352,6 +428,7 @@
       // If initialization failed, abort
       if (!audioContext || !mediaStream || !mediaRecorder) {
         console.error("Failed to initialize audio");
+        state = "idle";
         return;
       }
     }
@@ -367,7 +444,9 @@
     // STEP 3: START RECORDING IMMEDIATELY (critical for zero latency)
     audioChunks = [];
     recordingStartTime = Date.now(); // Track duration
-    mediaRecorder?.start(100); // Collect chunks every 100ms
+    if (mediaRecorder.state === "inactive") {
+      mediaRecorder.start(100); // Collect chunks every 100ms
+    }
 
     // Start duration check timer
     checkDuration();
@@ -375,8 +454,9 @@
     // STEP 3.5: Small delay to ensure audio buffer is capturing
     await new Promise((resolve) => setTimeout(resolve, 50));
 
+    if (state !== "recording") return;
+
     // STEP 4: Update UI (sequential - after recording started)
-    state = "recording";
     await invoke("resize_overlay", {
       recording: true,
       width: config.recording.width,
@@ -388,42 +468,36 @@
   }
 
   function visualize() {
-    if (!analyser || state !== "recording") {
+    if (state !== "recording" || !analyser) {
       barHeights = new Array(config.barCount).fill(config.barMinHeight);
       return;
     }
 
-    if (
-      !frequencyData ||
-      frequencyData.length !== analyser.frequencyBinCount
-    ) {
-      frequencyData = new Uint8Array(analyser.frequencyBinCount);
-    }
-    analyser.getByteFrequencyData(frequencyData);
-
-    let totalLevel = 0;
-    for (let i = 0; i < frequencyData.length; i++) {
-      totalLevel += frequencyData[i];
-    }
-    const avgLevel = totalLevel / frequencyData.length / 255;
+    const voiceLevel = measureVoiceActivity();
+    const isSpeaking = voiceLevel >= config.voiceActivityThreshold;
 
     const barCount = config.barCount;
     if (nextHeights.length !== barCount) {
       nextHeights = new Array(barCount).fill(config.barMinHeight);
     }
-    const center = (barCount - 1) / 2;
+
     const range = config.barMaxHeight - config.barMinHeight;
 
     for (let i = 0; i < barCount; i++) {
-      const distanceFromCenter = Math.abs(i - center) / center;
-      const centerWeight = 1 - distanceFromCenter * 0.6;
-      // Increased randomness range (0.4 to 1.6) for more organic feel
-      const randomFactor = 0.4 + Math.random() * 1.2;
-
-      const targetHeight =
-        config.barMinHeight + avgLevel * range * centerWeight * randomFactor;
       const currentHeight = barHeights[i] || config.barMinHeight;
-      nextHeights[i] = currentHeight + (targetHeight - currentHeight) * 0.5;
+
+      if (isSpeaking) {
+        const voiceBoost = Math.min(1, voiceLevel / config.voiceActivityThreshold);
+        const maxForFrame =
+          config.barMinHeight + range * (0.55 + Math.random() * 0.45 * voiceBoost);
+        const targetHeight =
+          config.barMinHeight + Math.random() * (maxForFrame - config.barMinHeight);
+        const speed = 0.4 + Math.random() * 0.5;
+        nextHeights[i] = currentHeight + (targetHeight - currentHeight) * speed;
+      } else {
+        nextHeights[i] =
+          currentHeight + (config.barMinHeight - currentHeight) * 0.3;
+      }
     }
 
     const prevHeights = barHeights;
@@ -433,18 +507,48 @@
   }
 
   async function stopRecording() {
-    if (state === "recording") {
-      state = "processing";
-      installStatusMessage = "";
+    if (state !== "recording" || !mediaRecorder || isStoppingRecording) return;
 
-      // Play loading sound during processing
-      playSound(loadingSound);
+    isStoppingRecording = true;
+    state = "processing";
+    installStatusMessage = "";
+    await refreshSoundEffectsSetting();
 
-      mediaRecorder?.stop();
+    // Play loading sound during processing
+    playSound(loadingSound);
+
+    const recorder = mediaRecorder;
+    let processingStarted = false;
+    const startProcessingOnce = () => {
+      if (processingStarted) return;
+      processingStarted = true;
+      void processRecording();
+    };
+
+    recorder.onstop = () => {
+      recorder.onstop = null;
+      startProcessingOnce();
+    };
+
+    try {
+      if (recorder.state === "recording") {
+        recorder.stop();
+      } else {
+        startProcessingOnce();
+      }
+    } catch (error) {
+      console.error("Failed to stop recorder:", error);
+      startProcessingOnce();
     }
   }
 
   async function processRecording() {
+    if (isProcessingRecording) return;
+    isProcessingRecording = true;
+
+    const capturedChunks = audioChunks;
+    audioChunks = [];
+
     try {
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
@@ -452,30 +556,30 @@
       }
       barHeights = new Array(config.barCount).fill(config.barMinHeight);
 
-      if (audioChunks.length === 0) {
-        cleanup();
+      if (capturedChunks.length === 0) {
         return;
       }
 
-      const audioBlob = new Blob(audioChunks, { type: audioChunks[0].type });
-
-      // Safety check: 15 minute limit
-      // 100ms chunks * 15 * 60 * 10 = 9000 chunks (rough estimate, better to check time)
+      const audioBlob = new Blob(capturedChunks, {
+        type: capturedChunks[0].type,
+      });
 
       // Always send WAV to backend for stable local decoding.
       const audioData = await convertRecordingToWav(audioBlob);
 
       await invoke<string>("process_audio_with_history", {
-        audioData, // Tauri v2 handles Uint8Array efficiently
+        audioData,
         normalize: true,
         releaseTimestamp,
       });
 
-      // Play end sound when processing is complete
+      await refreshSoundEffectsSetting();
       playSound(endSound);
     } catch (error) {
       console.error("Processing error:", error);
     } finally {
+      isProcessingRecording = false;
+      isStoppingRecording = false;
       cleanup();
     }
   }
@@ -509,13 +613,11 @@
       mediaStream = null;
     }
 
-    // Keep AudioContext for faster restart, but close analyser
     if (analyser) {
       analyser.disconnect();
       analyser = null;
     }
 
-    // Clear audio chunks
     audioChunks = [];
 
     // Resize back to idle after animation
@@ -536,11 +638,7 @@
   }
 
   async function handleRequestPermission() {
-    // Only trigger the system prompt (small dialog)
-    // We do NOT open the full settings window automatically anymore
-    invoke("check_accessibility_permission", { prompt: true });
-
-    // Start polling for permission since user might grant it via dialog
+    await invoke("check_accessibility_permission", { prompt: true });
     startPolling();
   }
 
@@ -576,18 +674,12 @@
   }
 </script>
 
-<main
-  class="w-full h-full flex justify-center {needsPermission
-    ? 'items-center'
-    : 'items-end'}"
->
+<main class="w-full h-full flex {needsPermission ? '' : 'items-end justify-center'}">
   {#if needsPermission}
-    <div class="z-50" transition:fade>
-      <PermissionGuide
-        onRequestPermission={handleRequestPermission}
-        onClose={closeGuide}
-      />
-    </div>
+    <PermissionGuide
+      onRequestPermission={handleRequestPermission}
+      onClose={closeGuide}
+    />
   {:else}
     <!-- Shortcut Hint - positioned independently above mini-bar -->
     {#if showShortcutHint && state === "idle"}

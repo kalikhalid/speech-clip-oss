@@ -15,7 +15,7 @@
     let demoText = $state("");
     let touchStartX = $state(0);
     let touchEndX = $state(0);
-    const fullDemoText = "Привет! Это Speech Clip — голосовой набор текста с AI.";
+    const fullDemoText = "Hi! This is Speech Clip — AI-powered voice dictation.";
 
     onMount(() => {
         // Wave animation
@@ -134,7 +134,7 @@
             </div>
             <h1 class="app-title">Speech Clip</h1>
             {#if !showEmailLogin}
-                <p class="app-subtitle">Голосовой набор текста с AI</p>
+                <p class="app-subtitle">AI-powered voice dictation</p>
             {/if}
         </div>
 
@@ -146,7 +146,7 @@
                     class="nav-btn prev" 
                     onclick={prevStep}
                     disabled={currentStep === 0}
-                    aria-label="Предыдущий шаг"
+                    aria-label="Previous step"
                 >
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="15 18 9 12 15 6"/>
@@ -172,13 +172,13 @@
                                     </div>
                                     <div class="recording-badge">
                                         <span class="recording-dot"></span>
-                                        Запись
+                                        Recording
                                     </div>
                                 </div>
                             </div>
                             <div class="feature-text">
-                                <h3>Зажмите <kbd>Ctrl</kbd>+<kbd>`</kbd> и говорите</h3>
-                                <p>Текст появляется мгновенно. Никаких кликов — просто голос.</p>
+                                <h3>Hold <kbd>Ctrl</kbd>+<kbd>`</kbd> and speak</h3>
+                                <p>Text appears instantly. No clicks — just your voice.</p>
                             </div>
                         </div>
                     {/if}
@@ -200,13 +200,13 @@
                                             <path d="M2 17l10 5 10-5"/>
                                             <path d="M2 12l10 5 10-5"/>
                                         </svg>
-                                        AI форматирует
+                                        AI formatting
                                     </div>
                                 </div>
                             </div>
                             <div class="feature-text">
-                                <h3>ИИ форматирует за вас</h3>
-                                <p>Пунктуация, структура и стиль — всё на месте автоматически.</p>
+                                <h3>AI formats for you</h3>
+                                <p>Punctuation, structure, and style — all handled automatically.</p>
                             </div>
                         </div>
                     {/if}
@@ -228,8 +228,8 @@
                                 </div>
                             </div>
                             <div class="feature-text">
-                                <h3>Работает везде</h3>
-                                <p>VS Code, Notion, Telegram, Safari — в любое приложение мгновенно.</p>
+                                <h3>Works everywhere</h3>
+                                <p>VS Code, Notion, Telegram, Safari — paste into any app instantly.</p>
                             </div>
                         </div>
                     {/if}
@@ -240,7 +240,7 @@
                     class="nav-btn next" 
                     onclick={nextStep}
                     disabled={currentStep === 2}
-                    aria-label="Следующий шаг"
+                    aria-label="Next step"
                 >
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="9 18 15 12 9 6"/>
@@ -256,7 +256,7 @@
                         class:active={step === currentStep}
                         class:completed={step < currentStep}
                         onclick={() => goToStep(step)}
-                        aria-label="Шаг {step + 1}"
+                        aria-label="Step {step + 1}"
                     ></button>
                 {/each}
             </div>
@@ -266,21 +266,21 @@
                 <button class="primary-btn" onclick={handleLoginWithBrowser} disabled={isBrowserOpening}>
                     {#if isBrowserOpening}
                         <span class="spinner"></span>
-                        <span>Открываем браузер...</span>
+                        <span>Opening browser...</span>
                     {:else}
                         <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
                             <polyline points="15 3 21 3 21 9"/>
                             <line x1="10" y1="14" x2="21" y2="3"/>
                         </svg>
-                        <span>Войти через браузер</span>
+                        <span>Sign in with browser</span>
                     {/if}
                 </button>
                 <button class="secondary-btn" onclick={() => showEmailLogin = true}>
-                    <span>Войти через почту</span>
+                    <span>Sign in with email</span>
                 </button>
                 <p class="helper-text">
-                    Нет аккаунта? <a href="https://speechclip.dev" target="_blank">Создать бесплатно</a>
+                    No account? <a href="https://speechclip.dev" target="_blank">Create one free</a>
                 </p>
             </div>
         {:else}
@@ -299,7 +299,7 @@
                         />
                     </div>
                     <div class="form-group">
-                        <label for="password">Пароль</label>
+                        <label for="password">Password</label>
                         <input 
                             type="password" 
                             id="password" 
@@ -319,9 +319,9 @@
                     <button type="submit" class="primary-btn" disabled={isLoggingIn}>
                         {#if isLoggingIn}
                             <span class="spinner"></span>
-                            <span>Входим...</span>
+                            <span>Signing in...</span>
                         {:else}
-                            <span>Войти</span>
+                            <span>Sign in</span>
                         {/if}
                     </button>
                 </form>
@@ -330,7 +330,7 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="15 18 9 12 15 6"/>
                     </svg>
-                    Назад к обзору
+                    Back to overview
                 </button>
             </div>
         {/if}

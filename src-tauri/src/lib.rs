@@ -2,6 +2,7 @@ mod app_context;
 mod audio;
 mod commands;
 mod debug;
+mod dictionary;
 mod input;
 mod parakeet;
 mod parakeet_install;

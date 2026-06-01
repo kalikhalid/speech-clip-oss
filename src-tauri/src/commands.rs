@@ -1,16 +1,29 @@
+use std::sync::atomic::{AtomicBool, Ordering};
+
 use crate::app_context::get_frontmost_app_name;
+use crate::dictionary::apply_dictionary;
 use crate::input::type_text;
 use crate::parakeet::{self, ParakeetSetupStatus};
 use crate::shortcuts;
 use crate::timing::TimingLogger;
 use crate::{settings, storage, window};
 use serde::Serialize;
-use tauri::AppHandle;
+use tauri::{AppHandle, Emitter, Manager};
 
 #[derive(Debug, Serialize)]
 pub struct ProcessingResult {
     pub raw: String,
     pub final_text: String,
+}
+
+static AUDIO_PROCESSING: AtomicBool = AtomicBool::new(false);
+
+fn emit_settings_updated(app: &AppHandle, settings: &settings::AppSettings) {
+    if let Some(main) = app.get_webview_window("main") {
+        let _ = main.emit("settings-updated", settings);
+    } else {
+        let _ = app.emit("settings-updated", settings);
+    }
 }
 
 #[tauri::command]
@@ -31,7 +44,7 @@ pub async fn resize_overlay(
 #[tauri::command]
 pub async fn set_guide_mode(app: AppHandle, enable: bool) -> Result<(), String> {
     if enable {
-        window::set_window_size(&app, 320.0, 400.0).await
+        window::set_window_size(&app, 340.0, 500.0).await
     } else {
         window::show_overlay(app).await
     }
@@ -59,7 +72,7 @@ pub async fn process_audio(
     let raw_text = parakeet::transcribe_audio(&app, audio_data, &model_id).await?;
     timer.mark_end("parakeet_asr");
 
-    let final_text = raw_text.clone();
+    let final_text = apply_dictionary(&raw_text, &app_settings.dictionary);
 
     timer.mark_start("typing");
     type_text(&app, final_text.clone(), app_name).await?;
@@ -79,6 +92,18 @@ pub async fn process_audio_with_history(
     normalize: bool,
     release_timestamp: Option<u64>,
 ) -> Result<String, String> {
+    if AUDIO_PROCESSING.swap(true, Ordering::SeqCst) {
+        return Err("Already processing audio".to_string());
+    }
+
+    struct ProcessingGuard;
+    impl Drop for ProcessingGuard {
+        fn drop(&mut self) {
+            AUDIO_PROCESSING.store(false, Ordering::SeqCst);
+        }
+    }
+    let _processing_guard = ProcessingGuard;
+
     let start_time = std::time::Instant::now();
     let app_name = get_frontmost_app_name();
 
@@ -128,7 +153,9 @@ pub async fn save_settings(
     app: AppHandle,
     new_settings: settings::AppSettings,
 ) -> Result<(), String> {
-    settings::save_settings(&app, &new_settings)
+    settings::save_settings(&app, &new_settings)?;
+    emit_settings_updated(&app, &new_settings);
+    Ok(())
 }
 
 #[tauri::command]
@@ -180,7 +207,11 @@ pub async fn open_dashboard(app: AppHandle) -> Result<(), String> {
 }
 
 #[tauri::command]
-pub async fn check_accessibility_permission(prompt: bool) -> bool {
+pub async fn check_accessibility_permission(app: AppHandle, prompt: bool) -> bool {
+    if prompt {
+        let _ = window::step_aside_for_system_dialog(&app).await;
+        tokio::time::sleep(tokio::time::Duration::from_millis(200)).await;
+    }
     crate::utils::macos::check_accessibility_permissions(prompt)
 }
 

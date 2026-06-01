@@ -3,6 +3,7 @@ use std::fs;
 use std::path::PathBuf;
 use tauri::{AppHandle, Manager};
 
+use crate::dictionary::{sanitize_entries, DictionaryEntry};
 use crate::parakeet::DEFAULT_MODEL_ID;
 
 fn default_hotkey() -> String {
@@ -17,6 +18,14 @@ fn default_parakeet_model() -> String {
     DEFAULT_MODEL_ID.to_string()
 }
 
+fn default_sound_effects_enabled() -> bool {
+    true
+}
+
+fn default_dictionary() -> Vec<DictionaryEntry> {
+    Vec::new()
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppSettings {
     /// Transcription hint for UI only (Parakeet v3 auto-detects language).
@@ -25,6 +34,11 @@ pub struct AppSettings {
     pub hotkey: String,
     #[serde(default = "default_parakeet_model")]
     pub parakeet_model: String,
+    #[serde(default = "default_sound_effects_enabled")]
+    pub sound_effects_enabled: bool,
+    /// Spoken phrase → replacement, applied after local transcription.
+    #[serde(default = "default_dictionary")]
+    pub dictionary: Vec<DictionaryEntry>,
 }
 
 impl Default for AppSettings {
@@ -33,6 +47,8 @@ impl Default for AppSettings {
             language: default_language(),
             hotkey: default_hotkey(),
             parakeet_model: default_parakeet_model(),
+            sound_effects_enabled: default_sound_effects_enabled(),
+            dictionary: default_dictionary(),
         }
     }
 }
@@ -61,15 +77,18 @@ pub fn load_settings(app: &AppHandle) -> Result<AppSettings, String> {
         let _ = save_settings(app, &settings);
     }
 
+    settings.dictionary = sanitize_entries(std::mem::take(&mut settings.dictionary));
     Ok(settings)
 }
 
 pub fn save_settings(app: &AppHandle, settings: &AppSettings) -> Result<(), String> {
+    let mut settings = settings.clone();
+    settings.dictionary = sanitize_entries(std::mem::take(&mut settings.dictionary));
     let path = get_settings_path(app)?;
     if let Some(parent) = path.parent() {
         fs::create_dir_all(parent).map_err(|e| format!("Failed to create settings dir: {e}"))?;
     }
-    let json = serde_json::to_string_pretty(settings)
+    let json = serde_json::to_string_pretty(&settings)
         .map_err(|e| format!("Failed to serialize settings: {e}"))?;
     fs::write(&path, json).map_err(|e| format!("Failed to write settings: {e}"))
 }

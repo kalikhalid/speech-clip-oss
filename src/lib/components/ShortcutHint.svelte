@@ -37,18 +37,18 @@
 >
   <div class="hint-container">
     <div class="hint-header">
-      <span class="hint-title">Быстрый старт</span>
+      <span class="hint-title">Quick Start</span>
     </div>
 
     <div class="hint-divider"></div>
 
     <div class="hint-row">
-      <span class="label">Диктовка</span>
+      <span class="label">Dictation</span>
       <span class="hotkey">{displayHotkey}</span>
     </div>
 
     <div class="hint-row subtle">
-      <span class="label">Удерживайте для записи</span>
+      <span class="label">Hold to record</span>
     </div>
   </div>
 </div>

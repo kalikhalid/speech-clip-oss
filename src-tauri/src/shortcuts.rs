@@ -1,5 +1,9 @@
 use tauri::{AppHandle, Emitter};
 use tauri_plugin_global_shortcut::{GlobalShortcutExt, Shortcut, ShortcutState};
+use std::sync::atomic::{AtomicU64, Ordering};
+
+static LAST_HOTKEY_RELEASE_MS: AtomicU64 = AtomicU64::new(0);
+const HOTKEY_RELEASE_DEBOUNCE_MS: u64 = 400;
 
 pub const DEFAULT_HOTKEY: &str = "control+`";
 
@@ -50,6 +54,11 @@ fn register_with_handler(app: &AppHandle, shortcut: Shortcut) -> Result<(), Stri
                     .duration_since(std::time::UNIX_EPOCH)
                     .unwrap()
                     .as_millis() as u64;
+                let last = LAST_HOTKEY_RELEASE_MS.load(Ordering::SeqCst);
+                if release_time.saturating_sub(last) < HOTKEY_RELEASE_DEBOUNCE_MS {
+                    return;
+                }
+                LAST_HOTKEY_RELEASE_MS.store(release_time, Ordering::SeqCst);
                 let _ = app_handle.emit("hotkey-released", release_time);
             }
         })

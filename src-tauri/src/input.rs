@@ -1,8 +1,12 @@
 use arboard::Clipboard;
+use std::sync::Mutex;
 use std::thread;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 use tauri::AppHandle;
 use tokio::sync::oneshot;
+
+static LAST_TYPED: Mutex<Option<(String, Instant)>> = Mutex::new(None);
+const TYPING_DEDUPE_WINDOW: Duration = Duration::from_secs(3);
 
 #[cfg(target_os = "macos")]
 use core_graphics::event::{CGEvent, CGEventFlags, CGEventTapLocation, CGKeyCode};
@@ -16,6 +20,16 @@ pub async fn type_text(
 ) -> Result<(), String> {
     if text.is_empty() {
         return Ok(());
+    }
+
+    {
+        let mut last = LAST_TYPED.lock().map_err(|e| e.to_string())?;
+        if let Some((previous, typed_at)) = last.as_ref() {
+            if previous == &text && typed_at.elapsed() < TYPING_DEDUPE_WINDOW {
+                return Ok(());
+            }
+        }
+        *last = Some((text.clone(), Instant::now()));
     }
 
     let (tx, rx) = oneshot::channel();

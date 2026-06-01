@@ -25,10 +25,10 @@
     <div class="tip-container">
         <div class="tip-header">
             <span class="icon">💡</span>
-            <span class="title">Совет</span>
+            <span class="title">Tip</span>
         </div>
         <div class="tip-body">
-            Удерживайте <span class="hotkey-badge">{displayHotkey}</span> для записи
+            Hold <span class="hotkey-badge">{displayHotkey}</span> to record
         </div>
     </div>
 
