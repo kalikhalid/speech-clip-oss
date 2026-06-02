@@ -5,6 +5,15 @@ use rubato::{FftFixedIn, Resampler};
 use std::io::Cursor;
 
 pub const PARAKEET_SAMPLE_RATE: u32 = 16000;
+/// ~0.15s at 16 kHz — shorter clips are treated as accidental taps.
+pub const MIN_AUDIO_SAMPLES: usize = 2400;
+
+pub fn audio_too_short(data: &[u8]) -> bool {
+    match decode_wav_bytes(data) {
+        Ok((samples, _)) => samples.len() < MIN_AUDIO_SAMPLES,
+        Err(_) => true,
+    }
+}
 
 pub fn decode_wav_bytes(data: &[u8]) -> Result<(Vec<f32>, u32), String> {
     let reader =

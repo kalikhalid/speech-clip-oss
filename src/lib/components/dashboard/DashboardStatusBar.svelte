@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { locale, format, messagesFor } from "$lib/i18n";
+
   interface Props {
     modelLabel: string;
     ready: boolean;
@@ -12,6 +14,8 @@
     installing = false,
     version = "0.1.0",
   }: Props = $props();
+
+  const msg = $derived(messagesFor($locale));
 </script>
 
 <footer
@@ -41,11 +45,11 @@
     </span>
     <span class="truncate text-[var(--dash-text-muted)]">
       {#if installing}
-        Setting up model…
+        {msg.statusBar.settingUp}
       {:else if ready}
-        Active: <span class="text-[var(--dash-text)]">{modelLabel}</span>
+        {format(msg.statusBar.active, { model: modelLabel })}
       {:else}
-        No active model — finish setup in General
+        {msg.statusBar.noModel}
       {/if}
     </span>
   </div>
@@ -55,6 +59,6 @@
     rel="noopener noreferrer"
     class="shrink-0 text-[var(--dash-text-subtle)] underline-offset-2 transition hover:text-[var(--dash-accent)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dash-accent)]/40"
   >
-    Speech Clip OSS v{version}
+    {format(msg.statusBar.version, { version })}
   </a>
 </footer>

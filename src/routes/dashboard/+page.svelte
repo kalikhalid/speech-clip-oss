@@ -5,7 +5,16 @@
   import DashboardSidebar from "$lib/components/dashboard/DashboardSidebar.svelte";
   import DashboardStatusBar from "$lib/components/dashboard/DashboardStatusBar.svelte";
   import DashboardPageHeader from "$lib/components/dashboard/DashboardPageHeader.svelte";
+  import LocalePicker from "$lib/components/dashboard/LocalePicker.svelte";
   import type { DashboardSection } from "$lib/components/dashboard/types";
+  import {
+    locale,
+    messagesFor,
+    format,
+    setLocale,
+    normalizeLocale,
+    type UiLocale,
+  } from "$lib/i18n";
 
   type ParakeetStatus = {
     model_id: string;
@@ -23,6 +32,13 @@
     percent: number;
   };
 
+  type TranscriptionTiming = {
+    total_ms: number;
+    asr_ms?: number;
+    postprocess_ms?: number;
+    typing_ms?: number;
+  };
+
   type HistoryEntry = {
     id: string;
     timestamp: number;
@@ -31,6 +47,7 @@
     duration_ms: number;
     engine?: string;
     local_model?: string | null;
+    timing?: TranscriptionTiming | null;
   };
 
   type DictionaryEntry = {
@@ -44,6 +61,13 @@
     parakeet_model: string;
     sound_effects_enabled: boolean;
     dictionary: DictionaryEntry[];
+    paste_delay_before_ms: number;
+    paste_delay_after_ms: number;
+    restore_clipboard_after_paste: boolean;
+    recording_mode: string;
+    strip_filler_words: boolean;
+    warmup_on_start: boolean;
+    ui_locale: string;
   };
 
   type SetupStage = {
@@ -51,35 +75,15 @@
     label: string;
   };
 
-  const SETUP_STAGES: SetupStage[] = [
-    { id: "download", label: "Download model" },
-    { id: "verify", label: "Verify" },
-    { id: "extract", label: "Extract" },
-    { id: "install", label: "Install" },
-    { id: "ready", label: "Ready" },
-  ];
+  const msg = $derived(messagesFor($locale));
 
-  const SECTION_META: Record<
-    DashboardSection,
-    { title: string; subtitle: string }
-  > = {
-    general: {
-      title: "General",
-      subtitle: "Setup status, model, and quick start for local dictation",
-    },
-    dictionary: {
-      title: "Dictionary",
-      subtitle: "Map spoken phrases to exact text after transcription",
-    },
-    history: {
-      title: "History",
-      subtitle: "Recent dictations saved on this Mac",
-    },
-    settings: {
-      title: "Settings",
-      subtitle: "Hotkey, sounds, and preferences",
-    },
-  };
+  const SETUP_STAGES = $derived<SetupStage[]>([
+    { id: "download", label: msg.setup.stages.download },
+    { id: "verify", label: msg.setup.stages.verify },
+    { id: "extract", label: msg.setup.stages.extract },
+    { id: "install", label: msg.setup.stages.install },
+    { id: "ready", label: msg.setup.stages.ready },
+  ]);
 
   let section = $state<DashboardSection>("general");
   let historyFilter = $state<"all" | "week">("all");
@@ -97,6 +101,13 @@
     parakeet_model: "parakeet-tdt-0.6b-v3",
     sound_effects_enabled: true,
     dictionary: [],
+    paste_delay_before_ms: 50,
+    paste_delay_after_ms: 30,
+    restore_clipboard_after_paste: true,
+    recording_mode: "push_to_talk",
+    strip_filler_words: false,
+    warmup_on_start: true,
+    ui_locale: "en",
   });
   let dictionaryFrom = $state("");
   let dictionaryTo = $state("");
@@ -106,6 +117,9 @@
   let showHotkeyErrorDetails = $state(false);
   let saveMessage = $state("");
   let isSaving = $state(false);
+  let dictionaryImportMessage = $state("");
+  let repasteMessage = $state("");
+  let csvFileInput: HTMLInputElement | undefined = $state();
 
   let unlistenProgress: (() => void) | null = null;
   let saveTimer: ReturnType<typeof setTimeout> | null = null;
@@ -122,23 +136,25 @@
   }
 
   function friendlyInstallError(raw: string): { title: string; hint: string } {
+    const m = messagesFor($locale);
     const lower = raw.toLowerCase();
     if (lower.includes("404") && lower.includes("download")) {
       return {
-        title: "Couldn't download Parakeet model",
-        hint: "Check your internet connection and try again from the dashboard.",
+        title: m.errors.downloadTitle,
+        hint: m.errors.downloadHint,
       };
     }
     if (lower.includes("checksum")) {
       return {
-        title: "Model download was corrupted",
-        hint: "Retry setup to download Parakeet v3 again.",
+        title: m.errors.checksumTitle,
+        hint: m.errors.checksumHint,
       };
     }
     const firstLine = raw.split("\n")[0]?.replace(/https?:\/\/\S+/g, "").trim();
     return {
-      title: firstLine && firstLine.length < 100 ? firstLine : "Setup didn't finish",
-      hint: "Open Details below for technical information, or retry setup.",
+      title:
+        firstLine && firstLine.length < 100 ? firstLine : m.errors.genericTitle,
+      hint: m.errors.genericHint,
     };
   }
 
@@ -152,32 +168,45 @@
   }
 
   function isStageComplete(stageId: string): boolean {
+    if (stageId === "ready") {
+      return parakeetStatus?.ready ?? false;
+    }
     const current = installProgress?.stage ?? parakeetStatus?.install_stage;
     const cur = stageIndex(current);
     const target = stageIndex(stageId);
     if (target < 0 || cur < 0) {
       if (stageId === "download") return parakeetStatus?.model_downloaded ?? false;
-      return parakeetStatus?.ready ?? false;
+      return false;
     }
     return cur > target;
   }
 
   function isStageActive(stageId: string): boolean {
-    const current = installProgress?.stage ?? "";
-    return current === stageId || (installing && current === stageId);
+    if (isStageComplete(stageId)) return false;
+    const current = installProgress?.stage ?? parakeetStatus?.install_stage ?? "";
+    if (current !== stageId) return false;
+    return installing || (parakeetStatus?.install_in_progress ?? false);
+  }
+
+  function clearInstallProgressIfReady() {
+    if (parakeetStatus?.ready && !installing && !parakeetStatus.install_in_progress) {
+      installProgress = null;
+    }
   }
 
   function relativeTime(ts: number): string {
+    const m = messagesFor($locale);
     const diff = Date.now() - ts;
     const sec = Math.floor(diff / 1000);
-    if (sec < 60) return "Just now";
+    if (sec < 60) return m.history.justNow;
     const min = Math.floor(sec / 60);
-    if (min < 60) return `${min}m ago`;
+    if (min < 60) return format(m.history.minutesAgo, { n: min });
     const hr = Math.floor(min / 60);
-    if (hr < 24) return `${hr}h ago`;
+    if (hr < 24) return format(m.history.hoursAgo, { n: hr });
     const day = Math.floor(hr / 24);
-    if (day < 7) return `${day}d ago`;
-    return new Date(ts).toLocaleDateString(undefined, {
+    if (day < 7) return format(m.history.daysAgo, { n: day });
+    const dateLocale = $locale === "ru" ? "ru-RU" : "en-US";
+    return new Date(ts).toLocaleDateString(dateLocale, {
       month: "short",
       day: "numeric",
     });
@@ -187,6 +216,90 @@
     const s = Math.round(ms / 1000);
     if (s < 60) return `${s}s`;
     return `${Math.floor(s / 60)}m ${s % 60}s`;
+  }
+
+  function formatTimingDetail(entry: HistoryEntry): string | null {
+    const m = messagesFor($locale);
+    const t = entry.timing;
+    if (!t?.asr_ms) return null;
+    const parts = [
+      format(m.history.asrTiming, { ms: Math.round(t.asr_ms) }),
+    ];
+    if (t.typing_ms != null) {
+      parts.push(
+        format(m.history.pasteTiming, { ms: Math.round(t.typing_ms) }),
+      );
+    }
+    return parts.join(" · ");
+  }
+
+  async function repasteLast() {
+    repasteMessage = "";
+    try {
+      await invoke("repaste_last");
+      repasteMessage = messagesFor($locale).settingsPanel.repasted;
+    } catch (e) {
+      repasteMessage = String(e);
+    }
+    setTimeout(() => {
+      repasteMessage = "";
+    }, 2500);
+  }
+
+  async function pasteHistoryEntry(text: string) {
+    try {
+      await invoke("paste_text_command", { text });
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async function exportDictionary() {
+    try {
+      const csv = await invoke<string>("export_dictionary_csv");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "speech-clip-dictionary.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+      dictionaryImportMessage = messagesFor($locale).dictionary.exported;
+    } catch (e) {
+      dictionaryImportMessage = String(e);
+    }
+    setTimeout(() => {
+      dictionaryImportMessage = "";
+    }, 2500);
+  }
+
+  function triggerDictionaryImport() {
+    csvFileInput?.click();
+  }
+
+  async function onDictionaryFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    input.value = "";
+    if (!file) return;
+    dictionaryImportMessage = "";
+    try {
+      const csv = await file.text();
+      const result = await invoke<{
+        entries_added: number;
+        dictionary: DictionaryEntry[];
+      }>("import_dictionary_csv", { csv, merge: true });
+      settings.dictionary = result.dictionary;
+      dictionaryImportMessage = format(
+        messagesFor($locale).dictionary.imported,
+        { count: result.entries_added },
+      );
+    } catch (e) {
+      dictionaryImportMessage = String(e);
+    }
+    setTimeout(() => {
+      dictionaryImportMessage = "";
+    }, 3000);
   }
 
   function shortModel(id: string): string {
@@ -206,6 +319,7 @@
       console.error(e);
     } finally {
       statusLoading = false;
+      clearInstallProgressIfReady();
     }
   }
 
@@ -214,22 +328,37 @@
     installing = true;
     installError = "";
     showErrorDetails = false;
-    installProgress = { stage: "start", message: "Starting setup…", percent: 0 };
+    installProgress = {
+      stage: "start",
+      message: messagesFor($locale).setup.starting,
+      percent: 0,
+    };
     try {
       parakeetStatus = await invoke<ParakeetStatus>("ensure_parakeet_runtime");
-      installProgress = { stage: "ready", message: "Ready", percent: 100 };
+      installProgress = null;
     } catch (e) {
       installError = String(e);
       await refreshStatus();
     } finally {
       installing = false;
+      clearInstallProgressIfReady();
     }
   }
 
   async function loadSettings() {
     const s = await invoke<AppSettings>("get_settings");
-    settings = s;
+    settings = {
+      ...s,
+      ui_locale: normalizeLocale(s.ui_locale),
+    };
     hotkeyInput = s.hotkey;
+    setLocale(normalizeLocale(s.ui_locale));
+  }
+
+  function onUiLocaleChange(next: UiLocale) {
+    settings.ui_locale = next;
+    setLocale(next);
+    scheduleSave();
   }
 
   async function loadHistory() {
@@ -259,7 +388,7 @@
       await invoke("save_settings", { newSettings: settings });
       hotkeyError = "";
       showHotkeyErrorDetails = false;
-      saveMessage = "Saved";
+      saveMessage = messagesFor($locale).settingsPanel.saved;
       return true;
     } catch (e) {
       hotkeyError = String(e);
@@ -283,18 +412,19 @@
     dictionaryError = "";
     const from = dictionaryFrom.trim();
     const to = dictionaryTo.trim();
+    const m = messagesFor($locale);
     if (!from) {
-      dictionaryError = "Enter the spoken phrase or mis-transcription.";
+      dictionaryError = m.dictionary.errFrom;
       return;
     }
     if (!to) {
-      dictionaryError = "Enter the replacement text.";
+      dictionaryError = m.dictionary.errTo;
       return;
     }
     if (
       settings.dictionary.some((e) => e.from.toLowerCase() === from.toLowerCase())
     ) {
-      dictionaryError = "A rule for this phrase already exists.";
+      dictionaryError = m.dictionary.errDuplicate;
       return;
     }
     settings.dictionary = [...settings.dictionary, { from, to }];
@@ -348,6 +478,8 @@
         installProgress = event.payload;
         if (event.payload.stage === "failed") {
           installError = event.payload.message;
+        } else if (event.payload.stage === "ready" && !installing) {
+          void refreshStatus();
         }
       },
     );
@@ -355,6 +487,7 @@
     await loadSettings();
     await loadHistory();
     await refreshStatus();
+    void invoke("warmup_parakeet").catch(() => {});
 
     if (parakeetStatus && !parakeetStatus.ready) {
       void runInstall();
@@ -372,9 +505,11 @@
   );
   const progressPercent = $derived(installProgress?.percent ?? 0);
   const showSetupProgress = $derived(
-    installing || installProgress !== null || hero === "setting-up",
+    installing ||
+      parakeetStatus?.install_in_progress ||
+      (installProgress !== null && !parakeetStatus?.ready),
   );
-  const meta = $derived(SECTION_META[section]);
+  const meta = $derived(msg.sections[section]);
   const filteredHistory = $derived(
     historyFilter === "week"
       ? historyEntries.filter(
@@ -404,13 +539,13 @@
         {#snippet actions()}
           {#if section === "history"}
             <label class="flex items-center gap-2">
-              <span class="sr-only">Filter history</span>
+              <span class="sr-only">{msg.history.filterAria}</span>
               <select
                 bind:value={historyFilter}
                 class="rounded-md border border-[var(--dash-border)] bg-[var(--dash-bg-card)] px-3 py-1.5 text-sm text-[var(--dash-text)] focus:border-[var(--dash-accent)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--dash-accent)]/20"
               >
-                <option value="all">All time</option>
-                <option value="week">Past 7 days</option>
+                <option value="all">{msg.history.allTime}</option>
+                <option value="week">{msg.history.pastWeek}</option>
               </select>
             </label>
           {/if}
@@ -437,9 +572,9 @@
                 ></div>
               </div>
               <div>
-                <h2 class="text-lg font-semibold text-white">Checking setup…</h2>
+                <h2 class="text-lg font-semibold text-white">{msg.hero.checkingTitle}</h2>
                 <p class="mt-1 text-sm text-[var(--dash-text-muted)]">
-                  Preparing local speech recognition
+                  {msg.hero.checkingSubtitle}
                 </p>
               </div>
             {:else if hero === "ready"}
@@ -462,12 +597,23 @@
                 </svg>
               </div>
               <div class="min-w-0 flex-1">
-                <h2 class="text-lg font-semibold text-white">Ready to dictate</h2>
+                <h2 class="text-lg font-semibold text-white">{msg.hero.readyTitle}</h2>
                 <p class="mt-1 text-sm text-[var(--dash-text-muted)]">
-                  Hold <kbd
-                    class="rounded border border-white/15 bg-white/5 px-1.5 py-0.5 font-mono text-xs text-[var(--dash-text)]"
-                    >{settings.hotkey}</kbd
-                  > and speak in any app
+                  {#if settings.recording_mode === "toggle"}
+                    {msg.hero.toggleHintBefore}
+                    <kbd
+                      class="mx-1 rounded border border-white/15 bg-white/5 px-1.5 py-0.5 font-mono text-xs text-[var(--dash-text)]"
+                      >{settings.hotkey}</kbd
+                    >
+                    {msg.hero.toggleHintAfter}
+                  {:else}
+                    {msg.hero.holdHintBefore}
+                    <kbd
+                      class="mx-1 rounded border border-white/15 bg-white/5 px-1.5 py-0.5 font-mono text-xs text-[var(--dash-text)]"
+                      >{settings.hotkey}</kbd
+                    >
+                    {msg.hero.holdHintAfter}
+                  {/if}
                 </p>
               </div>
             {:else if hero === "setting-up"}
@@ -480,11 +626,11 @@
                 ></div>
               </div>
               <div class="min-w-0 flex-1">
-                <h2 class="text-lg font-semibold text-white">Setting up…</h2>
+                <h2 class="text-lg font-semibold text-white">{msg.hero.settingUpTitle}</h2>
                 <p class="mt-1 text-sm text-[var(--dash-text-muted)]">
                   {installProgress?.message ??
                     parakeetStatus?.message ??
-                    "One-time download — this may take a few minutes"}
+                    msg.hero.settingUpFallback}
                 </p>
               </div>
             {:else if hero === "error"}
@@ -508,10 +654,10 @@
               </div>
               <div class="min-w-0 flex-1">
                 <h2 class="text-lg font-semibold text-white">
-                  {errorInfo?.title ?? "Setup failed"}
+                  {errorInfo?.title ?? msg.hero.setupFailed}
                 </h2>
                 <p class="mt-1 text-sm text-[var(--dash-text-muted)]">
-                  {errorInfo?.hint ?? "Try running setup again."}
+                  {errorInfo?.hint ?? msg.hero.tryAgain}
                 </p>
               </div>
             {:else}
@@ -534,10 +680,9 @@
                 </svg>
               </div>
               <div class="min-w-0 flex-1">
-                <h2 class="text-lg font-semibold text-white">Finish setup</h2>
+                <h2 class="text-lg font-semibold text-white">{msg.hero.finishTitle}</h2>
                 <p class="mt-1 text-sm text-[var(--dash-text-muted)]">
-                  {parakeetStatus?.message ??
-                    "Download speech components to start dictating"}
+                  {parakeetStatus?.message ?? msg.hero.finishFallback}
                 </p>
               </div>
             {/if}
@@ -597,7 +742,7 @@
                 onclick={() => (showErrorDetails = !showErrorDetails)}
                 aria-expanded={showErrorDetails}
               >
-                {showErrorDetails ? "Hide details" : "Show details"}
+                {showErrorDetails ? msg.errors.hideDetails : msg.errors.showDetails}
               </button>
               {#if showErrorDetails}
                 <pre
@@ -614,7 +759,7 @@
                 onclick={runInstall}
                 disabled={installing}
               >
-                {installing ? "Installing…" : "Run setup"}
+                {installing ? msg.hero.installing : msg.hero.runSetup}
               </button>
             {/if}
             <button
@@ -623,7 +768,7 @@
               onclick={refreshStatus}
               disabled={installing}
             >
-              Refresh
+              {msg.hero.refresh}
             </button>
           </div>
         </section>
@@ -636,7 +781,7 @@
               <p
                 class="text-[10px] font-medium uppercase tracking-wider text-[var(--dash-text-subtle)]"
               >
-                Model
+                {msg.cards.model}
               </p>
               <p class="mt-1 truncate text-sm font-medium text-white">
                 {modelShortName}
@@ -648,12 +793,12 @@
               <p
                 class="text-[10px] font-medium uppercase tracking-wider text-[var(--dash-text-subtle)]"
               >
-                Status
+                {msg.cards.status}
               </p>
               <p class="mt-1 text-sm font-medium {parakeetStatus.ready
                 ? 'text-emerald-400'
                 : 'text-[var(--dash-text-muted)]'}">
-                {parakeetStatus.ready ? "Ready" : "Pending"}
+                {parakeetStatus.ready ? msg.cards.ready : msg.cards.pending}
               </p>
             </div>
             <div
@@ -662,7 +807,7 @@
               <p
                 class="text-[10px] font-medium uppercase tracking-wider text-[var(--dash-text-subtle)]"
               >
-                Hotkey
+                {msg.cards.hotkey}
               </p>
               <p class="mt-1 truncate font-mono text-sm text-[var(--dash-text)]">
                 {settings.hotkey}
@@ -674,10 +819,10 @@
               <p
                 class="text-[10px] font-medium uppercase tracking-wider text-[var(--dash-text-subtle)]"
               >
-                Dictionary
+                {msg.cards.dictionary}
               </p>
               <p class="mt-1 text-sm font-medium text-[var(--dash-text)]">
-                {settings.dictionary.length} rules
+                {format(msg.cards.rules, { count: settings.dictionary.length })}
               </p>
             </div>
           </div>
@@ -689,7 +834,7 @@
               <h3
                 class="text-xs font-medium uppercase tracking-wider text-[var(--dash-text-subtle)]"
               >
-                Speech model
+                {msg.cards.speechModel}
               </h3>
               <button
                 type="button"
@@ -697,35 +842,37 @@
                 onclick={() => (showTechDetails = !showTechDetails)}
                 aria-expanded={showTechDetails}
               >
-                {showTechDetails ? "Less" : "Details"}
+                {showTechDetails ? msg.cards.less : msg.cards.details}
               </button>
             </div>
 
             <ul class="mt-3 space-y-2">
               <li class="flex items-center justify-between gap-3 text-sm">
-                <span class="text-[var(--dash-text-muted)]">Parakeet v3 (ONNX)</span>
+                <span class="text-[var(--dash-text-muted)]">{msg.cards.parakeetOnnx}</span>
                 <span
                   class="rounded-md px-2 py-0.5 text-xs font-medium {parakeetStatus.model_downloaded
                     ? 'bg-emerald-500/15 text-emerald-400'
                     : 'bg-white/5 text-[var(--dash-text-muted)]'}"
                 >
-                  {parakeetStatus.model_downloaded ? "Installed" : "Pending"}
+                  {parakeetStatus.model_downloaded
+                    ? msg.cards.installed
+                    : msg.cards.pending}
                 </span>
               </li>
               <li class="flex items-center justify-between gap-3 text-sm">
-                <span class="text-[var(--dash-text-muted)]">Runtime</span>
+                <span class="text-[var(--dash-text-muted)]">{msg.cards.runtime}</span>
                 <span class="text-xs font-medium {parakeetStatus.ready
                   ? 'text-emerald-400'
                   : 'text-[var(--dash-text-muted)]'}">
-                  {parakeetStatus.ready ? "Ready" : "Not ready"}
+                  {parakeetStatus.ready ? msg.cards.ready : msg.cards.notReady}
                 </span>
               </li>
               <li class="flex items-center justify-between gap-3 text-sm">
-                <span class="text-[var(--dash-text-muted)]">Engine</span>
+                <span class="text-[var(--dash-text-muted)]">{msg.cards.engine}</span>
                 <span class="font-mono text-xs text-[var(--dash-text)]">transcribe-rs</span>
               </li>
               <li class="flex items-center justify-between gap-3 text-sm">
-                <span class="text-[var(--dash-text-muted)]">Model ID</span>
+                <span class="text-[var(--dash-text-muted)]">{msg.cards.modelId}</span>
                 <span
                   class="max-w-[12rem] truncate font-mono text-xs text-[var(--dash-text)]"
                   title={parakeetStatus.model_id}
@@ -740,13 +887,13 @@
                 class="mt-3 space-y-2 border-t border-[var(--dash-border)] pt-3 font-mono text-[11px] text-[var(--dash-text-subtle)]"
               >
                 <div>
-                  <dt>Model directory</dt>
+                  <dt>{msg.cards.modelDirectory}</dt>
                   <dd class="mt-0.5 break-all text-[var(--dash-text-muted)]">
                     {parakeetStatus.model_dir}
                   </dd>
                 </div>
                 <div>
-                  <dt>Configured model</dt>
+                  <dt>{msg.cards.configuredModel}</dt>
                   <dd class="mt-0.5 break-all text-[var(--dash-text-muted)]">
                     {settings.parakeet_model}
                   </dd>
@@ -758,13 +905,11 @@
       {:else if section === "dictionary"}
         <section class="rounded-[10px] border border-[var(--dash-border)] bg-[var(--dash-bg-card)] p-5">
           <p class="text-sm text-[var(--dash-text-muted)]">
-            Map spoken phrases to exact text after transcription — product names,
-            APIs, casing, or agent mentions (e.g. “bridge mind” → BridgeMind).
-            Processed locally on your Mac.
+            {msg.dictionary.intro}
           </p>
 
           {#if settings.dictionary.length > 0}
-            <ul class="mt-5 space-y-2" aria-label="Dictionary rules">
+            <ul class="mt-5 space-y-2" aria-label={msg.dictionary.rulesAria}>
               {#each settings.dictionary as entry, index (entry.from + entry.to)}
                 <li
                   class="group flex items-center gap-2 rounded-lg border border-[var(--dash-border)] bg-[var(--dash-bg)] px-3 py-2.5 text-sm transition hover:border-white/12"
@@ -788,23 +933,23 @@
                     type="button"
                     class="shrink-0 rounded-md px-2 py-1 text-xs text-[var(--dash-text-subtle)] opacity-0 transition group-hover:opacity-100 hover:bg-white/5 hover:text-red-400 focus:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/40"
                     onclick={() => removeDictionaryEntry(index)}
-                    aria-label="Remove dictionary rule"
+                    aria-label={msg.dictionary.removeAria}
                   >
-                    Delete
+                    {msg.dictionary.delete}
                   </button>
                 </li>
               {/each}
             </ul>
           {:else}
             <p class="mt-4 text-sm text-[var(--dash-text-subtle)]">
-              No rules yet. Add one below or use Dictionary on a history entry.
+              {msg.dictionary.empty}
             </p>
           {/if}
 
           <div class="mt-5 grid gap-3 sm:grid-cols-2">
             <label class="block">
               <span class="text-xs font-medium text-[var(--dash-text-muted)]"
-                >Spoken phrase</span
+                >{msg.dictionary.spokenPhrase}</span
               >
               <input
                 type="text"
@@ -815,7 +960,7 @@
             </label>
             <label class="block">
               <span class="text-xs font-medium text-[var(--dash-text-muted)]"
-                >Replace with</span
+                >{msg.dictionary.replaceWith}</span
               >
               <input
                 type="text"
@@ -831,13 +976,41 @@
           {#if dictionaryError}
             <p class="mt-2 text-xs text-red-300">{dictionaryError}</p>
           {/if}
-          <button
-            type="button"
-            class="mt-3 rounded-md bg-[var(--dash-accent)] px-4 py-2 text-sm font-medium text-white transition hover:bg-[var(--dash-accent-hover)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dash-accent)]/50"
-            onclick={() => addDictionaryEntry()}
-          >
-            Add rule
-          </button>
+          <div class="mt-3 flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              class="rounded-md bg-[var(--dash-accent)] px-4 py-2 text-sm font-medium text-white transition hover:bg-[var(--dash-accent-hover)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dash-accent)]/50"
+              onclick={() => addDictionaryEntry()}
+            >
+              {msg.dictionary.addRule}
+            </button>
+            <button
+              type="button"
+              class="rounded-md border border-[var(--dash-border)] px-3 py-2 text-sm text-[var(--dash-text-muted)] transition hover:border-white/20 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dash-accent)]/40"
+              onclick={exportDictionary}
+            >
+              {msg.dictionary.exportCsv}
+            </button>
+            <button
+              type="button"
+              class="rounded-md border border-[var(--dash-border)] px-3 py-2 text-sm text-[var(--dash-text-muted)] transition hover:border-white/20 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dash-accent)]/40"
+              onclick={triggerDictionaryImport}
+            >
+              {msg.dictionary.importCsv}
+            </button>
+            <input
+              bind:this={csvFileInput}
+              type="file"
+              accept=".csv,text/csv"
+              class="hidden"
+              onchange={onDictionaryFileSelected}
+            />
+          </div>
+          {#if dictionaryImportMessage}
+            <p class="mt-2 text-xs text-[var(--dash-text-muted)]" role="status">
+              {dictionaryImportMessage}
+            </p>
+          {/if}
         </section>
       {:else if section === "history"}
         <section class="rounded-[10px] border border-[var(--dash-border)] bg-[var(--dash-bg-card)] p-5">
@@ -848,7 +1021,7 @@
                 class="text-xs text-[var(--dash-text-subtle)] transition hover:text-red-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/40"
                 onclick={clearHistory}
               >
-                Clear all
+                {msg.history.clearAll}
               </button>
             </div>
           {/if}
@@ -875,12 +1048,11 @@
               </div>
               <p class="text-sm font-medium text-[var(--dash-text-muted)]">
                 {historyEntries.length === 0
-                  ? "No transcriptions yet"
-                  : "No entries in this period"}
+                  ? msg.history.empty
+                  : msg.history.emptyPeriod}
               </p>
               <p class="mt-1 max-w-sm text-xs text-[var(--dash-text-subtle)]">
-                Hold your hotkey anywhere on your Mac and speak — text appears in
-                the focused field and shows up here.
+                {msg.history.emptyHint}
               </p>
             </div>
           {:else}
@@ -904,6 +1076,11 @@
                         </span>
                       {/if}
                       <span>{formatDuration(entry.duration_ms)}</span>
+                      {#if formatTimingDetail(entry)}
+                        <span class="text-[var(--dash-text-subtle)]"
+                          >{formatTimingDetail(entry)}</span
+                        >
+                      {/if}
                     </div>
                     <div
                       class="flex shrink-0 gap-1 opacity-0 transition group-hover:opacity-100 focus-within:opacity-100"
@@ -911,18 +1088,25 @@
                       <button
                         type="button"
                         class="rounded-md px-2 py-1 text-xs text-[var(--dash-text-subtle)] hover:bg-white/5 hover:text-[var(--dash-accent)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dash-accent)]/40"
+                        onclick={() => pasteHistoryEntry(entry.normalized_text)}
+                      >
+                        {msg.history.pasteAgain}
+                      </button>
+                      <button
+                        type="button"
+                        class="rounded-md px-2 py-1 text-xs text-[var(--dash-text-subtle)] hover:bg-white/5 hover:text-[var(--dash-accent)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dash-accent)]/40"
                         onclick={() =>
                           startDictionaryFromHistory(entry.normalized_text)}
                       >
-                        Dictionary
+                        {msg.history.dictionary}
                       </button>
                       <button
                         type="button"
                         class="rounded-md px-2 py-1 text-xs text-[var(--dash-text-subtle)] hover:bg-white/5 hover:text-red-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/40"
                         onclick={() => deleteEntry(entry.id)}
-                        aria-label="Delete transcription"
+                        aria-label={msg.history.deleteAria}
                       >
-                        Delete
+                        {msg.dictionary.delete}
                       </button>
                     </div>
                   </div>
@@ -936,12 +1120,21 @@
         </section>
       {:else}
         <div class="max-w-xl space-y-4">
+          <LocalePicker
+            value={normalizeLocale(settings.ui_locale)}
+            onchange={onUiLocaleChange}
+          />
+
           <section
             class="rounded-[10px] border border-[var(--dash-border)] bg-[var(--dash-bg-card)] p-5"
           >
-            <h2 class="text-sm font-semibold text-white">Dictation hotkey</h2>
+            <h2 class="text-sm font-semibold text-white">{msg.settingsPanel.hotkeyTitle}</h2>
             <p class="mt-1 text-xs text-[var(--dash-text-subtle)]">
-              Hold this combination to record. Release to transcribe and paste.
+              {#if settings.recording_mode === "toggle"}
+                {msg.settingsPanel.toggleModeHint}
+              {:else}
+                {msg.settingsPanel.holdModeHint}
+              {/if}
             </p>
             <input
               type="text"
@@ -953,7 +1146,8 @@
               aria-describedby="hotkey-help"
             />
             <p id="hotkey-help" class="mt-2 text-xs text-[var(--dash-text-subtle)]">
-              Examples: <code class="text-[var(--dash-text-muted)]">control+`</code>,
+              {msg.settingsPanel.hotkeyExamples}
+              <code class="text-[var(--dash-text-muted)]">control+`</code>,
               <code class="text-[var(--dash-text-muted)]">command+shift+d</code>
             </p>
             {#if hotkeyError}
@@ -967,7 +1161,9 @@
                   onclick={() =>
                     (showHotkeyErrorDetails = !showHotkeyErrorDetails)}
                 >
-                  {showHotkeyErrorDetails ? "Hide details" : "Details"}
+                  {showHotkeyErrorDetails
+                    ? msg.errors.hideDetails
+                    : msg.cards.details}
                 </button>
                 {#if showHotkeyErrorDetails}
                   <pre
@@ -980,19 +1176,150 @@
           <section
             class="rounded-[10px] border border-[var(--dash-border)] bg-[var(--dash-bg-card)] p-5"
           >
+            <h2 class="text-sm font-semibold text-white">{msg.settingsPanel.recordingTitle}</h2>
+            <p class="mt-1 text-xs text-[var(--dash-text-subtle)]">
+              {msg.settingsPanel.recordingHint}
+            </p>
+            <div class="mt-3 flex gap-2">
+              <button
+                type="button"
+                class="rounded-lg border px-3 py-2 text-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dash-accent)]/40 {settings.recording_mode !==
+                'toggle'
+                  ? 'border-[var(--dash-accent)]/50 bg-[var(--dash-accent-muted)] text-[#ffb899]'
+                  : 'border-[var(--dash-border)] text-[var(--dash-text-muted)] hover:border-white/20'}"
+                onclick={() => {
+                  settings.recording_mode = "push_to_talk";
+                  scheduleSave();
+                }}
+              >
+                {msg.settingsPanel.pushToTalk}
+              </button>
+              <button
+                type="button"
+                class="rounded-lg border px-3 py-2 text-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dash-accent)]/40 {settings.recording_mode ===
+                'toggle'
+                  ? 'border-[var(--dash-accent)]/50 bg-[var(--dash-accent-muted)] text-[#ffb899]'
+                  : 'border-[var(--dash-border)] text-[var(--dash-text-muted)] hover:border-white/20'}"
+                onclick={() => {
+                  settings.recording_mode = "toggle";
+                  scheduleSave();
+                }}
+              >
+                {msg.settingsPanel.toggle}
+              </button>
+            </div>
+          </section>
+
+          <section
+            class="rounded-[10px] border border-[var(--dash-border)] bg-[var(--dash-bg-card)] p-5"
+          >
+            <h2 class="text-sm font-semibold text-white">{msg.settingsPanel.pasteTitle}</h2>
+            <p class="mt-1 text-xs text-[var(--dash-text-subtle)]">
+              {msg.settingsPanel.pasteHint}
+            </p>
+            <div class="mt-3 grid gap-3 sm:grid-cols-2">
+              <label class="block">
+                <span class="text-xs text-[var(--dash-text-muted)]">{msg.settingsPanel.delayBefore}</span>
+                <input
+                  type="number"
+                  min="0"
+                  max="2000"
+                  bind:value={settings.paste_delay_before_ms}
+                  onchange={scheduleSave}
+                  class="mt-1 w-full rounded-lg border border-[var(--dash-border)] bg-[var(--dash-bg)] px-3 py-2 font-mono text-sm text-white focus:border-[var(--dash-accent)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--dash-accent)]/20"
+                />
+              </label>
+              <label class="block">
+                <span class="text-xs text-[var(--dash-text-muted)]">{msg.settingsPanel.delayAfter}</span>
+                <input
+                  type="number"
+                  min="0"
+                  max="2000"
+                  bind:value={settings.paste_delay_after_ms}
+                  onchange={scheduleSave}
+                  class="mt-1 w-full rounded-lg border border-[var(--dash-border)] bg-[var(--dash-bg)] px-3 py-2 font-mono text-sm text-white focus:border-[var(--dash-accent)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--dash-accent)]/20"
+                />
+              </label>
+            </div>
+            <label class="mt-4 flex cursor-pointer items-center gap-3">
+              <input
+                type="checkbox"
+                bind:checked={settings.restore_clipboard_after_paste}
+                onchange={scheduleSave}
+                class="rounded border-[var(--dash-border)]"
+              />
+              <span class="text-sm text-[var(--dash-text-muted)]"
+                >{msg.settingsPanel.restoreClipboard}</span
+              >
+            </label>
+          </section>
+
+          <section
+            class="rounded-[10px] border border-[var(--dash-border)] bg-[var(--dash-bg-card)] p-5"
+          >
             <div class="flex items-start justify-between gap-4">
               <div>
-                <h2 class="text-sm font-semibold text-white">Sound effects</h2>
+                <h2 class="text-sm font-semibold text-white">{msg.settingsPanel.fillerTitle}</h2>
                 <p class="mt-1 text-xs text-[var(--dash-text-subtle)]">
-                  Play short sounds when recording starts, while processing, and when
-                  transcription completes.
+                  {msg.settingsPanel.fillerHint}
+                </p>
+              </div>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={settings.strip_filler_words}
+                aria-label={msg.settingsPanel.fillerAria}
+                class="relative mt-0.5 h-6 w-11 shrink-0 rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dash-accent)]/50 {settings.strip_filler_words
+                  ? 'bg-[var(--dash-accent)]'
+                  : 'bg-[#3a3a44]'}"
+                onclick={() => {
+                  settings.strip_filler_words = !settings.strip_filler_words;
+                  void saveSettings({ quiet: true });
+                }}
+              >
+                <span
+                  class="absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform {settings.strip_filler_words
+                    ? 'translate-x-5'
+                    : 'translate-x-0'}"
+                ></span>
+              </button>
+            </div>
+          </section>
+
+          <section
+            class="rounded-[10px] border border-[var(--dash-border)] bg-[var(--dash-bg-card)] p-5"
+          >
+            <h2 class="text-sm font-semibold text-white">{msg.settingsPanel.repasteTitle}</h2>
+            <p class="mt-1 text-xs text-[var(--dash-text-subtle)]">
+              {msg.settingsPanel.repasteHint}
+            </p>
+            <button
+              type="button"
+              class="mt-3 rounded-md border border-[var(--dash-border)] px-4 py-2 text-sm text-[var(--dash-text-muted)] transition hover:border-[var(--dash-accent)]/40 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dash-accent)]/40"
+              onclick={repasteLast}
+            >
+              {msg.settingsPanel.repasteButton}
+            </button>
+            {#if repasteMessage}
+              <p class="mt-2 text-xs text-[var(--dash-text-muted)]">{repasteMessage}</p>
+            {/if}
+          </section>
+
+          <section
+            class="rounded-[10px] border border-[var(--dash-border)] bg-[var(--dash-bg-card)] p-5"
+          >
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h2 class="text-sm font-semibold text-white">{msg.settingsPanel.soundsTitle}</h2>
+                <p class="mt-1 text-xs text-[var(--dash-text-subtle)]">
+                  {msg.settingsPanel.soundsHint}
                 </p>
               </div>
               <button
                 type="button"
                 role="switch"
                 aria-checked={settings.sound_effects_enabled}
-                aria-label="Enable sound effects"
+                aria-label={msg.settingsPanel.soundsAria}
                 class="relative mt-0.5 h-6 w-11 shrink-0 rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dash-accent)]/50 {settings.sound_effects_enabled
                   ? 'bg-[var(--dash-accent)]'
                   : 'bg-[#3a3a44]'}"
@@ -1010,7 +1337,7 @@
           {#if isSaving || saveMessage}
             <p class="text-sm text-[var(--dash-text-muted)]" role="status">
               {#if isSaving}
-                Saving…
+                {msg.settingsPanel.saving}
               {:else}
                 <span class="text-emerald-400">{saveMessage}</span>
               {/if}

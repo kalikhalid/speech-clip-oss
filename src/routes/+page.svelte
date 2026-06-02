@@ -6,6 +6,12 @@
   import PermissionGuide from "$lib/components/PermissionGuide.svelte";
   import ShortcutHint from "$lib/components/ShortcutHint.svelte";
   import { config } from "$lib/config";
+  import {
+    locale,
+    messagesFor,
+    normalizeLocale,
+    setLocale,
+  } from "$lib/i18n";
 
   // Survives HMR remounts — prevents duplicate hotkey listeners in dev.
   let overlayListenerCleanups: Array<() => void> = [];
@@ -50,20 +56,41 @@
   let isCapturingHotkey = $state(false);
   let installStatusMessage = $state("");
   let soundEffectsEnabled = $state(true);
+  let recordingMode = $state<"push_to_talk" | "toggle">("push_to_talk");
+  let emptyFeedback = $state("");
   let isProcessingRecording = false;
   let isStoppingRecording = false;
   let lastHotkeyReleaseAt = 0;
   const MAX_DURATION_MS = 15 * 60 * 1000; // 15 minutes
 
-  async function refreshSoundEffectsSetting() {
+  const msg = $derived(messagesFor($locale));
+
+  async function refreshOverlaySettings() {
     try {
-      const appSettings = await invoke<{ sound_effects_enabled: boolean }>(
-        "get_settings",
-      );
+      const appSettings = await invoke<{
+        sound_effects_enabled: boolean;
+        recording_mode: string;
+        hotkey: string;
+        ui_locale?: string;
+      }>("get_settings");
       soundEffectsEnabled = appSettings.sound_effects_enabled;
+      recordingMode =
+        appSettings.recording_mode === "toggle" ? "toggle" : "push_to_talk";
+      currentHotkey = appSettings.hotkey;
+      setLocale(normalizeLocale(appSettings.ui_locale));
     } catch (e) {
-      console.warn("Failed to load sound setting:", e);
+      console.warn("Failed to load overlay settings:", e);
     }
+  }
+
+  function showEmptyFeedback(reason: string) {
+    emptyFeedback =
+      reason === "audio_too_short"
+        ? msg.overlay.recordingTooShort
+        : msg.overlay.noSpeech;
+    setTimeout(() => {
+      emptyFeedback = "";
+    }, 2800);
   }
 
   function checkDuration() {
@@ -300,7 +327,7 @@
   onMount(async () => {
     teardownOverlayListeners();
 
-    await refreshSoundEffectsSetting();
+    await refreshOverlaySettings();
 
     // Preload all sounds in parallel and wait for them to be ready
     try {
@@ -336,11 +363,19 @@
     // This prevents the microphone indicator from showing immediately
 
     unlistenPressed = await listen("hotkey-pressed", () => {
-      if (appState === "idle" && !isCapturingHotkey) startRecording();
+      if (isCapturingHotkey) return;
+      if (recordingMode === "toggle") {
+        if (appState === "idle") startRecording();
+        else if (appState === "recording") stopRecording();
+      } else if (appState === "idle") {
+        startRecording();
+      }
     });
     overlayListenerCleanups.push(unlistenPressed);
 
     unlistenReleased = await listen("hotkey-released", (event: any) => {
+      if (recordingMode === "toggle") return;
+
       const now = Date.now();
       if (now - lastHotkeyReleaseAt < 400) return;
       lastHotkeyReleaseAt = now;
@@ -380,10 +415,31 @@
 
     unlistenSettingsUpdated = await listen<{
       sound_effects_enabled: boolean;
+      recording_mode?: string;
+      hotkey?: string;
+      ui_locale?: string;
     }>("settings-updated", (event) => {
       soundEffectsEnabled = event.payload.sound_effects_enabled;
+      if (event.payload.recording_mode) {
+        recordingMode =
+          event.payload.recording_mode === "toggle" ? "toggle" : "push_to_talk";
+      }
+      if (event.payload.hotkey) {
+        currentHotkey = event.payload.hotkey;
+      }
+      if (event.payload.ui_locale) {
+        setLocale(normalizeLocale(event.payload.ui_locale));
+      }
     });
     overlayListenerCleanups.push(unlistenSettingsUpdated);
+
+    const unlistenEmpty = await listen<{ reason: string }>(
+      "transcription-empty",
+      (event) => {
+        showEmptyFeedback(event.payload.reason);
+      },
+    );
+    overlayListenerCleanups.push(unlistenEmpty);
 
     checkAndShowShortcutHint();
   });
@@ -419,7 +475,7 @@
     if (appState !== "idle" || isProcessingRecording) return;
 
     appState = "recording";
-    await refreshSoundEffectsSetting();
+    await refreshOverlaySettings();
 
     // STEP 1: Initialize audio pipeline FIRST (if needed)
     if (!audioContext || !mediaStream || !mediaRecorder) {
@@ -512,7 +568,7 @@
     isStoppingRecording = true;
     appState = "processing";
     installStatusMessage = "";
-    await refreshSoundEffectsSetting();
+    await refreshOverlaySettings();
 
     // Play loading sound during processing
     playSound(loadingSound);
@@ -573,10 +629,21 @@
         releaseTimestamp,
       });
 
-      await refreshSoundEffectsSetting();
+      await refreshOverlaySettings();
       playSound(endSound);
     } catch (error) {
-      console.error("Processing error:", error);
+      const msg = String(error);
+      if (
+        msg.includes("too short") ||
+        msg.includes("No speech") ||
+        msg.includes("No text")
+      ) {
+        showEmptyFeedback(
+          msg.toLowerCase().includes("short") ? "audio_too_short" : "empty_transcript",
+        );
+      } else {
+        console.error("Processing error:", error);
+      }
     } finally {
       isProcessingRecording = false;
       isStoppingRecording = false;
@@ -683,7 +750,11 @@
   {:else}
     <!-- Shortcut Hint - positioned independently above mini-bar -->
     {#if showShortcutHint && appState === "idle"}
-      <ShortcutHint hotkey={currentHotkey} onDismiss={dismissShortcutHint} />
+      <ShortcutHint
+        hotkey={currentHotkey}
+        {recordingMode}
+        onDismiss={dismissShortcutHint}
+      />
     {/if}
 
     <!-- Centered Bottom Anchor -->
@@ -697,7 +768,9 @@
         class:dictating={appState !== "idle"}
         class:hovered={isHovered}
       >
-        {#if appState === "idle"}
+        {#if emptyFeedback && appState === "idle"}
+          <span class="empty-feedback">{emptyFeedback}</span>
+        {:else if appState === "idle"}
           <div class="idle-content">
             <!-- Empty pill in idle -->
           </div>
@@ -710,7 +783,7 @@
                 e.stopPropagation();
                 cleanup();
               }}
-              aria-label="Cancel"
+              aria-label={msg.overlay.cancelAria}
               disabled={appState === "processing"}
             >
               <svg
@@ -754,7 +827,7 @@
                 e.stopPropagation();
                 stopRecording();
               }}
-              aria-label="Stop Recording"
+              aria-label={msg.overlay.stopAria}
               disabled={appState === "processing"}
             >
               <div
@@ -958,6 +1031,21 @@
     align-items: center;
     gap: 4px;
     max-width: 140px;
+  }
+
+  .empty-feedback {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: 11px;
+    color: rgba(255, 149, 0, 0.95);
+    background: rgba(0, 0, 0, 0.85);
+    border: 1px solid rgba(255, 79, 0, 0.35);
+    border-radius: 6px;
+    padding: 4px 8px;
+    pointer-events: none;
   }
 
   .install-hint {

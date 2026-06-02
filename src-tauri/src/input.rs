@@ -5,6 +5,8 @@ use std::time::{Duration, Instant};
 use tauri::AppHandle;
 use tokio::sync::oneshot;
 
+use crate::settings;
+
 static LAST_TYPED: Mutex<Option<(String, Instant)>> = Mutex::new(None);
 const TYPING_DEDUPE_WINDOW: Duration = Duration::from_secs(3);
 
@@ -32,6 +34,11 @@ pub async fn type_text(
         *last = Some((text.clone(), Instant::now()));
     }
 
+    let app_settings = settings::load_settings(app).unwrap_or_default();
+    let delay_before = Duration::from_millis(app_settings.paste_delay_before_ms);
+    let delay_after = Duration::from_millis(app_settings.paste_delay_after_ms);
+    let restore_clipboard = app_settings.restore_clipboard_after_paste;
+
     let (tx, rx) = oneshot::channel();
     let text_clone = text.clone();
 
@@ -40,13 +47,28 @@ pub async fn type_text(
             let mut clipboard =
                 Clipboard::new().map_err(|e| format!("Failed to access clipboard: {}", e))?;
 
+            let previous_text = if restore_clipboard {
+                clipboard.get_text().ok()
+            } else {
+                None
+            };
+
             clipboard
                 .set_text(&text_clone)
                 .map_err(|e| format!("Failed to write to clipboard: {}", e))?;
 
-            thread::sleep(Duration::from_millis(50));
+            thread::sleep(delay_before);
             simulate_cmd_v()?;
-            thread::sleep(Duration::from_millis(30));
+            thread::sleep(delay_after);
+
+            if restore_clipboard {
+                if let Some(prev) = previous_text {
+                    clipboard
+                        .set_text(&prev)
+                        .map_err(|e| format!("Failed to restore clipboard: {}", e))?;
+                }
+            }
+
             Ok::<(), String>(())
         })();
 

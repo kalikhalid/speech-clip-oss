@@ -91,6 +91,93 @@ pub fn sanitize_entries(entries: Vec<DictionaryEntry>) -> Vec<DictionaryEntry> {
     out
 }
 
+/// Export dictionary entries as CSV with `from,to` header.
+pub fn export_csv(entries: &[DictionaryEntry]) -> String {
+    let mut out = String::from("from,to\n");
+    for entry in entries {
+        out.push_str(&csv_escape(&entry.from));
+        out.push(',');
+        out.push_str(&csv_escape(&entry.to));
+        out.push('\n');
+    }
+    out
+}
+
+fn csv_escape(value: &str) -> String {
+    if value.contains(['"', ',', '\n', '\r']) {
+        format!(
+            "\"{}\"",
+            value.replace('"', "\"\"")
+        )
+    } else {
+        value.to_string()
+    }
+}
+
+/// Parse CSV (header optional) and merge with existing entries when `merge` is true.
+pub fn import_csv(csv: &str, existing: &[DictionaryEntry], merge: bool) -> Result<Vec<DictionaryEntry>, String> {
+    let mut parsed = Vec::new();
+    for (line_no, line) in csv.lines().enumerate() {
+        let trimmed = line.trim();
+        if trimmed.is_empty() {
+            continue;
+        }
+        if line_no == 0 && trimmed.eq_ignore_ascii_case("from,to") {
+            continue;
+        }
+        let cols = parse_csv_line(trimmed)?;
+        if cols.len() < 2 {
+            return Err(format!("Line {}: expected from,to columns", line_no + 1));
+        }
+        parsed.push(DictionaryEntry {
+            from: cols[0].clone(),
+            to: cols[1].clone(),
+        });
+    }
+
+    if parsed.is_empty() {
+        return Err("No dictionary rows found in CSV".to_string());
+    }
+
+    let combined = if merge {
+        let mut all = existing.to_vec();
+        all.extend(parsed);
+        all
+    } else {
+        parsed
+    };
+
+    Ok(sanitize_entries(combined))
+}
+
+fn parse_csv_line(line: &str) -> Result<Vec<String>, String> {
+    let mut fields = Vec::new();
+    let mut current = String::new();
+    let mut in_quotes = false;
+    let mut chars = line.chars().peekable();
+
+    while let Some(ch) = chars.next() {
+        match ch {
+            '"' if in_quotes => {
+                if chars.peek() == Some(&'"') {
+                    current.push('"');
+                    chars.next();
+                } else {
+                    in_quotes = false;
+                }
+            }
+            '"' => in_quotes = true,
+            ',' if !in_quotes => {
+                fields.push(current.trim().to_string());
+                current.clear();
+            }
+            c => current.push(c),
+        }
+    }
+    fields.push(current.trim().to_string());
+    Ok(fields)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -133,6 +220,16 @@ mod tests {
             apply_dictionary("next js and typescript", &entries),
             "Next.js and TypeScript"
         );
+    }
+
+    #[test]
+    fn csv_roundtrip() {
+        let entries = vec![rule("foo", "bar"), rule("a,b", "c\"d")];
+        let csv = export_csv(&entries);
+        let imported = import_csv(&csv, &[], false).unwrap();
+        assert_eq!(imported.len(), 2);
+        assert_eq!(imported[1].from, "a,b");
+        assert_eq!(imported[1].to, "c\"d");
     }
 
     #[test]

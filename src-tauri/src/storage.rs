@@ -36,6 +36,20 @@ pub struct TranscriptionEntry {
     /// User comment for debug/feedback
     #[serde(default)]
     pub comment: Option<String>,
+    /// Pipeline stage timings in milliseconds (when available).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub timing: Option<TranscriptionTiming>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct TranscriptionTiming {
+    pub total_ms: u64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub asr_ms: Option<u64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub postprocess_ms: Option<u64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub typing_ms: Option<u64>,
 }
 
 /// Container for all history entries

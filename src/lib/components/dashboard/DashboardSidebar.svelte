@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { DashboardSection } from "./types";
+  import { locale, messagesFor } from "$lib/i18n";
 
   type NavItem = {
     id: DashboardSection;
@@ -15,17 +16,19 @@
 
   let { active, historyCount = 0, onNavigate }: Props = $props();
 
-  const NAV: NavItem[] = [
-    { id: "general", label: "General", icon: "general" },
-    { id: "dictionary", label: "Dictionary", icon: "dictionary" },
-    { id: "history", label: "History", icon: "history" },
-    { id: "settings", label: "Settings", icon: "settings" },
-  ];
+  const msg = $derived(messagesFor($locale));
+
+  const NAV = $derived<NavItem[]>([
+    { id: "general", label: msg.nav.general, icon: "general" },
+    { id: "dictionary", label: msg.nav.dictionary, icon: "dictionary" },
+    { id: "history", label: msg.nav.history, icon: "history" },
+    { id: "settings", label: msg.nav.settings, icon: "settings" },
+  ]);
 </script>
 
 <aside
   class="dashboard-sidebar flex w-[188px] shrink-0 flex-col border-r border-[var(--dash-border)] bg-[var(--dash-sidebar-bg)] pb-4"
-  aria-label="Dashboard navigation"
+  aria-label={msg.nav.aria}
 >
   <div class="mb-6 flex items-center gap-2.5 px-4 pt-5">
     <img

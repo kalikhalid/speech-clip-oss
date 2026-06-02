@@ -4,8 +4,10 @@ mod commands;
 mod debug;
 mod dictionary;
 mod input;
+mod last_transcription;
 mod parakeet;
 mod parakeet_install;
+mod postprocess;
 mod settings;
 mod shortcuts;
 mod storage;
@@ -45,11 +47,23 @@ pub fn run() {
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .setup(|app| {
             let handle = app.handle().clone();
+
+            #[cfg(target_os = "macos")]
+            crate::utils::macos::disable_app_nap();
+
             let _ = setup_global_shortcuts(&handle);
 
             if let Some(window) = handle.get_webview_window("main") {
                 let _ = window::set_window_on_all_spaces(&window);
             }
+
+            let warmup_handle = handle.clone();
+            tauri::async_runtime::spawn(async move {
+                let settings = settings::load_settings(&warmup_handle).unwrap_or_default();
+                if settings.warmup_on_start {
+                    let _ = commands::warmup_parakeet(warmup_handle).await;
+                }
+            });
 
             app.set_activation_policy(tauri::ActivationPolicy::Regular);
             Ok(())
@@ -60,6 +74,11 @@ pub fn run() {
             commands::resize_overlay,
             commands::process_audio,
             commands::process_audio_with_history,
+            commands::repaste_last,
+            commands::paste_text_command,
+            commands::export_dictionary_csv,
+            commands::import_dictionary_csv,
+            commands::warmup_parakeet,
             commands::get_settings,
             commands::save_settings,
             commands::get_parakeet_status,

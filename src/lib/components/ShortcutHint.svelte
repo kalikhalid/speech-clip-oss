@@ -1,15 +1,18 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { fly } from "svelte/transition";
+  import { locale, messagesFor } from "$lib/i18n";
 
   interface Props {
     hotkey: string;
+    recordingMode?: "push_to_talk" | "toggle";
     onDismiss?: () => void;
   }
 
-  let { hotkey, onDismiss }: Props = $props();
+  let { hotkey, recordingMode = "push_to_talk", onDismiss }: Props = $props();
 
-  // Format hotkey for display (e.g., "control+`" -> "⌃`")
+  const msg = $derived(messagesFor($locale));
+
   function formatHotkey(hk: string): string {
     return hk
       .replace(/control/gi, "⌃")
@@ -21,7 +24,6 @@
 
   const displayHotkey = $derived(formatHotkey(hotkey));
 
-  // Автоматически скрываем через 5 секунд
   onMount(() => {
     const timer = setTimeout(() => {
       onDismiss?.();
@@ -37,27 +39,30 @@
 >
   <div class="hint-container">
     <div class="hint-header">
-      <span class="hint-title">Quick Start</span>
+      <span class="hint-title">{msg.shortcutHint.title}</span>
     </div>
 
     <div class="hint-divider"></div>
 
     <div class="hint-row">
-      <span class="label">Dictation</span>
+      <span class="label">{msg.shortcutHint.dictation}</span>
       <span class="hotkey">{displayHotkey}</span>
     </div>
 
     <div class="hint-row subtle">
-      <span class="label">Hold to record</span>
+      <span class="label">
+        {recordingMode === "toggle"
+          ? msg.shortcutHint.toggleToRecord
+          : msg.shortcutHint.holdToRecord}
+      </span>
     </div>
   </div>
 </div>
 
 <style>
   .shortcut-hint {
-    /* Ключевое: fixed позиционирование независимо от мини-бара */
     position: fixed;
-    bottom: 80px; /* Позиция над мини-баром (bottom-8 = 32px + высота подсказки + отступ) */
+    bottom: 80px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 50;

@@ -1,10 +1,17 @@
 <script lang="ts">
     import { fade, fly } from "svelte/transition";
+    import { locale, format, messagesFor } from "$lib/i18n";
 
-    export let onRequestPermission: () => void;
-    export let onClose: () => void;
+    interface Props {
+        onRequestPermission: () => void;
+        onClose: () => void;
+    }
 
-    let step: 1 | 2 = 1;
+    let { onRequestPermission, onClose }: Props = $props();
+
+    let step: 1 | 2 = $state(1);
+
+    const msg = $derived(messagesFor($locale));
 
     function handlePrimaryAction() {
         if (step === 1) {
@@ -21,7 +28,7 @@
         <div class="gradient-orb orb-2"></div>
     </div>
 
-    <button class="close-btn" on:click={onClose} aria-label="Close">
+    <button class="close-btn" on:click={onClose} aria-label={msg.permission.closeAria}>
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
             <path
                 d="M11 1L1 11M1 1L11 11"
@@ -33,7 +40,7 @@
     </button>
 
     <div class="content">
-        <div class="step-badge">Step {step} of 2</div>
+        <div class="step-badge">{format(msg.permission.stepOf, { step })}</div>
 
         <div class="icon-badge">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -44,9 +51,9 @@
 
         {#if step === 1}
             <div class="step-container" in:fly={{ y: 16, duration: 280 }} out:fade>
-                <h2>Accessibility Access</h2>
+                <h2>{msg.permission.step1Title}</h2>
                 <p class="description">
-                    Speech Clip needs Accessibility permission to paste transcribed text into any app.
+                    {msg.permission.step1Desc}
                 </p>
 
                 <div class="schematic-wrap">
@@ -64,15 +71,15 @@
                                     </defs>
                                 </svg>
                             </div>
-                            <div class="dialog-title">"Speech Clip" would like to control this computer</div>
+                            <div class="dialog-title">{msg.permission.dialogTitle}</div>
                         </div>
                         <div class="dialog-body">
-                            <p class="dialog-subtitle">Granting access allows Speech Clip to type text on your behalf.</p>
+                            <p class="dialog-subtitle">{msg.permission.dialogSubtitle}</p>
                         </div>
                         <div class="dialog-actions">
-                            <div class="btn secondary">Don't Allow</div>
+                            <div class="btn secondary">{msg.permission.dontAllow}</div>
                             <div class="btn primary active-target">
-                                Open System Settings
+                                {msg.permission.openSettings}
                                 <div class="cursor-hand step1">
                                     <svg viewBox="0 0 24 24" fill="white" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.5))">
                                         <path d="M7 2l12 11.2-5.8.5 3.4 8.3-2.6 1-3.4-8.3-4.6 4.3z" />
@@ -84,14 +91,14 @@
                 </div>
 
                 <p class="instruction-text">
-                    Click <strong>Open System Settings</strong> in the dialog that appears.
+                    {msg.permission.step1Instruction}
                 </p>
             </div>
         {:else}
             <div class="step-container" in:fly={{ y: 16, duration: 280 }} out:fade>
-                <h2>Enable the Toggle</h2>
+                <h2>{msg.permission.step2Title}</h2>
                 <p class="description">
-                    Find <strong>Speech Clip</strong> in the list and turn it on.
+                    {msg.permission.step2Desc}
                 </p>
 
                 <div class="schematic-wrap">
@@ -102,13 +109,13 @@
                                 <div class="dot yellow"></div>
                                 <div class="dot green"></div>
                             </div>
-                            <div class="window-title">Privacy &amp; Security → Accessibility</div>
+                            <div class="window-title">{msg.permission.privacyTitle}</div>
                         </div>
 
                         <div class="settings-list">
                             <div class="list-item other">
                                 <div class="app-icon"></div>
-                                <span class="app-name">Other App</span>
+                                <span class="app-name">{msg.permission.otherApp}</span>
                                 <div class="toggle"></div>
                             </div>
 
@@ -116,7 +123,7 @@
                                 <div class="app-icon speech-clip-icon">
                                     <img src="/logo.png" alt="" width="16" height="16" />
                                 </div>
-                                <span class="app-name">Speech Clip</span>
+                                <span class="app-name">{msg.permission.appName}</span>
                                 <div class="toggle-container">
                                     <div class="toggle active-anim"></div>
                                     <div class="cursor-hand step2">
@@ -139,9 +146,9 @@
 
         <button class="primary-btn" on:click={handlePrimaryAction}>
             {#if step === 1}
-                Request Access
+                {msg.permission.requestAccess}
             {:else}
-                Open Settings Again
+                {msg.permission.openAgain}
             {/if}
         </button>
     </div>

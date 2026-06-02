@@ -44,3 +44,11 @@ pub fn open_accessibility_settings() {
         .arg("x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")
         .spawn();
 }
+
+/// App Nap mitigation: `NSAppSleepDisabled` in `src-tauri/Info.plist` is the primary fix.
+/// A runtime `NSProcessInfo` activity token would be a partial complement; not wired here
+/// to avoid extra objc/cocoa surface — plist alone matches most dictation apps' needs.
+#[cfg(target_os = "macos")]
+pub fn disable_app_nap() {
+    // Intentionally empty — see Info.plist and comment above.
+}
