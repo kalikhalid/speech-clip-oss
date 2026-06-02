@@ -1,8 +1,57 @@
 use mouse_position::mouse_position::Mouse;
 use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::Mutex;
 use tauri::{AppHandle, Emitter, Manager};
 
 static HOVER_TRACKING_ACTIVE: AtomicBool = AtomicBool::new(false);
+
+/// Matches overlay pill sizes from `src/lib/config.ts` and `+page.svelte` CSS.
+const IDLE_PILL_WIDTH: f64 = 40.0;
+const IDLE_PILL_HEIGHT: f64 = 10.0;
+/// CSS `.liquid-bar.hovered:not(.dictating)` — idle hover animation size.
+const IDLE_HOVER_WIDTH: f64 = 50.0;
+const IDLE_HOVER_HEIGHT: f64 = 14.0;
+/// Tailwind `bottom-8` on the pill anchor (32px).
+const PILL_BOTTOM_OFFSET: f64 = 32.0;
+const HIT_PAD_X: f64 = 4.0;
+const HIT_PAD_Y: f64 = 4.0;
+
+#[derive(Clone, Copy)]
+struct PillHitbox {
+    width: f64,
+    height: f64,
+    recording: bool,
+}
+
+impl Default for PillHitbox {
+    fn default() -> Self {
+        Self {
+            width: IDLE_PILL_WIDTH,
+            height: IDLE_PILL_HEIGHT,
+            recording: false,
+        }
+    }
+}
+
+static PILL_HITBOX: Mutex<PillHitbox> = Mutex::new(PillHitbox {
+    width: IDLE_PILL_WIDTH,
+    height: IDLE_PILL_HEIGHT,
+    recording: false,
+});
+
+fn pill_hit_zone(hitbox: PillHitbox) -> (f64, f64) {
+    if hitbox.recording {
+        return (
+            hitbox.width + HIT_PAD_X * 2.0,
+            hitbox.height + HIT_PAD_Y * 2.0,
+        );
+    }
+    // Idle: only cover the hovered pill size, not the old oversized zone.
+    (
+        IDLE_HOVER_WIDTH + HIT_PAD_X * 2.0,
+        IDLE_HOVER_HEIGHT + HIT_PAD_Y * 2.0,
+    )
+}
 
 // Make window visible on all desktops/spaces
 #[cfg(target_os = "macos")]
@@ -114,13 +163,22 @@ pub async fn show_overlay(app: AppHandle) -> Result<(), String> {
     Ok(())
 }
 
-// Resize overlay - No-op for fullscreen overlay
+// Window stays fullscreen; we only update the native hover/click hit zone.
 pub async fn resize_overlay(
     _app: AppHandle,
-    _recording: bool,
-    _width: Option<f64>,
-    _height: Option<f64>,
+    recording: bool,
+    width: Option<f64>,
+    height: Option<f64>,
 ) -> Result<(), String> {
+    if let (Some(width), Some(height)) = (width, height) {
+        if let Ok(mut hitbox) = PILL_HITBOX.lock() {
+            hitbox.width = width;
+            hitbox.height = height;
+            hitbox.recording = recording;
+        }
+    } else if let Ok(mut hitbox) = PILL_HITBOX.lock() {
+        hitbox.recording = recording;
+    }
     Ok(())
 }
 
@@ -227,12 +285,6 @@ fn start_hover_tracking(app: AppHandle) {
     tokio::spawn(async move {
         let mut was_interactive = false;
 
-        // Dimensions of the "pill" (mini-bar)
-        // Match these with CSS in +page.svelte
-        const PILL_WIDTH: f64 = 140.0; // Slightly larger for easier hover
-        const PILL_HEIGHT: f64 = 60.0; // Including padding
-        const BOTTOM_OFFSET: f64 = 0.0; // CSS is bottom-8, roughly 32px
-
         while HOVER_TRACKING_ACTIVE.load(Ordering::Relaxed) {
             if let Some(window) = app.get_webview_window("main") {
                 if let Ok(Some(monitor)) = window.primary_monitor() {
@@ -242,11 +294,18 @@ fn start_hover_tracking(app: AppHandle) {
                     let screen_w = size.width as f64 / scale_factor;
                     let screen_h = size.height as f64 / scale_factor;
 
-                    // Calculate pill zone (centered horizontally at bottom)
-                    let pill_x_start = (screen_w - PILL_WIDTH) / 2.0;
-                    let pill_x_end = pill_x_start + PILL_WIDTH;
-                    let pill_y_start = screen_h - PILL_HEIGHT - BOTTOM_OFFSET;
-                    let pill_y_end = screen_h;
+                    let hitbox = PILL_HITBOX
+                        .lock()
+                        .map(|guard| *guard)
+                        .unwrap_or_default();
+                    let (pill_width, pill_height) = pill_hit_zone(hitbox);
+
+                    // Pill zone: centered horizontally, anchored above bottom-8.
+                    let pill_x_start = (screen_w - pill_width) / 2.0;
+                    let pill_x_end = pill_x_start + pill_width;
+                    let pill_y_start =
+                        screen_h - PILL_BOTTOM_OFFSET - pill_height;
+                    let pill_y_end = screen_h - PILL_BOTTOM_OFFSET;
 
                     if let Mouse::Position {
                         x: mouse_x,
