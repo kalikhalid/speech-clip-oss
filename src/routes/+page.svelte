@@ -5,6 +5,7 @@
   import { fade } from "svelte/transition";
   import PermissionGuide from "$lib/components/PermissionGuide.svelte";
   import ShortcutHint from "$lib/components/ShortcutHint.svelte";
+  import { convertRecordingToWav } from "$lib/audio/convert-recording";
   import { config } from "$lib/config";
   import {
     locale,
@@ -12,6 +13,9 @@
     normalizeLocale,
     setLocale,
   } from "$lib/i18n";
+
+  const VISUAL_HZ = 18;
+  const VISUAL_INTERVAL_MS = 1000 / VISUAL_HZ;
 
   // Survives HMR remounts — prevents duplicate hotkey listeners in dev.
   let overlayListenerCleanups: Array<() => void> = [];
@@ -30,12 +34,10 @@
   let analyser: AnalyserNode | null = null;
   let frequencyData: Uint8Array | null = null;
   let animationFrameId: number | null = null;
-  let barHeights: number[] = $state(
-    new Array(config.barCount).fill(config.barMinHeight),
-  );
-  let nextHeights: number[] = new Array(config.barCount).fill(
-    config.barMinHeight,
-  );
+  let waveformEl: HTMLDivElement | undefined;
+  let barHeights = new Array(config.barCount).fill(config.barMinHeight);
+  let nextHeights = new Array(config.barCount).fill(config.barMinHeight);
+  let lastVisualUpdate = 0;
   let mediaStream: MediaStream | null = $state(null);
   let mediaRecorder: MediaRecorder | null = null;
   let audioChunks: Blob[] = [];
@@ -46,17 +48,16 @@
   let unlistenPressed: (() => void) | null = null;
   let unlistenReleased: (() => void) | null = null;
   let unlistenHover: (() => void) | null = null;
-  let unlistenOverlayClick: (() => void) | null = null;
-  let unlistenCaptureStart: (() => void) | null = null;
-  let unlistenCaptureEnd: (() => void) | null = null;
   let unlistenParakeetInstall: (() => void) | null = null;
   let unlistenSettingsUpdated: (() => void) | null = null;
   let releaseTimestamp: number | null = null;
   let recordingStartTime: number | null = null;
-  let isCapturingHotkey = $state(false);
   let installStatusMessage = $state("");
   let soundEffectsEnabled = $state(true);
   let recordingMode = $state<"push_to_talk" | "toggle">("push_to_talk");
+  let hideIdlePill = $state(false);
+  let dictationNormalize = $state(true);
+  let hotkeyHeld = $state(false);
   let emptyFeedback = $state("");
   let isProcessingRecording = false;
   let isStoppingRecording = false;
@@ -65,19 +66,52 @@
 
   const msg = $derived(messagesFor($locale));
 
-  async function refreshOverlaySettings() {
-    try {
-      const appSettings = await invoke<{
-        sound_effects_enabled: boolean;
-        recording_mode: string;
-        hotkey: string;
-        ui_locale?: string;
-      }>("get_settings");
-      soundEffectsEnabled = appSettings.sound_effects_enabled;
+  const pillVisible = $derived(
+    !hideIdlePill || hotkeyHeld || appState !== "idle",
+  );
+
+  let lastPillShown: boolean | null = null;
+
+  $effect(() => {
+    if (needsPermission) return;
+    if (lastPillShown === pillVisible) return;
+    lastPillShown = pillVisible;
+    void invoke("set_overlay_pill_shown", { shown: pillVisible });
+  });
+
+  type OverlaySettingsPayload = {
+    sound_effects_enabled: boolean;
+    recording_mode?: string;
+    hotkey?: string;
+    ui_locale?: string;
+    hide_idle_pill?: boolean;
+    dictation_normalize?: boolean;
+  };
+
+  function applyOverlaySettings(appSettings: OverlaySettingsPayload) {
+    soundEffectsEnabled = appSettings.sound_effects_enabled;
+    if (appSettings.recording_mode) {
       recordingMode =
         appSettings.recording_mode === "toggle" ? "toggle" : "push_to_talk";
+    }
+    if (appSettings.hotkey) {
       currentHotkey = appSettings.hotkey;
-      setLocale(normalizeLocale(appSettings.ui_locale));
+    }
+    if (appSettings.ui_locale) {
+      void setLocale(normalizeLocale(appSettings.ui_locale));
+    }
+    if (appSettings.hide_idle_pill !== undefined) {
+      hideIdlePill = appSettings.hide_idle_pill;
+    }
+    if (appSettings.dictation_normalize !== undefined) {
+      dictationNormalize = appSettings.dictation_normalize;
+    }
+  }
+
+  async function loadOverlaySettingsOnce() {
+    try {
+      const appSettings = await invoke<OverlaySettingsPayload>("get_settings");
+      applyOverlaySettings(appSettings);
     } catch (e) {
       console.warn("Failed to load overlay settings:", e);
     }
@@ -142,113 +176,18 @@
     }
   }
 
-  async function resampleAudioBufferAsync(
-    audioBuffer: AudioBuffer,
-    targetSampleRate: number,
-  ): Promise<AudioBuffer> {
-    if (audioBuffer.sampleRate === targetSampleRate) {
-      return audioBuffer;
-    }
-
-    const frameCount = Math.max(
-      1,
-      Math.round(audioBuffer.duration * targetSampleRate),
-    );
-    const offline = new OfflineAudioContext(
-      1,
-      frameCount,
-      targetSampleRate,
-    );
-    const source = offline.createBufferSource();
-    source.buffer = audioBuffer;
-    source.connect(offline.destination);
-    source.start(0);
-    return offline.startRendering();
+  function applyBarHeights(heights: number[]) {
+    const bars = waveformEl?.querySelectorAll<HTMLElement>(".bar");
+    if (!bars) return;
+    bars.forEach((el, i) => {
+      el.style.height = `${heights[i] ?? config.barMinHeight}px`;
+    });
   }
 
-  function encodeAudioBufferToWav(
-    audioBuffer: AudioBuffer,
-    targetSampleRate = 16000,
-  ): Uint8Array {
-    const numChannels = 1;
-    const sampleRate = audioBuffer.sampleRate;
-    const numSamples = audioBuffer.length;
-    const bytesPerSample = 2;
-    const blockAlign = bytesPerSample;
-    const byteRate = sampleRate * blockAlign;
-    const dataSize = numSamples * bytesPerSample;
-    const headerSize = 44;
-    const wavBuffer = new ArrayBuffer(headerSize + dataSize);
-    const view = new DataView(wavBuffer);
-
-    const writeString = (offset: number, value: string) => {
-      for (let i = 0; i < value.length; i++) {
-        view.setUint8(offset + i, value.charCodeAt(i));
-      }
-    };
-
-    writeString(0, "RIFF");
-    view.setUint32(4, 36 + dataSize, true);
-    writeString(8, "WAVE");
-    writeString(12, "fmt ");
-    view.setUint32(16, 16, true);
-    view.setUint16(20, 1, true);
-    view.setUint16(22, 1, true);
-    view.setUint32(24, sampleRate, true);
-    view.setUint32(28, byteRate, true);
-    view.setUint16(32, blockAlign, true);
-    view.setUint16(34, 16, true);
-    writeString(36, "data");
-    view.setUint32(40, dataSize, true);
-
-    const channels: Float32Array[] = [];
-    for (let i = 0; i < audioBuffer.numberOfChannels; i++) {
-      channels.push(audioBuffer.getChannelData(i));
-    }
-
-    let offset = headerSize;
-    for (let i = 0; i < numSamples; i++) {
-      let sample = 0;
-      for (let ch = 0; ch < numChannels; ch++) {
-        sample += channels[ch][i];
-      }
-      sample /= numChannels;
-
-      const clamped = Math.max(-1, Math.min(1, sample));
-      const pcm = clamped < 0 ? clamped * 0x8000 : clamped * 0x7fff;
-      view.setInt16(offset, pcm, true);
-      offset += bytesPerSample;
-    }
-
-    return new Uint8Array(wavBuffer);
-  }
-
-  async function convertRecordingToWav(audioBlob: Blob): Promise<Uint8Array> {
-    const encodedBuffer = await audioBlob.arrayBuffer();
-    let decoderContext: AudioContext | null = null;
-    let shouldCloseContext = false;
-    try {
-      if (audioContext && audioContext.state !== "closed") {
-        decoderContext = audioContext;
-      } else {
-        decoderContext = new AudioContext();
-        shouldCloseContext = true;
-      }
-
-      const decodedBuffer = await decoderContext.decodeAudioData(
-        encodedBuffer.slice(0),
-      );
-      const resampled = await resampleAudioBufferAsync(decodedBuffer, 16000);
-      return encodeAudioBufferToWav(resampled, 16000);
-    } catch (error) {
-      throw new Error(`Failed to convert recording to WAV: ${String(error)}`);
-    } finally {
-      if (decoderContext && shouldCloseContext) {
-        try {
-          await decoderContext.close();
-        } catch (_) {}
-      }
-    }
+  function resetBarHeights() {
+    barHeights.fill(config.barMinHeight);
+    nextHeights.fill(config.barMinHeight);
+    applyBarHeights(barHeights);
   }
 
   function measureVoiceActivity(): number {
@@ -327,7 +266,7 @@
   onMount(async () => {
     teardownOverlayListeners();
 
-    await refreshOverlaySettings();
+    await loadOverlaySettingsOnce();
 
     // Preload all sounds in parallel and wait for them to be ready
     try {
@@ -363,7 +302,9 @@
     // This prevents the microphone indicator from showing immediately
 
     unlistenPressed = await listen("hotkey-pressed", () => {
-      if (isCapturingHotkey) return;
+      if (recordingMode === "push_to_talk") {
+        hotkeyHeld = true;
+      }
       if (recordingMode === "toggle") {
         if (appState === "idle") startRecording();
         else if (appState === "recording") stopRecording();
@@ -375,6 +316,8 @@
 
     unlistenReleased = await listen("hotkey-released", (event: any) => {
       if (recordingMode === "toggle") return;
+
+      hotkeyHeld = false;
 
       const now = Date.now();
       if (now - lastHotkeyReleaseAt < 400) return;
@@ -390,22 +333,6 @@
     });
     overlayListenerCleanups.push(unlistenHover);
 
-    unlistenOverlayClick = await listen("overlay-clicked", () => {
-      if (appState === "idle" && !isCapturingHotkey) startRecording();
-    });
-    overlayListenerCleanups.push(unlistenOverlayClick);
-
-    // Listen for hotkey capture state from dashboard
-    unlistenCaptureStart = await listen("hotkey-capture-started", () => {
-      isCapturingHotkey = true;
-    });
-    overlayListenerCleanups.push(unlistenCaptureStart);
-
-    unlistenCaptureEnd = await listen("hotkey-capture-ended", () => {
-      isCapturingHotkey = false;
-    });
-    overlayListenerCleanups.push(unlistenCaptureEnd);
-
     unlistenParakeetInstall = await listen<{
       message: string;
     }>("parakeet-install-progress", (event) => {
@@ -413,24 +340,12 @@
     });
     overlayListenerCleanups.push(unlistenParakeetInstall);
 
-    unlistenSettingsUpdated = await listen<{
-      sound_effects_enabled: boolean;
-      recording_mode?: string;
-      hotkey?: string;
-      ui_locale?: string;
-    }>("settings-updated", (event) => {
-      soundEffectsEnabled = event.payload.sound_effects_enabled;
-      if (event.payload.recording_mode) {
-        recordingMode =
-          event.payload.recording_mode === "toggle" ? "toggle" : "push_to_talk";
-      }
-      if (event.payload.hotkey) {
-        currentHotkey = event.payload.hotkey;
-      }
-      if (event.payload.ui_locale) {
-        setLocale(normalizeLocale(event.payload.ui_locale));
-      }
-    });
+    unlistenSettingsUpdated = await listen<OverlaySettingsPayload>(
+      "settings-updated",
+      (event) => {
+        applyOverlaySettings(event.payload);
+      },
+    );
     overlayListenerCleanups.push(unlistenSettingsUpdated);
 
     const unlistenEmpty = await listen<{ reason: string }>(
@@ -449,9 +364,6 @@
     unlistenPressed = null;
     unlistenReleased = null;
     unlistenHover = null;
-    unlistenOverlayClick = null;
-    unlistenCaptureStart = null;
-    unlistenCaptureEnd = null;
     unlistenParakeetInstall = null;
     unlistenSettingsUpdated = null;
 
@@ -475,7 +387,6 @@
     if (appState !== "idle" || isProcessingRecording) return;
 
     appState = "recording";
-    await refreshOverlaySettings();
 
     // STEP 1: Initialize audio pipeline FIRST (if needed)
     if (!audioContext || !mediaStream || !mediaRecorder) {
@@ -519,24 +430,20 @@
       height: config.recording.height,
     });
 
-    // STEP 5: Start visualization
-    visualize();
+    // STEP 5: Start visualization (~18 Hz DOM updates, rAF for analyser only)
+    lastVisualUpdate = 0;
+    animationFrameId = requestAnimationFrame(visualize);
   }
 
-  function visualize() {
+  function visualize(now: number) {
     if (appState !== "recording" || !analyser) {
-      barHeights = new Array(config.barCount).fill(config.barMinHeight);
+      resetBarHeights();
       return;
     }
 
     const voiceLevel = measureVoiceActivity();
     const isSpeaking = voiceLevel >= config.voiceActivityThreshold;
-
     const barCount = config.barCount;
-    if (nextHeights.length !== barCount) {
-      nextHeights = new Array(barCount).fill(config.barMinHeight);
-    }
-
     const range = config.barMaxHeight - config.barMinHeight;
 
     for (let i = 0; i < barCount; i++) {
@@ -559,6 +466,12 @@
     const prevHeights = barHeights;
     barHeights = nextHeights;
     nextHeights = prevHeights;
+
+    if (now - lastVisualUpdate >= VISUAL_INTERVAL_MS) {
+      lastVisualUpdate = now;
+      applyBarHeights(barHeights);
+    }
+
     animationFrameId = requestAnimationFrame(visualize);
   }
 
@@ -568,7 +481,6 @@
     isStoppingRecording = true;
     appState = "processing";
     installStatusMessage = "";
-    await refreshOverlaySettings();
 
     // Play loading sound during processing
     playSound(loadingSound);
@@ -610,7 +522,7 @@
         cancelAnimationFrame(animationFrameId);
         animationFrameId = null;
       }
-      barHeights = new Array(config.barCount).fill(config.barMinHeight);
+      resetBarHeights();
 
       if (capturedChunks.length === 0) {
         return;
@@ -621,15 +533,14 @@
       });
 
       // Always send WAV to backend for stable local decoding.
-      const audioData = await convertRecordingToWav(audioBlob);
+      const audioData = await convertRecordingToWav(audioBlob, audioContext);
 
       await invoke<string>("process_audio_with_history", {
         audioData,
-        normalize: true,
+        normalize: dictationNormalize,
         releaseTimestamp,
       });
 
-      await refreshOverlaySettings();
       playSound(endSound);
     } catch (error) {
       const msg = String(error);
@@ -657,7 +568,7 @@
 
     // FIRST: Reset state to idle immediately (fixes UI lag)
     appState = "idle";
-    barHeights = new Array(config.barCount).fill(config.barMinHeight);
+    resetBarHeights();
 
     // Reset visualization
     if (animationFrameId) {
@@ -749,7 +660,7 @@
     />
   {:else}
     <!-- Shortcut Hint - positioned independently above mini-bar -->
-    {#if showShortcutHint && appState === "idle"}
+    {#if showShortcutHint && appState === "idle" && !hideIdlePill}
       <ShortcutHint
         hotkey={currentHotkey}
         {recordingMode}
@@ -758,6 +669,7 @@
     {/if}
 
     <!-- Centered Bottom Anchor -->
+    {#if pillVisible}
     <div class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center justify-center">
       <div
         role="button"
@@ -803,7 +715,7 @@
             </button>
 
             <!-- Waveform (Center) -->
-            <div class="waveform">
+            <div class="waveform" bind:this={waveformEl}>
               {#if appState === "processing"}
                 <div class="processing-indicator">
                   <div
@@ -814,8 +726,8 @@
                   {/if}
                 </div>
               {:else}
-                {#each barHeights as height}
-                  <div class="bar" style="height: {height}px"></div>
+                {#each Array.from({ length: config.barCount }, (_, i) => i) as i (i)}
+                  <div class="bar" style="height: {config.barMinHeight}px"></div>
                 {/each}
               {/if}
             </div>
@@ -841,6 +753,7 @@
         <div class="shine"></div>
       </div>
     </div>
+    {/if}
   {/if}
 </main>
 

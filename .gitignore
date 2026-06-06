@@ -47,6 +47,9 @@ src-tauri/icons/StoreLogo.png
 src-tauri/icons/icon.ico
 src-tauri/icons/64x64.png
 
+# Dictation normalizer training data (local only)
+dictation-normalizer/data/
+
 # Parakeet model bundles (downloaded at runtime to app data dir)
 models/
 *parakeet*.tar.gz

@@ -5,8 +5,6 @@ use std::time::{Duration, Instant};
 use tauri::AppHandle;
 use tokio::sync::oneshot;
 
-use crate::settings;
-
 static LAST_TYPED: Mutex<Option<(String, Instant)>> = Mutex::new(None);
 const TYPING_DEDUPE_WINDOW: Duration = Duration::from_secs(3);
 
@@ -19,6 +17,9 @@ pub async fn type_text(
     app: &AppHandle,
     text: String,
     _app_name: Option<String>,
+    delay_before: Duration,
+    delay_after: Duration,
+    restore_clipboard: bool,
 ) -> Result<(), String> {
     if text.is_empty() {
         return Ok(());
@@ -33,11 +34,6 @@ pub async fn type_text(
         }
         *last = Some((text.clone(), Instant::now()));
     }
-
-    let app_settings = settings::load_settings(app).unwrap_or_default();
-    let delay_before = Duration::from_millis(app_settings.paste_delay_before_ms);
-    let delay_after = Duration::from_millis(app_settings.paste_delay_after_ms);
-    let restore_clipboard = app_settings.restore_clipboard_after_paste;
 
     let (tx, rx) = oneshot::channel();
     let text_clone = text.clone();

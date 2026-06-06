@@ -1,11 +1,12 @@
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::time::Instant;
+use std::time::{Duration, Instant};
 
 use crate::app_context::get_frontmost_app_name;
 use crate::audio;
 use crate::dictionary::{self, apply_dictionary};
 use crate::input::type_text;
-use crate::last_transcription;
+use crate::normalizer;
+use crate::normalizer_install::{self, NormalizerSetupStatus};
 use crate::parakeet::{self, ParakeetSetupStatus};
 use crate::postprocess;
 use crate::shortcuts;
@@ -47,23 +48,54 @@ fn emit_transcription_empty(app: &AppHandle, reason: &str) {
     }
 }
 
-fn finalize_text(raw: &str, app_settings: &settings::AppSettings) -> String {
-    let mut text = apply_dictionary(raw, &app_settings.dictionary);
+fn emit_history_updated(app: &AppHandle, entry: &storage::TranscriptionEntry) {
+    if let Some(dashboard) = app.get_webview_window("dashboard") {
+        let _ = dashboard.emit("history-updated", entry);
+    } else {
+        let _ = app.emit("history-updated", entry);
+    }
+}
+
+async fn finalize_text(
+    app: &AppHandle,
+    raw: &str,
+    normalize: bool,
+    app_settings: &settings::AppSettings,
+) -> (String, Option<u64>) {
+    let mut text = raw.to_string();
+    let mut normalizer_ms = None;
+
+    if normalize && app_settings.dictation_normalize {
+        let norm_start = Instant::now();
+        text = normalizer::normalize_text(app, raw).await;
+        normalizer_ms = Some(norm_start.elapsed().as_millis() as u64);
+    }
+
+    text = apply_dictionary(&text, &app_settings.dictionary_rules);
     if app_settings.strip_filler_words {
         text = postprocess::strip_filler_words(&text);
     }
-    text.trim().to_string()
+    (text.trim().to_string(), normalizer_ms)
 }
 
 async fn paste_text(
     app: &AppHandle,
     text: String,
     app_name: Option<String>,
+    app_settings: &settings::AppSettings,
 ) -> Result<(), String> {
     if text.is_empty() {
         return Err("Nothing to paste".to_string());
     }
-    type_text(app, text, app_name).await
+    type_text(
+        app,
+        text,
+        app_name,
+        Duration::from_millis(app_settings.paste_delay_before_ms),
+        Duration::from_millis(app_settings.paste_delay_after_ms),
+        app_settings.restore_clipboard_after_paste,
+    )
+    .await
 }
 
 #[tauri::command]
@@ -91,17 +123,20 @@ pub async fn set_guide_mode(app: AppHandle, enable: bool) -> Result<(), String> 
 }
 
 #[tauri::command]
-pub async fn hide_overlay(app: AppHandle) -> Result<(), String> {
-    window::hide_overlay(app).await
+pub async fn set_overlay_pill_shown(shown: bool) -> Result<(), String> {
+    window::set_overlay_pill_shown(shown);
+    Ok(())
 }
 
-#[tauri::command]
 pub async fn process_audio(
     app: AppHandle,
     audio_data: Vec<u8>,
-    _normalize: bool,
+    normalize: bool,
+    app_name: Option<String>,
+    app_settings: &settings::AppSettings,
 ) -> Result<ProcessingResult, String> {
-    if audio::audio_too_short(&audio_data) {
+    let (samples, sample_rate) = audio::decode_wav_bytes(&audio_data)?;
+    if audio::samples_too_short(samples.len()) {
         emit_transcription_empty(&app, "audio_too_short");
         return Err("Recording too short".to_string());
     }
@@ -110,13 +145,11 @@ pub async fn process_audio(
     let mut timer = TimingLogger::new();
     timer.mark("audio_received");
 
-    let app_name = get_frontmost_app_name();
-    let app_settings = settings::load_settings(&app).unwrap_or_default();
     let model_id = app_settings.parakeet_model.clone();
 
     timer.mark_start("parakeet_asr");
     let asr_start = Instant::now();
-    let raw_text = parakeet::transcribe_audio(&app, audio_data, &model_id).await?;
+    let raw_text = parakeet::transcribe_decoded(&app, samples, sample_rate, &model_id).await?;
     let asr_ms = asr_start.elapsed().as_millis() as u64;
     timer.mark_end("parakeet_asr");
 
@@ -126,7 +159,8 @@ pub async fn process_audio(
     }
 
     let post_start = Instant::now();
-    let final_text = finalize_text(&raw_text, &app_settings);
+    let (final_text, normalizer_ms) =
+        finalize_text(&app, &raw_text, normalize, app_settings).await;
     let postprocess_ms = post_start.elapsed().as_millis() as u64;
 
     if final_text.is_empty() {
@@ -134,11 +168,9 @@ pub async fn process_audio(
         return Err("No text to paste".to_string());
     }
 
-    last_transcription::set_last_final_text(&final_text);
-
     timer.mark_start("typing");
     let typing_start = Instant::now();
-    paste_text(&app, final_text.clone(), app_name).await?;
+    paste_text(&app, final_text.clone(), app_name, app_settings).await?;
     let typing_ms = typing_start.elapsed().as_millis() as u64;
     timer.mark_end("typing");
 
@@ -147,6 +179,7 @@ pub async fn process_audio(
     let timing = storage::TranscriptionTiming {
         total_ms: pipeline_start.elapsed().as_millis() as u64,
         asr_ms: Some(asr_ms),
+        normalizer_ms,
         postprocess_ms: Some(postprocess_ms),
         typing_ms: Some(typing_ms),
     };
@@ -178,8 +211,16 @@ pub async fn process_audio_with_history(
     let _processing_guard = ProcessingGuard;
 
     let app_name = get_frontmost_app_name();
+    let app_settings = settings::load_settings(&app)?;
 
-    let result = process_audio(app.clone(), audio_data, normalize).await;
+    let result = process_audio(
+        app.clone(),
+        audio_data,
+        normalize,
+        app_name.clone(),
+        &app_settings,
+    )
+    .await;
 
     if let Some(release_ts) = release_timestamp {
         let now = std::time::SystemTime::now()
@@ -193,41 +234,28 @@ pub async fn process_audio_with_history(
         );
     }
 
-    if let Ok(ref proc_result) = result {
-        let settings = settings::load_settings(&app).unwrap_or_default();
-        let timing = proc_result.timing.clone();
-        let total_ms = timing
-            .as_ref()
-            .map(|t| t.total_ms)
-            .unwrap_or(0);
-        let entry = storage::TranscriptionEntry {
-            id: uuid::Uuid::new_v4().to_string(),
-            timestamp: chrono::Utc::now().timestamp_millis(),
-            raw_text: proc_result.raw.clone(),
-            normalized_text: proc_result.final_text.clone(),
-            app_name,
-            duration_ms: total_ms,
-            engine: "transcribe-rs".to_string(),
-            local_model: Some(settings.parakeet_model),
-            comment: None,
-            timing,
-        };
-        let app_clone = app.clone();
-        tokio::spawn(async move {
-            let _ = storage::save_transcription(&app_clone, entry);
-        });
+    match result {
+        Ok(proc_result) => {
+            let timing = proc_result.timing.clone();
+            let total_ms = timing.as_ref().map(|t| t.total_ms).unwrap_or(0);
+            let entry = storage::TranscriptionEntry {
+                id: uuid::Uuid::new_v4().to_string(),
+                timestamp: chrono::Utc::now().timestamp_millis(),
+                raw_text: proc_result.raw,
+                normalized_text: proc_result.final_text.clone(),
+                app_name,
+                duration_ms: total_ms,
+                engine: "transcribe-rs".to_string(),
+                local_model: Some(app_settings.parakeet_model),
+                timing,
+            };
+            if storage::save_transcription(&app, entry.clone()).is_ok() {
+                emit_history_updated(&app, &entry);
+            }
+            Ok(proc_result.final_text)
+        }
+        Err(e) => Err(e),
     }
-
-    result.map(|r| r.final_text)
-}
-
-#[tauri::command]
-pub async fn repaste_last(app: AppHandle) -> Result<(), String> {
-    let text = last_transcription::get_last_final_text()
-        .filter(|t| !t.trim().is_empty())
-        .ok_or_else(|| "No previous transcription to paste".to_string())?;
-    let app_name = get_frontmost_app_name();
-    paste_text(&app, text, app_name).await
 }
 
 #[tauri::command]
@@ -237,7 +265,8 @@ pub async fn paste_text_command(app: AppHandle, text: String) -> Result<(), Stri
         return Err("Nothing to paste".to_string());
     }
     let app_name = get_frontmost_app_name();
-    paste_text(&app, trimmed, app_name).await
+    let app_settings = settings::load_settings(&app)?;
+    paste_text(&app, trimmed, app_name, &app_settings).await
 }
 
 #[tauri::command]
@@ -257,6 +286,7 @@ pub async fn import_dictionary_csv(
     settings.dictionary = dictionary::import_csv(&csv, &settings.dictionary, merge)?;
     let after = settings.dictionary.len();
     settings::save_settings(&app, &settings)?;
+    let settings = settings::load_settings(&app)?;
     emit_settings_updated(&app, &settings);
     Ok(DictionaryImportResult {
         entries_added: after.saturating_sub(if merge { before } else { 0 }),
@@ -274,7 +304,7 @@ pub async fn warmup_parakeet(app: AppHandle) -> Result<ParakeetSetupStatus, Stri
     if status.model_downloaded {
         let _ = parakeet::ensure_runtime(&app).await;
     }
-    parakeet::check_setup(&app, &settings.parakeet_model).await
+    Ok(status)
 }
 
 #[tauri::command]
@@ -287,9 +317,27 @@ pub async fn save_settings(
     app: AppHandle,
     new_settings: settings::AppSettings,
 ) -> Result<(), String> {
+    let previous = settings::load_settings(&app).unwrap_or_default();
+    if previous.hotkey != new_settings.hotkey {
+        let shortcut = shortcuts::parse_shortcut(&new_settings.hotkey)?;
+        let old_shortcut = shortcuts::parse_shortcut(&previous.hotkey).ok();
+        shortcuts::replace_hotkey(&app, shortcut, old_shortcut)?;
+    }
     settings::save_settings(&app, &new_settings)?;
-    emit_settings_updated(&app, &new_settings);
+    let settings = settings::load_settings(&app)?;
+    emit_settings_updated(&app, &settings);
     Ok(())
+}
+
+#[tauri::command]
+pub async fn get_normalizer_status(app: AppHandle) -> Result<NormalizerSetupStatus, String> {
+    normalizer_install::setup_status(&app)
+}
+
+#[tauri::command]
+pub async fn ensure_normalizer_model(app: AppHandle) -> Result<NormalizerSetupStatus, String> {
+    normalizer_install::ensure_model(&app).await?;
+    normalizer_install::setup_status(&app)
 }
 
 #[tauri::command]
@@ -321,8 +369,16 @@ pub async fn update_hotkey(app: AppHandle, hotkey: String) -> Result<String, Str
 }
 
 #[tauri::command]
-pub async fn get_history(app: AppHandle) -> Result<storage::TranscriptionHistory, String> {
-    storage::load_history(&app)
+pub async fn get_history(
+    app: AppHandle,
+    limit: Option<usize>,
+) -> Result<storage::TranscriptionHistory, String> {
+    storage::load_history(&app, limit)
+}
+
+#[tauri::command]
+pub fn get_dictation_stats(app: AppHandle) -> Result<storage::DictationStats, String> {
+    storage::dictation_stats(&app)
 }
 
 #[tauri::command]
@@ -336,21 +392,10 @@ pub async fn clear_all_history(app: AppHandle) -> Result<(), String> {
 }
 
 #[tauri::command]
-pub async fn open_dashboard(app: AppHandle) -> Result<(), String> {
-    window::open_dashboard(app).await
-}
-
-#[tauri::command]
 pub async fn check_accessibility_permission(app: AppHandle, prompt: bool) -> bool {
     if prompt {
         let _ = window::step_aside_for_system_dialog(&app).await;
         tokio::time::sleep(tokio::time::Duration::from_millis(200)).await;
     }
     crate::utils::macos::check_accessibility_permissions(prompt)
-}
-
-#[tauri::command]
-pub async fn open_accessibility_settings() -> Result<(), String> {
-    crate::utils::macos::open_accessibility_settings();
-    Ok(())
 }

@@ -24,6 +24,39 @@
     --dash-accent-hover: #e64800;
     --dash-accent-muted: rgba(255, 79, 0, 0.1);
     --dash-brand-orange: #ff4f00;
+    /* Clearance for macOS overlay traffic lights (dashboard window) */
+    --dash-titlebar-inset: 52px;
+}
+
+.dashboard-sidebar__header {
+    padding-top: var(--dash-titlebar-inset);
+    -webkit-app-region: drag;
+}
+
+.dashboard-sidebar__header img,
+.dashboard-sidebar__header span {
+    -webkit-app-region: no-drag;
+    pointer-events: none;
+}
+
+/* Dashboard: no accidental text selection on chrome; enable only where needed */
+.dashboard-shell {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.dashboard-shell :is(input, textarea, select) {
+    user-select: text;
+    -webkit-user-select: text;
+}
+
+.dashboard-selectable {
+    user-select: text;
+    -webkit-user-select: text;
+}
+
+.dashboard-selectable::selection {
+    background: color-mix(in srgb, var(--dash-accent) 30%, transparent);
 }
 
 /* Prevent white overscroll / rubber-band on macOS webviews */

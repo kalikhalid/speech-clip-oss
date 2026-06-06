@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { DashboardSection } from "./types";
   import { locale, messagesFor } from "$lib/i18n";
+  import { preloadDashboardSection } from "$lib/loading/dashboard-sections";
 
   type NavItem = {
     id: DashboardSection;
@@ -30,7 +31,7 @@
   class="dashboard-sidebar flex w-[188px] shrink-0 flex-col border-r border-[var(--dash-border)] bg-[var(--dash-sidebar-bg)] pb-4"
   aria-label={msg.nav.aria}
 >
-  <div class="mb-6 flex items-center gap-2.5 px-4 pt-5">
+  <div class="dashboard-sidebar__header mb-6 flex items-center gap-2.5 px-4">
     <img
       src="/logo.png"
       alt=""
@@ -58,6 +59,7 @@
           ? 'bg-white/[0.04] text-white'
           : 'text-[var(--dash-text-muted)] hover:bg-white/[0.03] hover:text-[var(--dash-text)]'}"
         aria-current={isActive ? "page" : undefined}
+        onmouseenter={() => preloadDashboardSection(item.id)}
         onclick={() => onNavigate(item.id)}
       >
         {#if isActive}

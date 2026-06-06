@@ -1,0 +1,2082 @@
+[
+  {
+    "from": "бек энд",
+    "to": "backend"
+  },
+  {
+    "from": "бекенд",
+    "to": "backend"
+  },
+  {
+    "from": "бэкенд",
+    "to": "backend"
+  },
+  {
+    "from": "враст",
+    "to": "Rust"
+  },
+  {
+    "from": "тип str враст",
+    "to": "тип str в Rust"
+  },
+  {
+    "from": "реadmi эmdi",
+    "to": "README.md"
+  },
+  {
+    "from": "реadmi",
+    "to": "README.md"
+  },
+  {
+    "from": "изучи реадми эмди",
+    "to": "изучи README.md"
+  },
+  {
+    "from": "реадми эмди",
+    "to": "README.md"
+  },
+  {
+    "from": "реадми",
+    "to": "README.md"
+  },
+  {
+    "from": "gitсerвер",
+    "to": "git server"
+  },
+  {
+    "from": "git сервер",
+    "to": "git server"
+  },
+  {
+    "from": "вправляй на gitсerвер",
+    "to": "отправляй на git server"
+  },
+  {
+    "from": "вправляй на git сервер",
+    "to": "отправляй на git server"
+  },
+  {
+    "from": "вправляй",
+    "to": "отправляй"
+  },
+  {
+    "from": "backendэкэнд",
+    "to": "backend"
+  },
+  {
+    "from": "backend экэнд",
+    "to": "backend"
+  },
+  {
+    "from": "backendэкенд",
+    "to": "backend"
+  },
+  {
+    "from": "frontendфронтенд",
+    "to": "frontend"
+  },
+  {
+    "from": "frontend фронтенд",
+    "to": "frontend"
+  },
+  {
+    "from": "закоммить изменения на гид сервер и поменяй конфиг томл",
+    "to": "закоммить changes на git server и поменяй config.toml"
+  },
+  {
+    "from": "закоммить изменения на гид сервер",
+    "to": "закоммить changes на git server"
+  },
+  {
+    "from": "закомить изменения на гид сервер и поменяй конфиг томл",
+    "to": "закоммить changes на git server и поменяй config.toml"
+  },
+  {
+    "from": "гид сервер",
+    "to": "git server"
+  },
+  {
+    "from": "конфиг томл",
+    "to": "config.toml"
+  },
+  {
+    "from": "смердж dev в мастер и резолvни конфликты",
+    "to": "merge dev в master и resolve конфликты"
+  },
+  {
+    "from": "смердж de в мастер и резолни конфликты",
+    "to": "merge dev в master и resolve конфликты"
+  },
+  {
+    "from": "изменения на гид сервер",
+    "to": "changes на git server"
+  },
+  {
+    "from": "закоммитил изменения",
+    "to": "закоммитил changes"
+  },
+  {
+    "from": "закоммить изменения",
+    "to": "закоммить changes"
+  },
+  {
+    "from": "закомить изменения",
+    "to": "закоммить changes"
+  },
+  {
+    "from": "энв файл",
+    "to": ".env файл"
+  },
+  {
+    "from": "интерактивный ребейз",
+    "to": "interactive rebase"
+  },
+  {
+    "from": "рабочее пространство",
+    "to": "workspace"
+  },
+  {
+    "from": "восклицательный знак",
+    "to": "!"
+  },
+  {
+    "from": "индекс точка джей эс",
+    "to": "index.js"
+  },
+  {
+    "from": "ти эс конфиг джейсон",
+    "to": "tsconfig.json"
+  },
+  {
+    "from": "переменные окружения",
+    "to": "env"
+  },
+  {
+    "from": "создать пул реквест",
+    "to": "create pull request"
+  },
+  {
+    "from": "открыть пул реквест",
+    "to": "open pull request"
+  },
+  {
+    "from": "закрыть пул реквест",
+    "to": "close pull request"
+  },
+  {
+    "from": "семантик версионинг",
+    "to": "semantic versioning"
+  },
+  {
+    "from": "вопросительный знак",
+    "to": "?"
+  },
+  {
+    "from": "интеграционный тест",
+    "to": "integration test"
+  },
+  {
+    "from": "запушить в ориджин",
+    "to": "push to origin"
+  },
+  {
+    "from": "резолвить конфликт",
+    "to": "resolve conflict"
+  },
+  {
+    "from": "задеплоить на прод",
+    "to": "deploy to prod"
+  },
+  {
+    "from": "запустить пайплайн",
+    "to": "run pipeline"
+  },
+  {
+    "from": "кубернетес кластер",
+    "to": "kubernetes cluster"
+  },
+  {
+    "from": "пакедж дот джейсон",
+    "to": "package.json"
+  },
+  {
+    "from": "пакедж лок джейсон",
+    "to": "package-lock.json"
+  },
+  {
+    "from": "пи эн пи эм инстал",
+    "to": "pnpm install"
+  },
+  {
+    "from": "индекс точка ти эс",
+    "to": "index.ts"
+  },
+  {
+    "from": "собака ридми эм дэ",
+    "to": "@README.md"
+  },
+  {
+    "from": "docker compose yml",
+    "to": "docker-compose.yml"
+  },
+  {
+    "from": "plus layout svelte",
+    "to": "+layout.svelte"
+  },
+  {
+    "from": "запушить в мастер",
+    "to": "push to master"
+  },
+  {
+    "from": "смержить в мастер",
+    "to": "merge to master"
+  },
+  {
+    "from": "резолвни конфликт",
+    "to": "resolve conflict"
+  },
+  {
+    "from": "задеплоить в прод",
+    "to": "deploy to prod"
+  },
+  {
+    "from": "интеректив ребейз",
+    "to": "interactive rebase"
+  },
+  {
+    "from": "раст си компайлер",
+    "to": "rustc"
+  },
+  {
+    "from": "двойное двоеточие",
+    "to": "::"
+  },
+  {
+    "from": "амазон веб сервис",
+    "to": "AWS"
+  },
+  {
+    "from": "асинхронный авейт",
+    "to": "async/await"
+  },
+  {
+    "from": "ридми точка эм dэ",
+    "to": "README.md"
+  },
+  {
+    "from": "тейлвинд цэ эс эс",
+    "to": "Tailwind CSS"
+  },
+  {
+    "from": "ридми точка эм дэ",
+    "to": "README.md"
+  },
+  {
+    "from": "докер компоуз yml",
+    "to": "docker-compose.yml"
+  },
+  {
+    "from": "тс конфиг джейсон",
+    "to": "tsconfig.json"
+  },
+  {
+    "from": "webpack config js",
+    "to": "webpack.config.js"
+  },
+  {
+    "from": "вебпэк конфиг джс",
+    "to": "webpack.config.js"
+  },
+  {
+    "from": "аутентифицировать",
+    "to": "authenticate"
+  },
+  {
+    "from": "разреши конфликт",
+    "to": "resolve conflict"
+  },
+  {
+    "from": "упавший пайплайн",
+    "to": "failed pipeline"
+  },
+  {
+    "from": "компилятор эррор",
+    "to": "compiler error"
+  },
+  {
+    "from": "но дефолт фичерс",
+    "to": "default-features"
+  },
+  {
+    "from": "андифайнд символ",
+    "to": "undefined symbol"
+  },
+  {
+    "from": "не компилируется",
+    "to": "does not compile"
+  },
+  {
+    "from": "ansible playbook",
+    "to": "ansible-playbook"
+  },
+  {
+    "from": "мейн точка ар эс",
+    "to": "main.rs"
+  },
+  {
+    "from": "plus page svelte",
+    "to": "+page.svelte"
+  },
+  {
+    "from": "плюс пейдж свелт",
+    "to": "+page.svelte"
+  },
+  {
+    "from": "конфликт мерджа",
+    "to": "merge conflict"
+  },
+  {
+    "from": "запуш в ориджин",
+    "to": "push to origin"
+  },
+  {
+    "from": "запушить в мейн",
+    "to": "push to main"
+  },
+  {
+    "from": "смержить в мейн",
+    "to": "merge to main"
+  },
+  {
+    "from": "смерджить ветку",
+    "to": "merge branch"
+  },
+  {
+    "from": "резолв конфликт",
+    "to": "resolve conflict"
+  },
+  {
+    "from": "откатить деплой",
+    "to": "rollback deploy"
+  },
+  {
+    "from": "сделать роллбэк",
+    "to": "do rollback"
+  },
+  {
+    "from": "монорепозиторий",
+    "to": "monorepo"
+  },
+  {
+    "from": "карго томл файл",
+    "to": "Cargo.toml"
+  },
+  {
+    "from": "main dot are es",
+    "to": "main.rs"
+  },
+  {
+    "from": "кросскомпиляция",
+    "to": "cross-compile"
+  },
+  {
+    "from": "индекс точка тс",
+    "to": "index.ts"
+  },
+  {
+    "from": "карго воркспейс",
+    "to": "cargo workspace"
+  },
+  {
+    "from": "статик лайфтайм",
+    "to": "'static"
+  },
+  {
+    "from": "докер контейнер",
+    "to": "docker container"
+  },
+  {
+    "from": "terraform apply",
+    "to": "terraform apply"
+  },
+  {
+    "from": "docker registry",
+    "to": "docker registry"
+  },
+  {
+    "from": "package джейсон",
+    "to": "package.json"
+  },
+  {
+    "from": "эн пи эм инстал",
+    "to": "npm install"
+  },
+  {
+    "from": "эн пи эм паблиш",
+    "to": "npm publish"
+  },
+  {
+    "from": "точка gitignore",
+    "to": ".gitignore"
+  },
+  {
+    "from": "депрекейтед апи",
+    "to": "deprecated API"
+  },
+  {
+    "from": "десериализовать",
+    "to": "deserialize"
+  },
+  {
+    "from": "релизная ветка",
+    "to": "release branch"
+  },
+  {
+    "from": "мердж конфликт",
+    "to": "merge conflict"
+  },
+  {
+    "from": "ориджин мастер",
+    "to": "origin master"
+  },
+  {
+    "from": "пре коммит хук",
+    "to": "pre-commit hook"
+  },
+  {
+    "from": "карго лок файл",
+    "to": "Cargo.lock"
+  },
+  {
+    "from": "карго томл дот",
+    "to": "Cargo.toml"
+  },
+  {
+    "from": "cargo dot toml",
+    "to": "Cargo.toml"
+  },
+  {
+    "from": "cargo dot lock",
+    "to": "Cargo.lock"
+  },
+  {
+    "from": "таргет триплет",
+    "to": "target triple"
+  },
+  {
+    "from": "лайфтайм эррор",
+    "to": "lifetime error"
+  },
+  {
+    "from": "систем контрол",
+    "to": "systemctl"
+  },
+  {
+    "from": "terraform plan",
+    "to": "terraform plan"
+  },
+  {
+    "from": "rolling update",
+    "to": "rolling update"
+  },
+  {
+    "from": "пакедж джейсон",
+    "to": "package.json"
+  },
+  {
+    "from": "эн пи эм старт",
+    "to": "npm start"
+  },
+  {
+    "from": "индекс джей эс",
+    "to": "index.js"
+  },
+  {
+    "from": "джей дабл ю ти",
+    "to": "JWT"
+  },
+  {
+    "from": "пэкэдж джейсон",
+    "to": "package.json"
+  },
+  {
+    "from": "vite config ts",
+    "to": "vite.config.ts"
+  },
+  {
+    "from": "вайт конфиг тс",
+    "to": "vite.config.ts"
+  },
+  {
+    "from": "пул соединений",
+    "to": "connection pool"
+  },
+  {
+    "from": "инстанс класса",
+    "to": "class instance"
+  },
+  {
+    "from": "аутентификация",
+    "to": "authentication"
+  },
+  {
+    "from": "мерж конфликт",
+    "to": "merge conflict"
+  },
+  {
+    "from": "гитхаб экшенс",
+    "to": "GitHub Actions"
+  },
+  {
+    "from": "упал пайплайн",
+    "to": "pipeline failed"
+  },
+  {
+    "from": "воркфлоу файл",
+    "to": "workflow file"
+  },
+  {
+    "from": "мейн точка рс",
+    "to": "main.rs"
+  },
+  {
+    "from": "заимствование",
+    "to": "borrow"
+  },
+  {
+    "from": "кросс компайл",
+    "to": "cross-compile"
+  },
+  {
+    "from": "макро правила",
+    "to": "macro_rules!"
+  },
+  {
+    "from": "двойной колон",
+    "to": "::"
+  },
+  {
+    "from": "индекс дот тс",
+    "to": "index.ts"
+  },
+  {
+    "from": "докер компоуз",
+    "to": "docker compose"
+  },
+  {
+    "from": "докер компоус",
+    "to": "docker compose"
+  },
+  {
+    "from": "докер экзекут",
+    "to": "docker exec"
+  },
+  {
+    "from": "докер нетворк",
+    "to": "docker network"
+  },
+  {
+    "from": "load balancer",
+    "to": "load balancer"
+  },
+  {
+    "from": "reverse proxy",
+    "to": "reverse proxy"
+  },
+  {
+    "from": "пакет джейсон",
+    "to": "package.json"
+  },
+  {
+    "from": "эн пи эм билд",
+    "to": "npm run build"
+  },
+  {
+    "from": "эн пи эм тест",
+    "to": "npm test"
+  },
+  {
+    "from": "реакт джей эс",
+    "to": "React.js"
+  },
+  {
+    "from": "некст джей эс",
+    "to": "Next.js"
+  },
+  {
+    "from": "точка джейсон",
+    "to": ".json"
+  },
+  {
+    "from": "дот gitignore",
+    "to": ".gitignore"
+  },
+  {
+    "from": "tsconfig json",
+    "to": "tsconfig.json"
+  },
+  {
+    "from": "отрефакторить",
+    "to": "refactor"
+  },
+  {
+    "from": "постгресскюэл",
+    "to": "PostgreSQL"
+  },
+  {
+    "from": "сериализовать",
+    "to": "serialize"
+  },
+  {
+    "from": "перезапросить",
+    "to": "retry"
+  },
+  {
+    "from": "идентификатор",
+    "to": "ID"
+  },
+  {
+    "from": "переключиться",
+    "to": "checkout"
+  },
+  {
+    "from": "пулл реквест",
+    "to": "pull request"
+  },
+  {
+    "from": "пул реквеста",
+    "to": "pull request"
+  },
+  {
+    "from": "пул реквесты",
+    "to": "pull requests"
+  },
+  {
+    "from": "гитхаб экшнс",
+    "to": "GitHub Actions"
+  },
+  {
+    "from": "гитлаб си ай",
+    "to": "GitLab CI"
+  },
+  {
+    "from": "ориджин мейн",
+    "to": "origin main"
+  },
+  {
+    "from": "фаст форвард",
+    "to": "fast-forward"
+  },
+  {
+    "from": "карго клиппи",
+    "to": "cargo clippy"
+  },
+  {
+    "from": "карго паблиш",
+    "to": "cargo publish"
+  },
+  {
+    "from": "карго инстал",
+    "to": "cargo install"
+  },
+  {
+    "from": "карго апдейт",
+    "to": "cargo update"
+  },
+  {
+    "from": "перечисление",
+    "to": "enum"
+  },
+  {
+    "from": "веб ассембли",
+    "to": "wasm"
+  },
+  {
+    "from": "доллар крейт",
+    "to": "$crate"
+  },
+  {
+    "from": "борроу чекер",
+    "to": "borrow checker"
+  },
+  {
+    "from": "мув семантик",
+    "to": "move semantics"
+  },
+  {
+    "from": "линкер эррор",
+    "to": "linker error"
+  },
+  {
+    "from": "докер композ",
+    "to": "docker compose"
+  },
+  {
+    "from": "докер вольюм",
+    "to": "docker volume"
+  },
+  {
+    "from": "компоуз файл",
+    "to": "compose.yaml"
+  },
+  {
+    "from": "куб си ти эл",
+    "to": "kubectl"
+  },
+  {
+    "from": "лод балансер",
+    "to": "load balancer"
+  },
+  {
+    "from": "health check",
+    "to": "health check"
+  },
+  {
+    "from": "package lock",
+    "to": "package-lock.json"
+  },
+  {
+    "from": "эн пи эм ран",
+    "to": "npm run"
+  },
+  {
+    "from": "эн пи эм дев",
+    "to": "npm run dev"
+  },
+  {
+    "from": "yarn install",
+    "to": "yarn install"
+  },
+  {
+    "from": "pnpm install",
+    "to": "pnpm install"
+  },
+  {
+    "from": "индекс ти эс",
+    "to": "index.ts"
+  },
+  {
+    "from": "собака ридми",
+    "to": "@README.md"
+  },
+  {
+    "from": "джава скрипт",
+    "to": "JavaScript"
+  },
+  {
+    "from": "at readme md",
+    "to": "@README.md"
+  },
+  {
+    "from": "package json",
+    "to": "package.json"
+  },
+  {
+    "from": "забагованный",
+    "to": "buggy"
+  },
+  {
+    "from": "интегра тест",
+    "to": "integration test"
+  },
+  {
+    "from": "закэшировать",
+    "to": "cache"
+  },
+  {
+    "from": "проксировать",
+    "to": "proxy"
+  },
+  {
+    "from": "конфигурация",
+    "to": "config"
+  },
+  {
+    "from": "залогировать",
+    "to": "log"
+  },
+  {
+    "from": "валидировать",
+    "to": "validate"
+  },
+  {
+    "from": "авторизовать",
+    "to": "authorize"
+  },
+  {
+    "from": "пул реквест",
+    "to": "pull request"
+  },
+  {
+    "from": "фичер бранч",
+    "to": "feature branch"
+  },
+  {
+    "from": "релиз бранч",
+    "to": "release branch"
+  },
+  {
+    "from": "гит чек аут",
+    "to": "git checkout"
+  },
+  {
+    "from": "си ай си ди",
+    "to": "CI/CD"
+  },
+  {
+    "from": "закоммитить",
+    "to": "commit"
+  },
+  {
+    "from": "клонировать",
+    "to": "clone"
+  },
+  {
+    "from": "транк бранч",
+    "to": "trunk branch"
+  },
+  {
+    "from": "фастфорвард",
+    "to": "fast-forward"
+  },
+  {
+    "from": "детачед хед",
+    "to": "detached HEAD"
+  },
+  {
+    "from": "карго ремув",
+    "to": "cargo remove"
+  },
+  {
+    "from": "мейн дот рс",
+    "to": "main.rs"
+  },
+  {
+    "from": "main dot rs",
+    "to": "main.rs"
+  },
+  {
+    "from": "время жизни",
+    "to": "lifetime"
+  },
+  {
+    "from": "фатал эррор",
+    "to": "fatal error"
+  },
+  {
+    "from": "карго трити",
+    "to": "cargo --"
+  },
+  {
+    "from": "рау поинтер",
+    "to": "raw pointer"
+  },
+  {
+    "from": "докер экзек",
+    "to": "docker exec"
+  },
+  {
+    "from": "докер имидж",
+    "to": "docker image"
+  },
+  {
+    "from": "докер волюм",
+    "to": "docker volume"
+  },
+  {
+    "from": "компоуз ямл",
+    "to": "compose.yaml"
+  },
+  {
+    "from": "стейтфулсет",
+    "to": "statefulset"
+  },
+  {
+    "from": "девелопмент",
+    "to": "development"
+  },
+  {
+    "from": "энvironment",
+    "to": "environment"
+  },
+  {
+    "from": "npm install",
+    "to": "npm install"
+  },
+  {
+    "from": "npm publish",
+    "to": "npm publish"
+  },
+  {
+    "from": "пи эн пи эм",
+    "to": "pnpm"
+  },
+  {
+    "from": "нод джей эс",
+    "to": "Node.js"
+  },
+  {
+    "from": "вью джей эс",
+    "to": "Vue.js"
+  },
+  {
+    "from": "тайп скрипт",
+    "to": "typescript"
+  },
+  {
+    "from": "асинк авейт",
+    "to": "async/await"
+  },
+  {
+    "from": "медиа квери",
+    "to": "media query"
+  },
+  {
+    "from": "медиазапрос",
+    "to": "media query"
+  },
+  {
+    "from": "граф кью эл",
+    "to": "GraphQL"
+  },
+  {
+    "from": "джаваскрипт",
+    "to": "JavaScript"
+  },
+  {
+    "from": "ридми эм дэ",
+    "to": "README.md"
+  },
+  {
+    "from": "точка эм дэ",
+    "to": ".md"
+  },
+  {
+    "from": "дот джейсон",
+    "to": ".json"
+  },
+  {
+    "from": "рефакторинг",
+    "to": "refactoring"
+  },
+  {
+    "from": "депрекейтед",
+    "to": "deprecated"
+  },
+  {
+    "from": "мигрировать",
+    "to": "migrate"
+  },
+  {
+    "from": "экзекьютить",
+    "to": "execute"
+  },
+  {
+    "from": "десериалайз",
+    "to": "deserialize"
+  },
+  {
+    "from": "отребейзить",
+    "to": "rebase"
+  },
+  {
+    "from": "авторизация",
+    "to": "authorization"
+  },
+  {
+    "from": "репозиторий",
+    "to": "repo"
+  },
+  {
+    "from": "застейджить",
+    "to": "stage"
+  },
+  {
+    "from": "фича бранч",
+    "to": "feature branch"
+  },
+  {
+    "from": "фича ветка",
+    "to": "feature branch"
+  },
+  {
+    "from": "гит ребейз",
+    "to": "git rebase"
+  },
+  {
+    "from": "гит ребейс",
+    "to": "git rebase"
+  },
+  {
+    "from": "гит чекаут",
+    "to": "git checkout"
+  },
+  {
+    "from": "гит реверт",
+    "to": "git revert"
+  },
+  {
+    "from": "гит статус",
+    "to": "git status"
+  },
+  {
+    "from": "гит коммит",
+    "to": "git commit"
+  },
+  {
+    "from": "саб модуль",
+    "to": "submodule"
+  },
+  {
+    "from": "закомитить",
+    "to": "commit"
+  },
+  {
+    "from": "ревертнуть",
+    "to": "revert"
+  },
+  {
+    "from": "задеплоить",
+    "to": "deploy"
+  },
+  {
+    "from": "деплоймент",
+    "to": "deployment"
+  },
+  {
+    "from": "карго билд",
+    "to": "cargo build"
+  },
+  {
+    "from": "карго тест",
+    "to": "cargo test"
+  },
+  {
+    "from": "карго бенч",
+    "to": "cargo bench"
+  },
+  {
+    "from": "карго томл",
+    "to": "Cargo.toml"
+  },
+  {
+    "from": "либ дот рс",
+    "to": "lib.rs"
+  },
+  {
+    "from": "lib dot rs",
+    "to": "lib.rs"
+  },
+  {
+    "from": "мод дот рс",
+    "to": "mod.rs"
+  },
+  {
+    "from": "mod dot rs",
+    "to": "mod.rs"
+  },
+  {
+    "from": "фича флаги",
+    "to": "feature flags"
+  },
+  {
+    "from": "фичер флаг",
+    "to": "feature flag"
+  },
+  {
+    "from": "карго инит",
+    "to": "cargo init"
+  },
+  {
+    "from": "карго клин",
+    "to": "cargo clean"
+  },
+  {
+    "from": "олл фичерс",
+    "to": "all-features"
+  },
+  {
+    "from": "дебаг билд",
+    "to": "debug build"
+  },
+  {
+    "from": "докер билд",
+    "to": "docker build"
+  },
+  {
+    "from": "докер логс",
+    "to": "docker logs"
+  },
+  {
+    "from": "докер файл",
+    "to": "Dockerfile"
+  },
+  {
+    "from": "кубернетес",
+    "to": "kubernetes"
+  },
+  {
+    "from": "кубернетис",
+    "to": "kubernetes"
+  },
+  {
+    "from": "конфиг мап",
+    "to": "configmap"
+  },
+  {
+    "from": "репликасет",
+    "to": "replicaset"
+  },
+  {
+    "from": "гугл клауд",
+    "to": "GCP"
+  },
+  {
+    "from": "систем ctl",
+    "to": "systemctl"
+  },
+  {
+    "from": "си ай сиди",
+    "to": "CI/CD"
+  },
+  {
+    "from": "промetheus",
+    "to": "Prometheus"
+  },
+  {
+    "from": "docker hub",
+    "to": "Docker Hub"
+  },
+  {
+    "from": "blue green",
+    "to": "blue-green"
+  },
+  {
+    "from": "пакедж лок",
+    "to": "package-lock.json"
+  },
+  {
+    "from": "ярн инстал",
+    "to": "yarn install"
+  },
+  {
+    "from": "yarn build",
+    "to": "yarn build"
+  },
+  {
+    "from": "тайпскрипт",
+    "to": "typescript"
+  },
+  {
+    "from": "флекс бокс",
+    "to": "flexbox"
+  },
+  {
+    "from": "адаптивный",
+    "to": "responsive"
+  },
+  {
+    "from": "си о ар эс",
+    "to": "CORS"
+  },
+  {
+    "from": "точка томл",
+    "to": ".toml"
+  },
+  {
+    "from": "дот svelte",
+    "to": ".svelte"
+  },
+  {
+    "from": "cargo toml",
+    "to": "Cargo.toml"
+  },
+  {
+    "from": "карго тому",
+    "to": "Cargo.toml"
+  },
+  {
+    "from": "cargo lock",
+    "to": "Cargo.lock"
+  },
+  {
+    "from": "dockerfile",
+    "to": "Dockerfile"
+  },
+  {
+    "from": "git ignore",
+    "to": ".gitignore"
+  },
+  {
+    "from": "обновление",
+    "to": "update"
+  },
+  {
+    "from": "задеплоили",
+    "to": "deployed"
+  },
+  {
+    "from": "задебажить",
+    "to": "debug"
+  },
+  {
+    "from": "рефакторим",
+    "to": "refactor"
+  },
+  {
+    "from": "легаси код",
+    "to": "legacy code"
+  },
+  {
+    "from": "обработчик",
+    "to": "handler"
+  },
+  {
+    "from": "транзакция",
+    "to": "transaction"
+  },
+  {
+    "from": "транзакшен",
+    "to": "transaction"
+  },
+  {
+    "from": "локал хост",
+    "to": "localhost"
+  },
+  {
+    "from": "скомпилить",
+    "to": "compile"
+  },
+  {
+    "from": "компиляция",
+    "to": "compile"
+  },
+  {
+    "from": "распарсить",
+    "to": "parse"
+  },
+  {
+    "from": "зет эс эйч",
+    "to": "zsh"
+  },
+  {
+    "from": "зарелизить",
+    "to": "release"
+  },
+  {
+    "from": "черри пик",
+    "to": "cherry-pick"
+  },
+  {
+    "from": "гит мердж",
+    "to": "git merge"
+  },
+  {
+    "from": "гит аменд",
+    "to": "git amend"
+  },
+  {
+    "from": "гит сквош",
+    "to": "git squash"
+  },
+  {
+    "from": "гит бранч",
+    "to": "git branch"
+  },
+  {
+    "from": "чейнджлог",
+    "to": "changelog"
+  },
+  {
+    "from": "сабмодуль",
+    "to": "submodule"
+  },
+  {
+    "from": "ребейзить",
+    "to": "rebase"
+  },
+  {
+    "from": "чекаутить",
+    "to": "checkout"
+  },
+  {
+    "from": "прекоммит",
+    "to": "pre-commit"
+  },
+  {
+    "from": "пайп лайн",
+    "to": "pipeline"
+  },
+  {
+    "from": "ворк флоу",
+    "to": "workflow"
+  },
+  {
+    "from": "резолвить",
+    "to": "resolve"
+  },
+  {
+    "from": "стейджинг",
+    "to": "staging"
+  },
+  {
+    "from": "детач хед",
+    "to": "detached HEAD"
+  },
+  {
+    "from": "карго ран",
+    "to": "cargo run"
+  },
+  {
+    "from": "карго чек",
+    "to": "cargo check"
+  },
+  {
+    "from": "карго фмт",
+    "to": "cargo fmt"
+  },
+  {
+    "from": "карго док",
+    "to": "cargo doc"
+  },
+  {
+    "from": "карго адд",
+    "to": "cargo add"
+  },
+  {
+    "from": "карго лок",
+    "to": "Cargo.lock"
+  },
+  {
+    "from": "имплемент",
+    "to": "impl"
+  },
+  {
+    "from": "структура",
+    "to": "struct"
+  },
+  {
+    "from": "воркспейс",
+    "to": "workspace"
+  },
+  {
+    "from": "фича флаг",
+    "to": "feature flag"
+  },
+  {
+    "from": "диз эррор",
+    "to": "thiserror"
+  },
+  {
+    "from": "результат",
+    "to": "Result"
+  },
+  {
+    "from": "анврап ор",
+    "to": "unwrap_or"
+  },
+  {
+    "from": "карго нью",
+    "to": "cargo new"
+  },
+  {
+    "from": "но дефолт",
+    "to": "--no-default-features"
+  },
+  {
+    "from": "докер ран",
+    "to": "docker run"
+  },
+  {
+    "from": "докер пул",
+    "to": "docker pull"
+  },
+  {
+    "from": "докер пуш",
+    "to": "docker push"
+  },
+  {
+    "from": "докерфайл",
+    "to": "Dockerfile"
+  },
+  {
+    "from": "контейнер",
+    "to": "container"
+  },
+  {
+    "from": "хелм чарт",
+    "to": "helm chart"
+  },
+  {
+    "from": "неймспейс",
+    "to": "namespace"
+  },
+  {
+    "from": "неймспэйс",
+    "to": "namespace"
+  },
+  {
+    "from": "конфигмап",
+    "to": "configmap"
+  },
+  {
+    "from": "даемонсет",
+    "to": "daemonset"
+  },
+  {
+    "from": "эн джинкс",
+    "to": "nginx"
+  },
+  {
+    "from": "терраформ",
+    "to": "terraform"
+  },
+  {
+    "from": "гитлаб ci",
+    "to": "GitLab CI"
+  },
+  {
+    "from": "арго сиди",
+    "to": "ArgoCD"
+  },
+  {
+    "from": "канарейка",
+    "to": "canary"
+  },
+  {
+    "from": "npm build",
+    "to": "npm run build"
+  },
+  {
+    "from": "npm start",
+    "to": "npm start"
+  },
+  {
+    "from": "интерфейс",
+    "to": "interface"
+  },
+  {
+    "from": "тс конфиг",
+    "to": "tsconfig.json"
+  },
+  {
+    "from": "точка энв",
+    "to": ".env"
+  },
+  {
+    "from": "флексбокс",
+    "to": "flexbox"
+  },
+  {
+    "from": "респонсив",
+    "to": "responsive"
+  },
+  {
+    "from": "веб сокет",
+    "to": "WebSocket"
+  },
+  {
+    "from": "at readme",
+    "to": "@README.md"
+  },
+  {
+    "from": "дот эм дэ",
+    "to": ".md"
+  },
+  {
+    "from": "точка env",
+    "to": ".env"
+  },
+  {
+    "from": "make file",
+    "to": "Makefile"
+  },
+  {
+    "from": "гит игнор",
+    "to": ".gitignore"
+  },
+  {
+    "from": "индекс тс",
+    "to": "index.ts"
+  },
+  {
+    "from": "src slash",
+    "to": "src/"
+  },
+  {
+    "from": "апдейтить",
+    "to": "update"
+  },
+  {
+    "from": "пофиксить",
+    "to": "fix"
+  },
+  {
+    "from": "зафиксить",
+    "to": "fix"
+  },
+  {
+    "from": "депрекейт",
+    "to": "deprecate"
+  },
+  {
+    "from": "слушатель",
+    "to": "listener"
+  },
+  {
+    "from": "сингл тон",
+    "to": "singleton"
+  },
+  {
+    "from": "эс кью эл",
+    "to": "SQL"
+  },
+  {
+    "from": "юнит тест",
+    "to": "unit test"
+  },
+  {
+    "from": "застабить",
+    "to": "stub"
+  },
+  {
+    "from": "локалхост",
+    "to": "localhost"
+  },
+  {
+    "from": "выполнить",
+    "to": "execute"
+  },
+  {
+    "from": "сериалайз",
+    "to": "serialize"
+  },
+  {
+    "from": "эс эс эйч",
+    "to": "SSH"
+  },
+  {
+    "from": "замержить",
+    "to": "merge"
+  },
+  {
+    "from": "графкьюэл",
+    "to": "GraphQL"
+  },
+  {
+    "from": "валидация",
+    "to": "validation"
+  },
+  {
+    "from": "застешить",
+    "to": "stash"
+  },
+  {
+    "from": "чери пик",
+    "to": "cherry-pick"
+  },
+  {
+    "from": "черрипик",
+    "to": "cherry-pick"
+  },
+  {
+    "from": "гит клон",
+    "to": "git clone"
+  },
+  {
+    "from": "гит фетч",
+    "to": "git fetch"
+  },
+  {
+    "from": "гит стэш",
+    "to": "git stash"
+  },
+  {
+    "from": "гит сташ",
+    "to": "git stash"
+  },
+  {
+    "from": "гит дифф",
+    "to": "git diff"
+  },
+  {
+    "from": "си си ди",
+    "to": "CI/CD"
+  },
+  {
+    "from": "чейнжлог",
+    "to": "changelog"
+  },
+  {
+    "from": "хот фикс",
+    "to": "hotfix"
+  },
+  {
+    "from": "монорепо",
+    "to": "monorepo"
+  },
+  {
+    "from": "запушить",
+    "to": "push"
+  },
+  {
+    "from": "смержить",
+    "to": "merge"
+  },
+  {
+    "from": "форкнуть",
+    "to": "fork"
+  },
+  {
+    "from": "амендить",
+    "to": "amend"
+  },
+  {
+    "from": "сквошить",
+    "to": "squash"
+  },
+  {
+    "from": "ролл бэк",
+    "to": "rollback"
+  },
+  {
+    "from": "пайплайн",
+    "to": "pipeline"
+  },
+  {
+    "from": "воркфлоу",
+    "to": "workflow"
+  },
+  {
+    "from": "артефакт",
+    "to": "artifact"
+  },
+  {
+    "from": "артифакт",
+    "to": "artifact"
+  },
+  {
+    "from": "конфликт",
+    "to": "conflict"
+  },
+  {
+    "from": "резолвни",
+    "to": "resolve"
+  },
+  {
+    "from": "форс пуш",
+    "to": "force push"
+  },
+  {
+    "from": "асинхрон",
+    "to": "async"
+  },
+  {
+    "from": "лайфтайм",
+    "to": "lifetime"
+  },
+  {
+    "from": "раст фмт",
+    "to": "rustfmt"
+  },
+  {
+    "from": "руст фмт",
+    "to": "rustfmt"
+  },
+  {
+    "from": "овнершип",
+    "to": "ownership"
+  },
+  {
+    "from": "референс",
+    "to": "reference"
+  },
+  {
+    "from": "эни хаус",
+    "to": "anyhow"
+  },
+  {
+    "from": "реф целл",
+    "to": "RefCell"
+  },
+  {
+    "from": "дот томл",
+    "to": ".toml"
+  },
+  {
+    "from": "некомпил",
+    "to": "does not compile"
+  },
+  {
+    "from": "фор лайф",
+    "to": "'static"
+  },
+  {
+    "from": "кубекутл",
+    "to": "kubectl"
+  },
+  {
+    "from": "кронджоб",
+    "to": "cronjob"
+  },
+  {
+    "from": "эс эс эл",
+    "to": "SSL"
+  },
+  {
+    "from": "ти эл эс",
+    "to": "TLS"
+  },
+  {
+    "from": "систем д",
+    "to": "systemd"
+  },
+  {
+    "from": "продакшн",
+    "to": "production"
+  },
+  {
+    "from": "env файл",
+    "to": ".env"
+  },
+  {
+    "from": "postgres",
+    "to": "PostgreSQL"
+  },
+  {
+    "from": "постгрес",
+    "to": "PostgreSQL"
+  },
+  {
+    "from": "эн пи эм",
+    "to": "npm"
+  },
+  {
+    "from": "npm test",
+    "to": "npm test"
+  },
+  {
+    "from": "ярн билд",
+    "to": "yarn build"
+  },
+  {
+    "from": "экспресс",
+    "to": "express"
+  },
+  {
+    "from": "преттиер",
+    "to": "prettier"
+  },
+  {
+    "from": "at ридми",
+    "to": "@README.md"
+  },
+  {
+    "from": "тейлвинд",
+    "to": "tailwind"
+  },
+  {
+    "from": "css грид",
+    "to": "CSS Grid"
+  },
+  {
+    "from": "эндпоинт",
+    "to": "endpoint"
+  },
+  {
+    "from": "рест апи",
+    "to": "REST API"
+  },
+  {
+    "from": "графкуэл",
+    "to": "GraphQL"
+  },
+  {
+    "from": "вебсокет",
+    "to": "websocket"
+  },
+  {
+    "from": "д жейсон",
+    "to": ".json"
+  },
+  {
+    "from": "точка rs",
+    "to": ".rs"
+  },
+  {
+    "from": "точка ts",
+    "to": ".ts"
+  },
+  {
+    "from": "точка js",
+    "to": ".js"
+  },
+  {
+    "from": "точка py",
+    "to": ".py"
+  },
+  {
+    "from": "дот yaml",
+    "to": ".yaml"
+  },
+  {
+    "from": "дот html",
+    "to": ".html"
+  },
+  {
+    "from": "дот lock",
+    "to": ".lock"
+  },
+  {
+    "from": "майкфайл",
+    "to": "Makefile"
+  },
+  {
+    "from": "index ts",
+    "to": "index.ts"
+  },
+  {
+    "from": "app html",
+    "to": "app.html"
+  },
+  {
+    "from": "эс ар си",
+    "to": "src"
+  },
+  {
+    "from": "задеплой",
+    "to": "deploy"
+  },
+  {
+    "from": "дебажить",
+    "to": "debug"
+  },
+  {
+    "from": "фичефлаг",
+    "to": "feature flag"
+  },
+  {
+    "from": "рефактор",
+    "to": "refactor"
+  },
+  {
+    "from": "фронтенд",
+    "to": "frontend"
+  },
+  {
+    "from": "фронтэнд",
+    "to": "frontend"
+  },
+  {
+    "from": "фул стек",
+    "to": "fullstack"
+  },
+  {
+    "from": "мидлвейр",
+    "to": "middleware"
+  },
+  {
+    "from": "миддлвер",
+    "to": "middleware"
+  },
+  {
+    "from": "листенер",
+    "to": "listener"
+  },
+  {
+    "from": "синглтон",
+    "to": "singleton"
+  },
+  {
+    "from": "миграция",
+    "to": "migration"
+  },
+  {
+    "from": "юниттест",
+    "to": "unit test"
+  },
+  {
+    "from": "замокать",
+    "to": "mock"
+  },
+  {
+    "from": "фикстура",
+    "to": "fixture"
+  },
+  {
+    "from": "фикстуры",
+    "to": "fixtures"
+  },
+  {
+    "from": "ковередж",
+    "to": "coverage"
+  },
+  {
+    "from": "кавередж",
+    "to": "coverage"
+  },
+  {
+    "from": "покрытие",
+    "to": "coverage"
+  },
+  {
+    "from": "ти ди ди",
+    "to": "TDD"
+  },
+  {
+    "from": "ран тайм",
+    "to": "runtime"
+  },
+  {
+    "from": "экзекьют",
+    "to": "execute"
+  },
+  {
+    "from": "терминал",
+    "to": "terminal"
+  },
+  {
+    "from": "эндпойнт",
+    "to": "endpoint"
+  },
+  {
+    "from": "откатить",
+    "to": "rollback"
+  },
+  {
+    "from": "айдишник",
+    "to": "ID"
+  },
+  {
+    "from": "гит пул",
+    "to": "git pull"
+  },
+  {
+    "from": "гид пул",
+    "to": "git pull"
+  },
+  {
+    "from": "гит пуш",
+    "to": "git push"
+  },
+  {
+    "from": "гид пуш",
+    "to": "git push"
+  },
+  {
+    "from": "гит тэг",
+    "to": "git tag"
+  },
+  {
+    "from": "гит тег",
+    "to": "git tag"
+  },
+  {
+    "from": "гит лог",
+    "to": "git log"
+  },
+  {
+    "from": "гит адд",
+    "to": "git add"
+  },
+  {
+    "from": "гит хук",
+    "to": "git hook"
+  },
+  {
+    "from": "хотфикс",
+    "to": "hotfix"
+  },
+  {
+    "from": "гит лаб",
+    "to": "GitLab"
+  },
+  {
+    "from": "ориджин",
+    "to": "origin"
+  },
+  {
+    "from": "чек аут",
+    "to": "checkout"
+  },
+  {
+    "from": "фетчить",
+    "to": "fetch"
+  },
+  {
+    "from": "роллбэк",
+    "to": "rollback"
+  },
+  {
+    "from": "форспуш",
+    "to": "force push"
+  },
+  {
+    "from": "раст си",
+    "to": "Rust"
+  },
+  {
+    "from": "руст си",
+    "to": "rustc"
+  },
+  {
+    "from": "мьютекс",
+    "to": "Mutex"
+  },
+  {
+    "from": "экспект",
+    "to": "expect"
+  },
+  {
+    "from": "атрибут",
+    "to": "#["
+  },
+  {
+    "from": "стрелка",
+    "to": "->"
+  },
+  {
+    "from": "сегфолт",
+    "to": "segfault"
+  },
+  {
+    "from": "компоуз",
+    "to": "compose"
+  },
+  {
+    "from": "куб ctl",
+    "to": "kubectl"
+  },
+  {
+    "from": "кубектл",
+    "to": "kubectl"
+  },
+  {
+    "from": "ингресс",
+    "to": "ingress"
+  },
+  {
+    "from": "инgress",
+    "to": "ingress"
+  },
+  {
+    "from": "сикретс",
+    "to": "secrets"
+  },
+  {
+    "from": "энжинкс",
+    "to": "nginx"
+  },
+  {
+    "from": "системд",
+    "to": "systemd"
+  },
+  {
+    "from": "дот энв",
+    "to": ".env"
+  },
+  {
+    "from": "арго cd",
+    "to": "ArgoCD"
+  }
+]

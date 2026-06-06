@@ -4,6 +4,11 @@ use std::sync::Mutex;
 use tauri::{AppHandle, Emitter, Manager};
 
 static HOVER_TRACKING_ACTIVE: AtomicBool = AtomicBool::new(false);
+static OVERLAY_PILL_SHOWN: AtomicBool = AtomicBool::new(true);
+
+pub fn set_overlay_pill_shown(shown: bool) {
+    OVERLAY_PILL_SHOWN.store(shown, Ordering::Relaxed);
+}
 
 /// Matches overlay pill sizes from `src/lib/config.ts` and `+page.svelte` CSS.
 const IDLE_PILL_WIDTH: f64 = 40.0;
@@ -78,44 +83,6 @@ pub fn set_window_on_all_spaces(window: &tauri::WebviewWindow) -> Result<(), Str
     }
 
     Ok(())
-}
-
-#[cfg(windows)]
-pub fn set_window_on_all_spaces(window: &tauri::WebviewWindow) -> Result<(), String> {
-    use raw_window_handle::{HasWindowHandle, RawWindowHandle};
-    use windows::Win32::{
-        Foundation::HWND,
-        UI::WindowsAndMessaging::{
-            SetWindowPos, HWND_TOPMOST, SWP_NOMOVE, SWP_NOSIZE, SWP_SHOWWINDOW,
-        },
-    };
-
-    unsafe {
-        let handle = window.window_handle().map_err(|e| e.to_string())?;
-        let raw_handle = handle.as_raw();
-        let hwnd = match raw_handle {
-            RawWindowHandle::Win32(handle) => HWND(handle.hwnd.get() as isize),
-            _ => return Err("Not Windows".to_string()),
-        };
-
-        SetWindowPos(
-            hwnd,
-            Some(HWND_TOPMOST),
-            0,
-            0,
-            0,
-            0,
-            SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW,
-        )
-        .map_err(|e| e.to_string())?;
-
-        Ok(())
-    }
-}
-
-#[cfg(not(any(target_os = "macos", windows)))]
-pub fn set_window_on_all_spaces(_window: &tauri::WebviewWindow) -> Result<(), String> {
-    Ok(()) // No-op on unsupported platforms
 }
 
 // Show recording overlay
@@ -269,14 +236,6 @@ fn center_on_primary_monitor(
         .map_err(|e| e.to_string())
 }
 
-// Hide recording overlay
-pub async fn hide_overlay(app: AppHandle) -> Result<(), String> {
-    let window = app.get_webview_window("main").ok_or("Window not found")?;
-    window.hide().map_err(|e| e.to_string())?;
-    HOVER_TRACKING_ACTIVE.store(false, Ordering::Relaxed);
-    Ok(())
-}
-
 fn start_hover_tracking(app: AppHandle) {
     if HOVER_TRACKING_ACTIVE.swap(true, Ordering::Relaxed) {
         return;
@@ -287,6 +246,16 @@ fn start_hover_tracking(app: AppHandle) {
 
         while HOVER_TRACKING_ACTIVE.load(Ordering::Relaxed) {
             if let Some(window) = app.get_webview_window("main") {
+                if !OVERLAY_PILL_SHOWN.load(Ordering::Relaxed) {
+                    if was_interactive {
+                        let _ = window.set_ignore_cursor_events(true);
+                        was_interactive = false;
+                        let _ = app.emit("hover-changed", false);
+                    }
+                    tokio::time::sleep(tokio::time::Duration::from_millis(50)).await;
+                    continue;
+                }
+
                 if let Ok(Some(monitor)) = window.primary_monitor() {
                     let size = monitor.size();
                     let scale_factor = monitor.scale_factor();
@@ -348,27 +317,6 @@ pub async fn open_dashboard(app: AppHandle) -> Result<(), String> {
         window.set_focus().map_err(|e| e.to_string())?;
     } else {
         // Create window if it doesn't exist
-        let _window = tauri::WebviewWindowBuilder::new(
-            &app,
-            "dashboard",
-            tauri::WebviewUrl::App("/dashboard".into()),
-        )
-        .title("Speech Clip OSS")
-        .inner_size(800.0, 600.0)
-        .min_inner_size(910.0, 625.0)
-        .center()
-        .build()
-        .map_err(|e| e.to_string())?;
-    }
-    Ok(())
-}
-
-// Sync version for tray menu (non-async context)
-pub fn open_dashboard_sync(app: AppHandle) -> Result<(), String> {
-    if let Some(window) = app.get_webview_window("dashboard") {
-        window.show().map_err(|e| e.to_string())?;
-        window.set_focus().map_err(|e| e.to_string())?;
-    } else {
         let _window = tauri::WebviewWindowBuilder::new(
             &app,
             "dashboard",

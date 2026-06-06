@@ -1,0 +1,4736 @@
+[
+  {
+    "from": "интерактивный ребейз",
+    "to": "interactive rebase",
+    "notes": "Russian adjective",
+    "source": "git"
+  },
+  {
+    "from": "рабочее пространство",
+    "to": "workspace",
+    "notes": "Russian literal workspace",
+    "source": "rust"
+  },
+  {
+    "from": "восклицательный знак",
+    "to": "!",
+    "notes": "Russian literal macro !",
+    "source": "rust"
+  },
+  {
+    "from": "индекс точка джей эс",
+    "to": "index.js",
+    "notes": "Russian spoken filename",
+    "source": "web"
+  },
+  {
+    "from": "ти эс конфиг джейсон",
+    "to": "tsconfig.json",
+    "notes": "Russian spoken tsconfig",
+    "source": "web"
+  },
+  {
+    "from": "переменные окружения",
+    "to": "env",
+    "notes": "prefer env in dev speech",
+    "source": "general"
+  },
+  {
+    "from": "создать пул реквест",
+    "to": "create pull request",
+    "notes": "open PR",
+    "source": "git"
+  },
+  {
+    "from": "открыть пул реквест",
+    "to": "open pull request",
+    "notes": "open PR",
+    "source": "git"
+  },
+  {
+    "from": "закрыть пул реквест",
+    "to": "close pull request",
+    "notes": "close PR",
+    "source": "git"
+  },
+  {
+    "from": "семантик версионинг",
+    "to": "semantic versioning",
+    "notes": "full term",
+    "source": "git"
+  },
+  {
+    "from": "вопросительный знак",
+    "to": "?",
+    "notes": "Russian literal ? operator",
+    "source": "rust"
+  },
+  {
+    "from": "интеграционный тест",
+    "to": "integration test",
+    "notes": "mixed RU adj + EN noun",
+    "source": "general"
+  },
+  {
+    "from": "запушить в ориджин",
+    "to": "push to origin",
+    "notes": "push phrase",
+    "source": "git"
+  },
+  {
+    "from": "резолвить конфликт",
+    "to": "resolve conflict",
+    "notes": "fix conflict",
+    "source": "git"
+  },
+  {
+    "from": "задеплоить на прод",
+    "to": "deploy to prod",
+    "notes": "на/в variant",
+    "source": "git"
+  },
+  {
+    "from": "запустить пайплайн",
+    "to": "run pipeline",
+    "notes": "trigger CI",
+    "source": "git"
+  },
+  {
+    "from": "кубернетес кластер",
+    "to": "kubernetes cluster",
+    "notes": "Full cluster reference",
+    "source": "cloud"
+  },
+  {
+    "from": "пакедж дот джейсон",
+    "to": "package.json",
+    "notes": "Spoken dot variant",
+    "source": "web"
+  },
+  {
+    "from": "пакедж лок джейсон",
+    "to": "package-lock.json",
+    "notes": "Full spoken form",
+    "source": "web"
+  },
+  {
+    "from": "пи эн пи эм инстал",
+    "to": "pnpm install",
+    "notes": "Russian phonetic",
+    "source": "web"
+  },
+  {
+    "from": "индекс точка ти эс",
+    "to": "index.ts",
+    "notes": "Russian spoken filename",
+    "source": "web"
+  },
+  {
+    "from": "собака ридми эм дэ",
+    "to": "@README.md",
+    "notes": "@ mention with extension spoken",
+    "source": "files"
+  },
+  {
+    "from": "docker compose yml",
+    "to": "docker-compose.yml",
+    "notes": "Docker Compose config filename",
+    "source": "files"
+  },
+  {
+    "from": "plus layout svelte",
+    "to": "+layout.svelte",
+    "notes": "SvelteKit layout file",
+    "source": "files"
+  },
+  {
+    "from": "запушить в мастер",
+    "to": "push to master",
+    "notes": "push to master",
+    "source": "git"
+  },
+  {
+    "from": "смержить в мастер",
+    "to": "merge to master",
+    "notes": "merge phrase",
+    "source": "git"
+  },
+  {
+    "from": "резолвни конфликт",
+    "to": "resolve conflict",
+    "notes": "imperative ASR",
+    "source": "git"
+  },
+  {
+    "from": "задеплоить в прод",
+    "to": "deploy to prod",
+    "notes": "production deploy",
+    "source": "git"
+  },
+  {
+    "from": "интеректив ребейз",
+    "to": "interactive rebase",
+    "notes": "git rebase -i",
+    "source": "git"
+  },
+  {
+    "from": "раст си компайлер",
+    "to": "rustc",
+    "notes": "Russian spoken rustc",
+    "source": "rust"
+  },
+  {
+    "from": "двойное двоеточие",
+    "to": "::",
+    "notes": "Russian spoken path separator",
+    "source": "rust"
+  },
+  {
+    "from": "амазон веб сервис",
+    "to": "AWS",
+    "notes": "Full Russian name",
+    "source": "cloud"
+  },
+  {
+    "from": "асинхронный авейт",
+    "to": "async/await",
+    "notes": "Descriptive Russian form",
+    "source": "web"
+  },
+  {
+    "from": "ридми точка эм dэ",
+    "to": "README.md",
+    "notes": "ASR misrecognition pattern",
+    "source": "web"
+  },
+  {
+    "from": "тейлвинд цэ эс эс",
+    "to": "Tailwind CSS",
+    "notes": "Russian spoken Tailwind CSS",
+    "source": "web"
+  },
+  {
+    "from": "ридми точка эм дэ",
+    "to": "README.md",
+    "notes": "readme with explicit dot before md",
+    "source": "files"
+  },
+  {
+    "from": "докер компоуз yml",
+    "to": "docker-compose.yml",
+    "notes": "docker-compose.yml in Russian",
+    "source": "files"
+  },
+  {
+    "from": "тс конфиг джейсон",
+    "to": "tsconfig.json",
+    "notes": "tsconfig.json in Russian phonetics",
+    "source": "files"
+  },
+  {
+    "from": "webpack config js",
+    "to": "webpack.config.js",
+    "notes": "Webpack config filename",
+    "source": "files"
+  },
+  {
+    "from": "вебпэк конфиг джс",
+    "to": "webpack.config.js",
+    "notes": "webpack.config.js in Russian",
+    "source": "files"
+  },
+  {
+    "from": "аутентифицировать",
+    "to": "authenticate",
+    "notes": "verb",
+    "source": "general"
+  },
+  {
+    "from": "разреши конфликт",
+    "to": "resolve conflict",
+    "notes": "Russian verb",
+    "source": "git"
+  },
+  {
+    "from": "упавший пайплайн",
+    "to": "failed pipeline",
+    "notes": "CI failure",
+    "source": "git"
+  },
+  {
+    "from": "компилятор эррор",
+    "to": "compiler error",
+    "notes": "Russian spoken compiler error",
+    "source": "rust"
+  },
+  {
+    "from": "но дефолт фичерс",
+    "to": "default-features",
+    "notes": "Cargo dependency flag",
+    "source": "rust"
+  },
+  {
+    "from": "андифайнд символ",
+    "to": "undefined symbol",
+    "notes": "Linker error pattern",
+    "source": "rust"
+  },
+  {
+    "from": "не компилируется",
+    "to": "does not compile",
+    "notes": "Russian literal compile failure",
+    "source": "rust"
+  },
+  {
+    "from": "ansible playbook",
+    "to": "ansible-playbook",
+    "notes": "Ansible execution command",
+    "source": "cloud"
+  },
+  {
+    "from": "мейн точка ар эс",
+    "to": "main.rs",
+    "notes": "Russian spoken main.rs",
+    "source": "web"
+  },
+  {
+    "from": "plus page svelte",
+    "to": "+page.svelte",
+    "notes": "SvelteKit route page file",
+    "source": "files"
+  },
+  {
+    "from": "плюс пейдж свелт",
+    "to": "+page.svelte",
+    "notes": "+page.svelte in Russian phonetics",
+    "source": "files"
+  },
+  {
+    "from": "конфликт мерджа",
+    "to": "merge conflict",
+    "notes": "Russian word order",
+    "source": "git"
+  },
+  {
+    "from": "запуш в ориджин",
+    "to": "push to origin",
+    "notes": "imperative",
+    "source": "git"
+  },
+  {
+    "from": "запушить в мейн",
+    "to": "push to main",
+    "notes": "push to main",
+    "source": "git"
+  },
+  {
+    "from": "смержить в мейн",
+    "to": "merge to main",
+    "notes": "merge to main",
+    "source": "git"
+  },
+  {
+    "from": "смерджить ветку",
+    "to": "merge branch",
+    "notes": "merge branch",
+    "source": "git"
+  },
+  {
+    "from": "резолв конфликт",
+    "to": "resolve conflict",
+    "notes": "short form",
+    "source": "git"
+  },
+  {
+    "from": "откатить деплой",
+    "to": "rollback deploy",
+    "notes": "rollback phrase",
+    "source": "git"
+  },
+  {
+    "from": "сделать роллбэк",
+    "to": "do rollback",
+    "notes": "rollback action",
+    "source": "git"
+  },
+  {
+    "from": "монорепозиторий",
+    "to": "monorepo",
+    "notes": "full Russian word",
+    "source": "git"
+  },
+  {
+    "from": "карго томл файл",
+    "to": "Cargo.toml",
+    "notes": "Spoken file reference",
+    "source": "rust"
+  },
+  {
+    "from": "main dot are es",
+    "to": "main.rs",
+    "notes": "Letter-by-letter ASR",
+    "source": "rust"
+  },
+  {
+    "from": "кросскомпиляция",
+    "to": "cross-compile",
+    "notes": "Russian noun form",
+    "source": "rust"
+  },
+  {
+    "from": "индекс точка тс",
+    "to": "index.ts",
+    "notes": "Russian dot as точка",
+    "source": "rust"
+  },
+  {
+    "from": "карго воркспейс",
+    "to": "cargo workspace",
+    "notes": "Workspace-related cargo command context",
+    "source": "rust"
+  },
+  {
+    "from": "статик лайфтайм",
+    "to": "'static",
+    "notes": "Russian spoken 'static lifetime",
+    "source": "rust"
+  },
+  {
+    "from": "докер контейнер",
+    "to": "docker container",
+    "notes": "Container management subcommand",
+    "source": "cloud"
+  },
+  {
+    "from": "terraform apply",
+    "to": "terraform apply",
+    "notes": "Apply infra changes",
+    "source": "cloud"
+  },
+  {
+    "from": "docker registry",
+    "to": "docker registry",
+    "notes": "Image repository",
+    "source": "cloud"
+  },
+  {
+    "from": "package джейсон",
+    "to": "package.json",
+    "notes": "Mixed RU/EN",
+    "source": "web"
+  },
+  {
+    "from": "эн пи эм инстал",
+    "to": "npm install",
+    "notes": "Russian phonetic install",
+    "source": "web"
+  },
+  {
+    "from": "эн пи эм паблиш",
+    "to": "npm publish",
+    "notes": "Russian phonetic publish",
+    "source": "web"
+  },
+  {
+    "from": "точка gitignore",
+    "to": ".gitignore",
+    "notes": "точка gitignore hidden file",
+    "source": "files"
+  },
+  {
+    "from": "депрекейтед апи",
+    "to": "deprecated API",
+    "notes": "common phrase in code review",
+    "source": "general"
+  },
+  {
+    "from": "десериализовать",
+    "to": "deserialize",
+    "notes": "verb infinitive",
+    "source": "general"
+  },
+  {
+    "from": "релизная ветка",
+    "to": "release branch",
+    "notes": "Russian phrasing",
+    "source": "git"
+  },
+  {
+    "from": "мердж конфликт",
+    "to": "merge conflict",
+    "notes": "common error state",
+    "source": "git"
+  },
+  {
+    "from": "ориджин мастер",
+    "to": "origin master",
+    "notes": "legacy default",
+    "source": "git"
+  },
+  {
+    "from": "пре коммит хук",
+    "to": "pre-commit hook",
+    "notes": "hook type",
+    "source": "git"
+  },
+  {
+    "from": "карго лок файл",
+    "to": "Cargo.lock",
+    "notes": "Spoken file reference",
+    "source": "rust"
+  },
+  {
+    "from": "карго томл дот",
+    "to": "Cargo.toml",
+    "notes": "Mixed Russian/English dot",
+    "source": "rust"
+  },
+  {
+    "from": "cargo dot toml",
+    "to": "Cargo.toml",
+    "notes": "English ASR dot pattern",
+    "source": "rust"
+  },
+  {
+    "from": "cargo dot lock",
+    "to": "Cargo.lock",
+    "notes": "English ASR dot pattern",
+    "source": "rust"
+  },
+  {
+    "from": "таргет триплет",
+    "to": "target triple",
+    "notes": "Cross-compile target triple",
+    "source": "rust"
+  },
+  {
+    "from": "лайфтайм эррор",
+    "to": "lifetime error",
+    "notes": "Common Rust error category",
+    "source": "rust"
+  },
+  {
+    "from": "систем контрол",
+    "to": "systemctl",
+    "notes": "Phonetic expansion",
+    "source": "cloud"
+  },
+  {
+    "from": "terraform plan",
+    "to": "terraform plan",
+    "notes": "Preview infra changes",
+    "source": "cloud"
+  },
+  {
+    "from": "rolling update",
+    "to": "rolling update",
+    "notes": "Zero-downtime deploy strategy",
+    "source": "cloud"
+  },
+  {
+    "from": "пакедж джейсон",
+    "to": "package.json",
+    "notes": "Russian phonetic for package.json",
+    "source": "web"
+  },
+  {
+    "from": "эн пи эм старт",
+    "to": "npm start",
+    "notes": "Russian phonetic start",
+    "source": "web"
+  },
+  {
+    "from": "индекс джей эс",
+    "to": "index.js",
+    "notes": "Short spoken form",
+    "source": "web"
+  },
+  {
+    "from": "джей дабл ю ти",
+    "to": "JWT",
+    "notes": "Russian letter spelling JWT",
+    "source": "web"
+  },
+  {
+    "from": "пэкэдж джейсон",
+    "to": "package.json",
+    "notes": "package.json in Russian phonetics",
+    "source": "files"
+  },
+  {
+    "from": "vite config ts",
+    "to": "vite.config.ts",
+    "notes": "Vite config filename",
+    "source": "files"
+  },
+  {
+    "from": "вайт конфиг тс",
+    "to": "vite.config.ts",
+    "notes": "vite.config.ts in Russian phonetics",
+    "source": "files"
+  },
+  {
+    "from": "пул соединений",
+    "to": "connection pool",
+    "notes": "common phrase",
+    "source": "general"
+  },
+  {
+    "from": "инстанс класса",
+    "to": "class instance",
+    "notes": "OOP phrase",
+    "source": "general"
+  },
+  {
+    "from": "аутентификация",
+    "to": "authentication",
+    "notes": "authN",
+    "source": "general"
+  },
+  {
+    "from": "мерж конфликт",
+    "to": "merge conflict",
+    "notes": "short merge form",
+    "source": "git"
+  },
+  {
+    "from": "гитхаб экшенс",
+    "to": "GitHub Actions",
+    "notes": "actions variant",
+    "source": "git"
+  },
+  {
+    "from": "упал пайплайн",
+    "to": "pipeline failed",
+    "notes": "past tense",
+    "source": "git"
+  },
+  {
+    "from": "воркфлоу файл",
+    "to": "workflow file",
+    "notes": "GitHub Actions YAML",
+    "source": "git"
+  },
+  {
+    "from": "мейн точка рс",
+    "to": "main.rs",
+    "notes": "Russian dot as точка",
+    "source": "rust"
+  },
+  {
+    "from": "заимствование",
+    "to": "borrow",
+    "notes": "Russian borrow checker term",
+    "source": "rust"
+  },
+  {
+    "from": "кросс компайл",
+    "to": "cross-compile",
+    "notes": "Russian spoken cross-compile",
+    "source": "rust"
+  },
+  {
+    "from": "макро правила",
+    "to": "macro_rules!",
+    "notes": "Russian spoken macro_rules!",
+    "source": "rust"
+  },
+  {
+    "from": "двойной колон",
+    "to": "::",
+    "notes": "Russian spoken :: operator",
+    "source": "rust"
+  },
+  {
+    "from": "индекс дот тс",
+    "to": "index.ts",
+    "notes": "Dot-notation pattern for TS files",
+    "source": "rust"
+  },
+  {
+    "from": "докер компоуз",
+    "to": "docker compose",
+    "notes": "Multi-container orchestration CLI",
+    "source": "cloud"
+  },
+  {
+    "from": "докер компоус",
+    "to": "docker compose",
+    "notes": "Phonetic mishearing",
+    "source": "cloud"
+  },
+  {
+    "from": "докер экзекут",
+    "to": "docker exec",
+    "notes": "ASR variant of exec",
+    "source": "cloud"
+  },
+  {
+    "from": "докер нетворк",
+    "to": "docker network",
+    "notes": "Container networking",
+    "source": "cloud"
+  },
+  {
+    "from": "load balancer",
+    "to": "load balancer",
+    "notes": "Traffic distribution",
+    "source": "cloud"
+  },
+  {
+    "from": "reverse proxy",
+    "to": "reverse proxy",
+    "notes": "Proxy pattern",
+    "source": "cloud"
+  },
+  {
+    "from": "пакет джейсон",
+    "to": "package.json",
+    "notes": "Alternate Russian phonetic",
+    "source": "web"
+  },
+  {
+    "from": "эн пи эм билд",
+    "to": "npm run build",
+    "notes": "Russian phonetic build",
+    "source": "web"
+  },
+  {
+    "from": "эн пи эм тест",
+    "to": "npm test",
+    "notes": "Russian phonetic test",
+    "source": "web"
+  },
+  {
+    "from": "реакт джей эс",
+    "to": "React.js",
+    "notes": "Russian spoken React.js",
+    "source": "web"
+  },
+  {
+    "from": "некст джей эс",
+    "to": "Next.js",
+    "notes": "Russian spoken Next.js",
+    "source": "web"
+  },
+  {
+    "from": "точка джейсон",
+    "to": ".json",
+    "notes": "точка json extension",
+    "source": "files"
+  },
+  {
+    "from": "дот gitignore",
+    "to": ".gitignore",
+    "notes": "dot gitignore hidden file",
+    "source": "files"
+  },
+  {
+    "from": "tsconfig json",
+    "to": "tsconfig.json",
+    "notes": "TypeScript config filename",
+    "source": "files"
+  },
+  {
+    "from": "отрефакторить",
+    "to": "refactor",
+    "notes": "verb infinitive",
+    "source": "general"
+  },
+  {
+    "from": "постгресскюэл",
+    "to": "PostgreSQL",
+    "notes": "full product name",
+    "source": "general"
+  },
+  {
+    "from": "сериализовать",
+    "to": "serialize",
+    "notes": "verb; mixed RU ending",
+    "source": "general"
+  },
+  {
+    "from": "перезапросить",
+    "to": "retry",
+    "notes": "when meaning HTTP retry",
+    "source": "general"
+  },
+  {
+    "from": "идентификатор",
+    "to": "ID",
+    "notes": "prefer ID in code speech",
+    "source": "general"
+  },
+  {
+    "from": "переключиться",
+    "to": "checkout",
+    "notes": "when meaning git checkout branch",
+    "source": "general"
+  },
+  {
+    "from": "пулл реквест",
+    "to": "pull request",
+    "notes": "double-L mishearing",
+    "source": "git"
+  },
+  {
+    "from": "пул реквеста",
+    "to": "pull request",
+    "notes": "genitive case",
+    "source": "git"
+  },
+  {
+    "from": "пул реквесты",
+    "to": "pull requests",
+    "notes": "plural",
+    "source": "git"
+  },
+  {
+    "from": "гитхаб экшнс",
+    "to": "GitHub Actions",
+    "notes": "CI platform",
+    "source": "git"
+  },
+  {
+    "from": "гитлаб си ай",
+    "to": "GitLab CI",
+    "notes": "GitLab pipeline",
+    "source": "git"
+  },
+  {
+    "from": "ориджин мейн",
+    "to": "origin main",
+    "notes": "modern default",
+    "source": "git"
+  },
+  {
+    "from": "фаст форвард",
+    "to": "fast-forward",
+    "notes": "merge type",
+    "source": "git"
+  },
+  {
+    "from": "карго клиппи",
+    "to": "cargo clippy",
+    "notes": "Russian phonetic for cargo clippy",
+    "source": "rust"
+  },
+  {
+    "from": "карго паблиш",
+    "to": "cargo publish",
+    "notes": "Russian phonetic for cargo publish",
+    "source": "rust"
+  },
+  {
+    "from": "карго инстал",
+    "to": "cargo install",
+    "notes": "Russian phonetic for cargo install",
+    "source": "rust"
+  },
+  {
+    "from": "карго апдейт",
+    "to": "cargo update",
+    "notes": "Russian phonetic for cargo update",
+    "source": "rust"
+  },
+  {
+    "from": "перечисление",
+    "to": "enum",
+    "notes": "Russian word for enumeration",
+    "source": "rust"
+  },
+  {
+    "from": "веб ассембли",
+    "to": "wasm",
+    "notes": "Russian spoken WebAssembly target",
+    "source": "rust"
+  },
+  {
+    "from": "доллар крейт",
+    "to": "$crate",
+    "notes": "Macro $crate identifier",
+    "source": "rust"
+  },
+  {
+    "from": "борроу чекер",
+    "to": "borrow checker",
+    "notes": "Russian spoken borrow checker",
+    "source": "rust"
+  },
+  {
+    "from": "мув семантик",
+    "to": "move semantics",
+    "notes": "Russian spoken move semantics",
+    "source": "rust"
+  },
+  {
+    "from": "линкер эррор",
+    "to": "linker error",
+    "notes": "Common build failure spoken aloud",
+    "source": "rust"
+  },
+  {
+    "from": "докер композ",
+    "to": "docker compose",
+    "notes": "ASR variant of compose",
+    "source": "cloud"
+  },
+  {
+    "from": "докер вольюм",
+    "to": "docker volume",
+    "notes": "Phonetic variant",
+    "source": "cloud"
+  },
+  {
+    "from": "компоуз файл",
+    "to": "compose.yaml",
+    "notes": "Compose manifest",
+    "source": "cloud"
+  },
+  {
+    "from": "куб си ти эл",
+    "to": "kubectl",
+    "notes": "Letter-by-letter ASR",
+    "source": "cloud"
+  },
+  {
+    "from": "лод балансер",
+    "to": "load balancer",
+    "notes": "Cyrillic mishearing",
+    "source": "cloud"
+  },
+  {
+    "from": "health check",
+    "to": "health check",
+    "notes": "Service liveness probe",
+    "source": "cloud"
+  },
+  {
+    "from": "package lock",
+    "to": "package-lock.json",
+    "notes": "English spoken, lockfile intent",
+    "source": "web"
+  },
+  {
+    "from": "эн пи эм ран",
+    "to": "npm run",
+    "notes": "Russian phonetic run",
+    "source": "web"
+  },
+  {
+    "from": "эн пи эм дев",
+    "to": "npm run dev",
+    "notes": "Russian phonetic dev",
+    "source": "web"
+  },
+  {
+    "from": "yarn install",
+    "to": "yarn install",
+    "notes": "Keep canonical command",
+    "source": "web"
+  },
+  {
+    "from": "pnpm install",
+    "to": "pnpm install",
+    "notes": "Keep canonical command",
+    "source": "web"
+  },
+  {
+    "from": "индекс ти эс",
+    "to": "index.ts",
+    "notes": "Short spoken form",
+    "source": "web"
+  },
+  {
+    "from": "собака ридми",
+    "to": "@README.md",
+    "notes": "Russian @ as собака",
+    "source": "web"
+  },
+  {
+    "from": "джава скрипт",
+    "to": "JavaScript",
+    "notes": "Split spoken form",
+    "source": "web"
+  },
+  {
+    "from": "at readme md",
+    "to": "@README.md",
+    "notes": "at mention with md spoken",
+    "source": "files"
+  },
+  {
+    "from": "package json",
+    "to": "package.json",
+    "notes": "Common npm manifest filename",
+    "source": "files"
+  },
+  {
+    "from": "забагованный",
+    "to": "buggy",
+    "notes": "adjective; mixed RU suffix",
+    "source": "general"
+  },
+  {
+    "from": "интегра тест",
+    "to": "integration test",
+    "notes": "short spoken form",
+    "source": "general"
+  },
+  {
+    "from": "закэшировать",
+    "to": "cache",
+    "notes": "verb; store in cache",
+    "source": "general"
+  },
+  {
+    "from": "проксировать",
+    "to": "proxy",
+    "notes": "verb",
+    "source": "general"
+  },
+  {
+    "from": "конфигурация",
+    "to": "config",
+    "notes": "when meaning app settings file",
+    "source": "general"
+  },
+  {
+    "from": "залогировать",
+    "to": "log",
+    "notes": "verb; write to log",
+    "source": "general"
+  },
+  {
+    "from": "валидировать",
+    "to": "validate",
+    "notes": "verb; check input",
+    "source": "general"
+  },
+  {
+    "from": "авторизовать",
+    "to": "authorize",
+    "notes": "verb",
+    "source": "general"
+  },
+  {
+    "from": "пул реквест",
+    "to": "pull request",
+    "notes": "PR full phrase",
+    "source": "git"
+  },
+  {
+    "from": "фичер бранч",
+    "to": "feature branch",
+    "notes": "phonetic variant",
+    "source": "git"
+  },
+  {
+    "from": "релиз бранч",
+    "to": "release branch",
+    "notes": "release workflow",
+    "source": "git"
+  },
+  {
+    "from": "гит чек аут",
+    "to": "git checkout",
+    "notes": "split syllables",
+    "source": "git"
+  },
+  {
+    "from": "си ай си ди",
+    "to": "CI/CD",
+    "notes": "spelled out",
+    "source": "git"
+  },
+  {
+    "from": "закоммитить",
+    "to": "commit",
+    "notes": "verb form",
+    "source": "git"
+  },
+  {
+    "from": "клонировать",
+    "to": "clone",
+    "notes": "Russian verb",
+    "source": "git"
+  },
+  {
+    "from": "транк бранч",
+    "to": "trunk branch",
+    "notes": "mainline branch",
+    "source": "git"
+  },
+  {
+    "from": "фастфорвард",
+    "to": "fast-forward",
+    "notes": "run-together",
+    "source": "git"
+  },
+  {
+    "from": "детачед хед",
+    "to": "detached HEAD",
+    "notes": "git state",
+    "source": "git"
+  },
+  {
+    "from": "карго ремув",
+    "to": "cargo remove",
+    "notes": "Russian phonetic for cargo remove",
+    "source": "rust"
+  },
+  {
+    "from": "мейн дот рс",
+    "to": "main.rs",
+    "notes": "Dot-notation file pattern",
+    "source": "rust"
+  },
+  {
+    "from": "main dot rs",
+    "to": "main.rs",
+    "notes": "English ASR dot pattern",
+    "source": "rust"
+  },
+  {
+    "from": "время жизни",
+    "to": "lifetime",
+    "notes": "Russian literal translation",
+    "source": "rust"
+  },
+  {
+    "from": "фатал эррор",
+    "to": "fatal error",
+    "notes": "Compiler error spoken aloud",
+    "source": "rust"
+  },
+  {
+    "from": "карго трити",
+    "to": "cargo --",
+    "notes": "ASR for cargo pass-through args",
+    "source": "rust"
+  },
+  {
+    "from": "рау поинтер",
+    "to": "raw pointer",
+    "notes": "Russian spoken raw pointer",
+    "source": "rust"
+  },
+  {
+    "from": "докер экзек",
+    "to": "docker exec",
+    "notes": "Run command in running container",
+    "source": "cloud"
+  },
+  {
+    "from": "докер имидж",
+    "to": "docker image",
+    "notes": "Image management subcommand",
+    "source": "cloud"
+  },
+  {
+    "from": "докер волюм",
+    "to": "docker volume",
+    "notes": "Persistent storage",
+    "source": "cloud"
+  },
+  {
+    "from": "компоуз ямл",
+    "to": "compose.yaml",
+    "notes": "YAML compose file",
+    "source": "cloud"
+  },
+  {
+    "from": "стейтфулсет",
+    "to": "statefulset",
+    "notes": "Stateful workload",
+    "source": "cloud"
+  },
+  {
+    "from": "девелопмент",
+    "to": "development",
+    "notes": "Full dev environment name",
+    "source": "cloud"
+  },
+  {
+    "from": "энvironment",
+    "to": "environment",
+    "notes": "Mixed pronunciation",
+    "source": "cloud"
+  },
+  {
+    "from": "npm install",
+    "to": "npm install",
+    "notes": "Keep canonical command",
+    "source": "web"
+  },
+  {
+    "from": "npm publish",
+    "to": "npm publish",
+    "notes": "Keep canonical command",
+    "source": "web"
+  },
+  {
+    "from": "пи эн пи эм",
+    "to": "pnpm",
+    "notes": "Russian letter spelling",
+    "source": "web"
+  },
+  {
+    "from": "нод джей эс",
+    "to": "Node.js",
+    "notes": "Russian spoken Node.js",
+    "source": "web"
+  },
+  {
+    "from": "вью джей эс",
+    "to": "Vue.js",
+    "notes": "Russian spoken Vue.js",
+    "source": "web"
+  },
+  {
+    "from": "тайп скрипт",
+    "to": "typescript",
+    "notes": "Split spoken form",
+    "source": "web"
+  },
+  {
+    "from": "асинк авейт",
+    "to": "async/await",
+    "notes": "Russian phonetic async/await",
+    "source": "web"
+  },
+  {
+    "from": "медиа квери",
+    "to": "media query",
+    "notes": "Russian phonetic media query",
+    "source": "web"
+  },
+  {
+    "from": "медиазапрос",
+    "to": "media query",
+    "notes": "Russian compound form",
+    "source": "web"
+  },
+  {
+    "from": "граф кью эл",
+    "to": "GraphQL",
+    "notes": "Russian letter spelling GraphQL",
+    "source": "web"
+  },
+  {
+    "from": "джаваскрипт",
+    "to": "JavaScript",
+    "notes": "Russian phonetic JavaScript",
+    "source": "web"
+  },
+  {
+    "from": "ридми эм дэ",
+    "to": "README.md",
+    "notes": "readme + .md extension spoken aloud",
+    "source": "files"
+  },
+  {
+    "from": "точка эм дэ",
+    "to": ".md",
+    "notes": "точка md extension pattern",
+    "source": "files"
+  },
+  {
+    "from": "дот джейсон",
+    "to": ".json",
+    "notes": "dot json extension",
+    "source": "files"
+  },
+  {
+    "from": "рефакторинг",
+    "to": "refactoring",
+    "notes": "noun; code restructuring",
+    "source": "general"
+  },
+  {
+    "from": "депрекейтед",
+    "to": "deprecated",
+    "notes": "adjective; API marked obsolete",
+    "source": "general"
+  },
+  {
+    "from": "мигрировать",
+    "to": "migrate",
+    "notes": "verb; run migrations",
+    "source": "general"
+  },
+  {
+    "from": "экзекьютить",
+    "to": "execute",
+    "notes": "verb infinitive",
+    "source": "general"
+  },
+  {
+    "from": "десериалайз",
+    "to": "deserialize",
+    "notes": "verb stem",
+    "source": "general"
+  },
+  {
+    "from": "отребейзить",
+    "to": "rebase",
+    "notes": "verb infinitive",
+    "source": "general"
+  },
+  {
+    "from": "авторизация",
+    "to": "authorization",
+    "notes": "authZ; not authentication",
+    "source": "general"
+  },
+  {
+    "from": "репозиторий",
+    "to": "repo",
+    "notes": "git repo in casual speech",
+    "source": "general"
+  },
+  {
+    "from": "застейджить",
+    "to": "stage",
+    "notes": "git add to stage",
+    "source": "general"
+  },
+  {
+    "from": "фича бранч",
+    "to": "feature branch",
+    "notes": "common workflow term",
+    "source": "git"
+  },
+  {
+    "from": "фича ветка",
+    "to": "feature branch",
+    "notes": "mixed RU/EN",
+    "source": "git"
+  },
+  {
+    "from": "гит ребейз",
+    "to": "git rebase",
+    "notes": "rebase command",
+    "source": "git"
+  },
+  {
+    "from": "гит ребейс",
+    "to": "git rebase",
+    "notes": "rebeyс variant",
+    "source": "git"
+  },
+  {
+    "from": "гит чекаут",
+    "to": "git checkout",
+    "notes": "switch branch",
+    "source": "git"
+  },
+  {
+    "from": "гит реверт",
+    "to": "git revert",
+    "notes": "revert commit",
+    "source": "git"
+  },
+  {
+    "from": "гит статус",
+    "to": "git status",
+    "notes": "check status",
+    "source": "git"
+  },
+  {
+    "from": "гит коммит",
+    "to": "git commit",
+    "notes": "create commit",
+    "source": "git"
+  },
+  {
+    "from": "саб модуль",
+    "to": "submodule",
+    "notes": "split syllables",
+    "source": "git"
+  },
+  {
+    "from": "закомитить",
+    "to": "commit",
+    "notes": "verb variant",
+    "source": "git"
+  },
+  {
+    "from": "ревертнуть",
+    "to": "revert",
+    "notes": "verb",
+    "source": "git"
+  },
+  {
+    "from": "задеплоить",
+    "to": "deploy",
+    "notes": "verb",
+    "source": "git"
+  },
+  {
+    "from": "деплоймент",
+    "to": "deployment",
+    "notes": "full noun",
+    "source": "git"
+  },
+  {
+    "from": "карго билд",
+    "to": "cargo build",
+    "notes": "Common Russian dictation of cargo build",
+    "source": "rust"
+  },
+  {
+    "from": "карго тест",
+    "to": "cargo test",
+    "notes": "Common Russian dictation of cargo test",
+    "source": "rust"
+  },
+  {
+    "from": "карго бенч",
+    "to": "cargo bench",
+    "notes": "Russian phonetic for cargo bench",
+    "source": "rust"
+  },
+  {
+    "from": "карго томл",
+    "to": "Cargo.toml",
+    "notes": "Russian ASR for Cargo.toml",
+    "source": "rust"
+  },
+  {
+    "from": "либ дот рс",
+    "to": "lib.rs",
+    "notes": "Dot-notation file pattern",
+    "source": "rust"
+  },
+  {
+    "from": "lib dot rs",
+    "to": "lib.rs",
+    "notes": "English ASR dot pattern",
+    "source": "rust"
+  },
+  {
+    "from": "мод дот рс",
+    "to": "mod.rs",
+    "notes": "Dot-notation file pattern",
+    "source": "rust"
+  },
+  {
+    "from": "mod dot rs",
+    "to": "mod.rs",
+    "notes": "English ASR dot pattern",
+    "source": "rust"
+  },
+  {
+    "from": "фича флаги",
+    "to": "feature flags",
+    "notes": "Plural feature flags",
+    "source": "rust"
+  },
+  {
+    "from": "фичер флаг",
+    "to": "feature flag",
+    "notes": "ASR variant",
+    "source": "rust"
+  },
+  {
+    "from": "карго инит",
+    "to": "cargo init",
+    "notes": "Russian spoken cargo init",
+    "source": "rust"
+  },
+  {
+    "from": "карго клин",
+    "to": "cargo clean",
+    "notes": "Russian spoken cargo clean",
+    "source": "rust"
+  },
+  {
+    "from": "олл фичерс",
+    "to": "all-features",
+    "notes": "Cargo test/build flag",
+    "source": "rust"
+  },
+  {
+    "from": "дебаг билд",
+    "to": "debug build",
+    "notes": "Russian spoken debug build",
+    "source": "rust"
+  },
+  {
+    "from": "докер билд",
+    "to": "docker build",
+    "notes": "Build image from Dockerfile",
+    "source": "cloud"
+  },
+  {
+    "from": "докер логс",
+    "to": "docker logs",
+    "notes": "View container logs",
+    "source": "cloud"
+  },
+  {
+    "from": "докер файл",
+    "to": "Dockerfile",
+    "notes": "Image build recipe file",
+    "source": "cloud"
+  },
+  {
+    "from": "кубернетес",
+    "to": "kubernetes",
+    "notes": "Full cluster name",
+    "source": "cloud"
+  },
+  {
+    "from": "кубернетис",
+    "to": "kubernetes",
+    "notes": "Phonetic variant",
+    "source": "cloud"
+  },
+  {
+    "from": "конфиг мап",
+    "to": "configmap",
+    "notes": "Split pronunciation",
+    "source": "cloud"
+  },
+  {
+    "from": "репликасет",
+    "to": "replicaset",
+    "notes": "Pod replica controller",
+    "source": "cloud"
+  },
+  {
+    "from": "гугл клауд",
+    "to": "GCP",
+    "notes": "Google Cloud shorthand",
+    "source": "cloud"
+  },
+  {
+    "from": "систем ctl",
+    "to": "systemctl",
+    "notes": "Split systemctl mishearing",
+    "source": "cloud"
+  },
+  {
+    "from": "си ай сиди",
+    "to": "CI/CD",
+    "notes": "Letter-by-letter ASR",
+    "source": "cloud"
+  },
+  {
+    "from": "промetheus",
+    "to": "Prometheus",
+    "notes": "Metrics monitoring",
+    "source": "cloud"
+  },
+  {
+    "from": "docker hub",
+    "to": "Docker Hub",
+    "notes": "Public image registry",
+    "source": "cloud"
+  },
+  {
+    "from": "blue green",
+    "to": "blue-green",
+    "notes": "Deploy strategy",
+    "source": "cloud"
+  },
+  {
+    "from": "пакедж лок",
+    "to": "package-lock.json",
+    "notes": "Russian phonetic for package-lock",
+    "source": "web"
+  },
+  {
+    "from": "ярн инстал",
+    "to": "yarn install",
+    "notes": "Russian phonetic",
+    "source": "web"
+  },
+  {
+    "from": "yarn build",
+    "to": "yarn build",
+    "notes": "Keep canonical command",
+    "source": "web"
+  },
+  {
+    "from": "тайпскрипт",
+    "to": "typescript",
+    "notes": "Russian phonetic typescript",
+    "source": "web"
+  },
+  {
+    "from": "флекс бокс",
+    "to": "flexbox",
+    "notes": "Split spoken form",
+    "source": "web"
+  },
+  {
+    "from": "адаптивный",
+    "to": "responsive",
+    "notes": "Russian descriptive synonym",
+    "source": "web"
+  },
+  {
+    "from": "си о ар эс",
+    "to": "CORS",
+    "notes": "Russian letter spelling CORS",
+    "source": "web"
+  },
+  {
+    "from": "точка томл",
+    "to": ".toml",
+    "notes": "точка toml extension",
+    "source": "files"
+  },
+  {
+    "from": "дот svelte",
+    "to": ".svelte",
+    "notes": "dot svelte component extension",
+    "source": "files"
+  },
+  {
+    "from": "cargo toml",
+    "to": "Cargo.toml",
+    "notes": "Lowercase cargo → correct Rust manifest casing",
+    "source": "files"
+  },
+  {
+    "from": "карго тому",
+    "to": "Cargo.toml",
+    "notes": "Common mishearing of Cargo.toml",
+    "source": "files"
+  },
+  {
+    "from": "cargo lock",
+    "to": "Cargo.lock",
+    "notes": "Rust lockfile with correct casing",
+    "source": "files"
+  },
+  {
+    "from": "dockerfile",
+    "to": "Dockerfile",
+    "notes": "Lowercase dockerfile → Dockerfile",
+    "source": "files"
+  },
+  {
+    "from": "git ignore",
+    "to": ".gitignore",
+    "notes": "git ignore without leading dot",
+    "source": "files"
+  },
+  {
+    "from": "обновление",
+    "to": "update",
+    "notes": "when context is IT release/update, prefer Latin",
+    "source": "general"
+  },
+  {
+    "from": "задеплоили",
+    "to": "deployed",
+    "notes": "past tense with Russian ending",
+    "source": "general"
+  },
+  {
+    "from": "задебажить",
+    "to": "debug",
+    "notes": "perfective verb; fix by debugging",
+    "source": "general"
+  },
+  {
+    "from": "рефакторим",
+    "to": "refactor",
+    "notes": "1pl present",
+    "source": "general"
+  },
+  {
+    "from": "легаси код",
+    "to": "legacy code",
+    "notes": "compound phrase",
+    "source": "general"
+  },
+  {
+    "from": "обработчик",
+    "to": "handler",
+    "notes": "literal RU word; prefer handler in IT context",
+    "source": "general"
+  },
+  {
+    "from": "транзакция",
+    "to": "transaction",
+    "notes": "DB transaction",
+    "source": "general"
+  },
+  {
+    "from": "транзакшен",
+    "to": "transaction",
+    "notes": "phonetic English ending",
+    "source": "general"
+  },
+  {
+    "from": "локал хост",
+    "to": "localhost",
+    "notes": "ASR word split",
+    "source": "general"
+  },
+  {
+    "from": "скомпилить",
+    "to": "compile",
+    "notes": "verb infinitive",
+    "source": "general"
+  },
+  {
+    "from": "компиляция",
+    "to": "compile",
+    "notes": "when meaning build step, not generic compilation theory",
+    "source": "general"
+  },
+  {
+    "from": "распарсить",
+    "to": "parse",
+    "notes": "perfective verb",
+    "source": "general"
+  },
+  {
+    "from": "зет эс эйч",
+    "to": "zsh",
+    "notes": "Z shell spoken",
+    "source": "general"
+  },
+  {
+    "from": "зарелизить",
+    "to": "release",
+    "notes": "verb; ship release",
+    "source": "general"
+  },
+  {
+    "from": "черри пик",
+    "to": "cherry-pick",
+    "notes": "git command",
+    "source": "git"
+  },
+  {
+    "from": "гит мердж",
+    "to": "git merge",
+    "notes": "merge command",
+    "source": "git"
+  },
+  {
+    "from": "гит аменд",
+    "to": "git amend",
+    "notes": "amend commit",
+    "source": "git"
+  },
+  {
+    "from": "гит сквош",
+    "to": "git squash",
+    "notes": "squash commits",
+    "source": "git"
+  },
+  {
+    "from": "гит бранч",
+    "to": "git branch",
+    "notes": "branch command",
+    "source": "git"
+  },
+  {
+    "from": "чейнджлог",
+    "to": "changelog",
+    "notes": "release notes file",
+    "source": "git"
+  },
+  {
+    "from": "сабмодуль",
+    "to": "submodule",
+    "notes": "git submodule",
+    "source": "git"
+  },
+  {
+    "from": "ребейзить",
+    "to": "rebase",
+    "notes": "verb",
+    "source": "git"
+  },
+  {
+    "from": "чекаутить",
+    "to": "checkout",
+    "notes": "verb",
+    "source": "git"
+  },
+  {
+    "from": "прекоммит",
+    "to": "pre-commit",
+    "notes": "hook shorthand",
+    "source": "git"
+  },
+  {
+    "from": "пайп лайн",
+    "to": "pipeline",
+    "notes": "split",
+    "source": "git"
+  },
+  {
+    "from": "ворк флоу",
+    "to": "workflow",
+    "notes": "split",
+    "source": "git"
+  },
+  {
+    "from": "резолвить",
+    "to": "resolve",
+    "notes": "verb",
+    "source": "git"
+  },
+  {
+    "from": "стейджинг",
+    "to": "staging",
+    "notes": "staging env",
+    "source": "git"
+  },
+  {
+    "from": "детач хед",
+    "to": "detached HEAD",
+    "notes": "short form",
+    "source": "git"
+  },
+  {
+    "from": "карго ран",
+    "to": "cargo run",
+    "notes": "Russian phonetic for cargo run",
+    "source": "rust"
+  },
+  {
+    "from": "карго чек",
+    "to": "cargo check",
+    "notes": "Russian phonetic for cargo check",
+    "source": "rust"
+  },
+  {
+    "from": "карго фмт",
+    "to": "cargo fmt",
+    "notes": "Russian phonetic for cargo fmt",
+    "source": "rust"
+  },
+  {
+    "from": "карго док",
+    "to": "cargo doc",
+    "notes": "Russian phonetic for cargo doc",
+    "source": "rust"
+  },
+  {
+    "from": "карго адд",
+    "to": "cargo add",
+    "notes": "Russian phonetic for cargo add",
+    "source": "rust"
+  },
+  {
+    "from": "карго лок",
+    "to": "Cargo.lock",
+    "notes": "Russian ASR for Cargo.lock",
+    "source": "rust"
+  },
+  {
+    "from": "имплемент",
+    "to": "impl",
+    "notes": "Russian spoken impl block",
+    "source": "rust"
+  },
+  {
+    "from": "структура",
+    "to": "struct",
+    "notes": "Russian word for structure",
+    "source": "rust"
+  },
+  {
+    "from": "воркспейс",
+    "to": "workspace",
+    "notes": "Russian phonetic for workspace",
+    "source": "rust"
+  },
+  {
+    "from": "фича флаг",
+    "to": "feature flag",
+    "notes": "Russian spoken feature flag",
+    "source": "rust"
+  },
+  {
+    "from": "диз эррор",
+    "to": "thiserror",
+    "notes": "Russian spoken thiserror",
+    "source": "rust"
+  },
+  {
+    "from": "результат",
+    "to": "Result",
+    "notes": "Russian spoken Result type",
+    "source": "rust"
+  },
+  {
+    "from": "анврап ор",
+    "to": "unwrap_or",
+    "notes": "Russian spoken unwrap_or",
+    "source": "rust"
+  },
+  {
+    "from": "карго нью",
+    "to": "cargo new",
+    "notes": "Russian spoken cargo new",
+    "source": "rust"
+  },
+  {
+    "from": "но дефолт",
+    "to": "--no-default-features",
+    "notes": "Cargo flag spoken aloud",
+    "source": "rust"
+  },
+  {
+    "from": "докер ран",
+    "to": "docker run",
+    "notes": "Start container",
+    "source": "cloud"
+  },
+  {
+    "from": "докер пул",
+    "to": "docker pull",
+    "notes": "Download image from registry",
+    "source": "cloud"
+  },
+  {
+    "from": "докер пуш",
+    "to": "docker push",
+    "notes": "Upload image to registry",
+    "source": "cloud"
+  },
+  {
+    "from": "докерфайл",
+    "to": "Dockerfile",
+    "notes": "Merged pronunciation",
+    "source": "cloud"
+  },
+  {
+    "from": "контейнер",
+    "to": "container",
+    "notes": "Generic container term",
+    "source": "cloud"
+  },
+  {
+    "from": "хелм чарт",
+    "to": "helm chart",
+    "notes": "Packaged K8s manifests",
+    "source": "cloud"
+  },
+  {
+    "from": "неймспейс",
+    "to": "namespace",
+    "notes": "K8s logical partition",
+    "source": "cloud"
+  },
+  {
+    "from": "неймспэйс",
+    "to": "namespace",
+    "notes": "Phonetic variant",
+    "source": "cloud"
+  },
+  {
+    "from": "конфигмап",
+    "to": "configmap",
+    "notes": "Non-secret config store",
+    "source": "cloud"
+  },
+  {
+    "from": "даемонсет",
+    "to": "daemonset",
+    "notes": "Node-level pod controller",
+    "source": "cloud"
+  },
+  {
+    "from": "эн джинкс",
+    "to": "nginx",
+    "notes": "Split pronunciation",
+    "source": "cloud"
+  },
+  {
+    "from": "терраформ",
+    "to": "terraform",
+    "notes": "IaC tool",
+    "source": "cloud"
+  },
+  {
+    "from": "гитлаб ci",
+    "to": "GitLab CI",
+    "notes": "GitLab pipelines",
+    "source": "cloud"
+  },
+  {
+    "from": "арго сиди",
+    "to": "ArgoCD",
+    "notes": "Phonetic variant",
+    "source": "cloud"
+  },
+  {
+    "from": "канарейка",
+    "to": "canary",
+    "notes": "Russian word for canary deploy",
+    "source": "cloud"
+  },
+  {
+    "from": "npm build",
+    "to": "npm run build",
+    "notes": "Common shorthand to full command",
+    "source": "web"
+  },
+  {
+    "from": "npm start",
+    "to": "npm start",
+    "notes": "Keep canonical command",
+    "source": "web"
+  },
+  {
+    "from": "интерфейс",
+    "to": "interface",
+    "notes": "Russian word for interface keyword",
+    "source": "web"
+  },
+  {
+    "from": "тс конфиг",
+    "to": "tsconfig.json",
+    "notes": "Short spoken form",
+    "source": "web"
+  },
+  {
+    "from": "точка энв",
+    "to": ".env",
+    "notes": "Russian dot variant",
+    "source": "web"
+  },
+  {
+    "from": "флексбокс",
+    "to": "flexbox",
+    "notes": "Russian phonetic flexbox",
+    "source": "web"
+  },
+  {
+    "from": "респонсив",
+    "to": "responsive",
+    "notes": "Russian phonetic responsive",
+    "source": "web"
+  },
+  {
+    "from": "веб сокет",
+    "to": "WebSocket",
+    "notes": "Split spoken form",
+    "source": "web"
+  },
+  {
+    "from": "at readme",
+    "to": "@README.md",
+    "notes": "English at-sign mention",
+    "source": "files"
+  },
+  {
+    "from": "дот эм дэ",
+    "to": ".md",
+    "notes": "dot md extension pattern",
+    "source": "files"
+  },
+  {
+    "from": "точка env",
+    "to": ".env",
+    "notes": "точка env environment file",
+    "source": "files"
+  },
+  {
+    "from": "make file",
+    "to": "Makefile",
+    "notes": "make file → Makefile casing",
+    "source": "files"
+  },
+  {
+    "from": "гит игнор",
+    "to": ".gitignore",
+    "notes": ".gitignore in Russian phonetics",
+    "source": "files"
+  },
+  {
+    "from": "индекс тс",
+    "to": "index.ts",
+    "notes": "index.ts in Russian phonetics",
+    "source": "files"
+  },
+  {
+    "from": "src slash",
+    "to": "src/",
+    "notes": "Path prefix src/ spoken aloud",
+    "source": "files"
+  },
+  {
+    "from": "апдейтить",
+    "to": "update",
+    "notes": "verb; infinitive stem in speech",
+    "source": "general"
+  },
+  {
+    "from": "пофиксить",
+    "to": "fix",
+    "notes": "verb; patch a bug",
+    "source": "general"
+  },
+  {
+    "from": "зафиксить",
+    "to": "fix",
+    "notes": "perfective; commit a fix",
+    "source": "general"
+  },
+  {
+    "from": "депрекейт",
+    "to": "deprecate",
+    "notes": "verb; mark API obsolete",
+    "source": "general"
+  },
+  {
+    "from": "слушатель",
+    "to": "listener",
+    "notes": "literal RU; use listener for code",
+    "source": "general"
+  },
+  {
+    "from": "сингл тон",
+    "to": "singleton",
+    "notes": "ASR word split",
+    "source": "general"
+  },
+  {
+    "from": "эс кью эл",
+    "to": "SQL",
+    "notes": "letter-by-letter ASR",
+    "source": "general"
+  },
+  {
+    "from": "юнит тест",
+    "to": "unit test",
+    "notes": "testing level",
+    "source": "general"
+  },
+  {
+    "from": "застабить",
+    "to": "stub",
+    "notes": "verb; stub out dependency",
+    "source": "general"
+  },
+  {
+    "from": "локалхост",
+    "to": "localhost",
+    "notes": "dev server address",
+    "source": "general"
+  },
+  {
+    "from": "выполнить",
+    "to": "execute",
+    "notes": "when meaning run a script/binary",
+    "source": "general"
+  },
+  {
+    "from": "сериалайз",
+    "to": "serialize",
+    "notes": "verb stem",
+    "source": "general"
+  },
+  {
+    "from": "эс эс эйч",
+    "to": "SSH",
+    "notes": "spoken acronym",
+    "source": "general"
+  },
+  {
+    "from": "замержить",
+    "to": "merge",
+    "notes": "verb; merge branches",
+    "source": "general"
+  },
+  {
+    "from": "графкьюэл",
+    "to": "GraphQL",
+    "notes": "API query language",
+    "source": "general"
+  },
+  {
+    "from": "валидация",
+    "to": "validation",
+    "notes": "noun",
+    "source": "general"
+  },
+  {
+    "from": "застешить",
+    "to": "stash",
+    "notes": "verb; git stash changes",
+    "source": "general"
+  },
+  {
+    "from": "чери пик",
+    "to": "cherry-pick",
+    "notes": "shortened cherry",
+    "source": "git"
+  },
+  {
+    "from": "черрипик",
+    "to": "cherry-pick",
+    "notes": "run-together",
+    "source": "git"
+  },
+  {
+    "from": "гит клон",
+    "to": "git clone",
+    "notes": "clone repo",
+    "source": "git"
+  },
+  {
+    "from": "гит фетч",
+    "to": "git fetch",
+    "notes": "fetch remote",
+    "source": "git"
+  },
+  {
+    "from": "гит стэш",
+    "to": "git stash",
+    "notes": "stash changes",
+    "source": "git"
+  },
+  {
+    "from": "гит сташ",
+    "to": "git stash",
+    "notes": "stash variant",
+    "source": "git"
+  },
+  {
+    "from": "гит дифф",
+    "to": "git diff",
+    "notes": "view changes",
+    "source": "git"
+  },
+  {
+    "from": "си си ди",
+    "to": "CI/CD",
+    "notes": "abbreviation slip",
+    "source": "git"
+  },
+  {
+    "from": "чейнжлог",
+    "to": "changelog",
+    "notes": "spelling variant",
+    "source": "git"
+  },
+  {
+    "from": "хот фикс",
+    "to": "hotfix",
+    "notes": "split word",
+    "source": "git"
+  },
+  {
+    "from": "монорепо",
+    "to": "monorepo",
+    "notes": "short form",
+    "source": "git"
+  },
+  {
+    "from": "запушить",
+    "to": "push",
+    "notes": "verb",
+    "source": "git"
+  },
+  {
+    "from": "смержить",
+    "to": "merge",
+    "notes": "verb",
+    "source": "git"
+  },
+  {
+    "from": "форкнуть",
+    "to": "fork",
+    "notes": "verb",
+    "source": "git"
+  },
+  {
+    "from": "амендить",
+    "to": "amend",
+    "notes": "verb",
+    "source": "git"
+  },
+  {
+    "from": "сквошить",
+    "to": "squash",
+    "notes": "verb",
+    "source": "git"
+  },
+  {
+    "from": "ролл бэк",
+    "to": "rollback",
+    "notes": "split",
+    "source": "git"
+  },
+  {
+    "from": "пайплайн",
+    "to": "pipeline",
+    "notes": "CI pipeline",
+    "source": "git"
+  },
+  {
+    "from": "воркфлоу",
+    "to": "workflow",
+    "notes": "CI workflow",
+    "source": "git"
+  },
+  {
+    "from": "артефакт",
+    "to": "artifact",
+    "notes": "CI artifact",
+    "source": "git"
+  },
+  {
+    "from": "артифакт",
+    "to": "artifact",
+    "notes": "spelling variant",
+    "source": "git"
+  },
+  {
+    "from": "конфликт",
+    "to": "conflict",
+    "notes": "merge conflict",
+    "source": "git"
+  },
+  {
+    "from": "резолвни",
+    "to": "resolve",
+    "notes": "imperative ASR",
+    "source": "git"
+  },
+  {
+    "from": "форс пуш",
+    "to": "force push",
+    "notes": "dangerous operation",
+    "source": "git"
+  },
+  {
+    "from": "асинхрон",
+    "to": "async",
+    "notes": "Russian async keyword",
+    "source": "rust"
+  },
+  {
+    "from": "лайфтайм",
+    "to": "lifetime",
+    "notes": "Russian phonetic for lifetime",
+    "source": "rust"
+  },
+  {
+    "from": "раст фмт",
+    "to": "rustfmt",
+    "notes": "Russian phonetic for rustfmt",
+    "source": "rust"
+  },
+  {
+    "from": "руст фмт",
+    "to": "rustfmt",
+    "notes": "Transliterated rustfmt",
+    "source": "rust"
+  },
+  {
+    "from": "овнершип",
+    "to": "ownership",
+    "notes": "Russian phonetic for ownership",
+    "source": "rust"
+  },
+  {
+    "from": "референс",
+    "to": "reference",
+    "notes": "Russian phonetic for reference",
+    "source": "rust"
+  },
+  {
+    "from": "эни хаус",
+    "to": "anyhow",
+    "notes": "Popular error handling crate",
+    "source": "rust"
+  },
+  {
+    "from": "реф целл",
+    "to": "RefCell",
+    "notes": "Russian spoken RefCell",
+    "source": "rust"
+  },
+  {
+    "from": "дот томл",
+    "to": ".toml",
+    "notes": "Generic TOML extension pattern",
+    "source": "rust"
+  },
+  {
+    "from": "некомпил",
+    "to": "does not compile",
+    "notes": "Russian spoken compile failure",
+    "source": "rust"
+  },
+  {
+    "from": "фор лайф",
+    "to": "'static",
+    "notes": "Russian spoken static lifetime",
+    "source": "rust"
+  },
+  {
+    "from": "кубекутл",
+    "to": "kubectl",
+    "notes": "Phonetic variant",
+    "source": "cloud"
+  },
+  {
+    "from": "кронджоб",
+    "to": "cronjob",
+    "notes": "Scheduled K8s job",
+    "source": "cloud"
+  },
+  {
+    "from": "эс эс эл",
+    "to": "SSL",
+    "notes": "TLS certificate shorthand",
+    "source": "cloud"
+  },
+  {
+    "from": "ти эл эс",
+    "to": "TLS",
+    "notes": "Transport layer security",
+    "source": "cloud"
+  },
+  {
+    "from": "систем д",
+    "to": "systemd",
+    "notes": "Split pronunciation",
+    "source": "cloud"
+  },
+  {
+    "from": "продакшн",
+    "to": "production",
+    "notes": "Full production name",
+    "source": "cloud"
+  },
+  {
+    "from": "env файл",
+    "to": ".env",
+    "notes": "Mixed-script env file",
+    "source": "cloud"
+  },
+  {
+    "from": "postgres",
+    "to": "PostgreSQL",
+    "notes": "Relational database",
+    "source": "cloud"
+  },
+  {
+    "from": "постгрес",
+    "to": "PostgreSQL",
+    "notes": "Russian pronunciation",
+    "source": "cloud"
+  },
+  {
+    "from": "эн пи эм",
+    "to": "npm",
+    "notes": "Russian letter spelling",
+    "source": "web"
+  },
+  {
+    "from": "npm test",
+    "to": "npm test",
+    "notes": "Keep canonical command",
+    "source": "web"
+  },
+  {
+    "from": "ярн билд",
+    "to": "yarn build",
+    "notes": "Russian phonetic",
+    "source": "web"
+  },
+  {
+    "from": "экспресс",
+    "to": "express",
+    "notes": "Russian phonetic express",
+    "source": "web"
+  },
+  {
+    "from": "преттиер",
+    "to": "prettier",
+    "notes": "Russian phonetic prettier",
+    "source": "web"
+  },
+  {
+    "from": "at ридми",
+    "to": "@README.md",
+    "notes": "Mixed EN @ + RU readme",
+    "source": "web"
+  },
+  {
+    "from": "тейлвинд",
+    "to": "tailwind",
+    "notes": "Russian phonetic tailwind",
+    "source": "web"
+  },
+  {
+    "from": "css грид",
+    "to": "CSS Grid",
+    "notes": "Russian spoken CSS Grid",
+    "source": "web"
+  },
+  {
+    "from": "эндпоинт",
+    "to": "endpoint",
+    "notes": "Russian phonetic endpoint",
+    "source": "web"
+  },
+  {
+    "from": "рест апи",
+    "to": "REST API",
+    "notes": "Russian spoken REST API",
+    "source": "web"
+  },
+  {
+    "from": "графкуэл",
+    "to": "GraphQL",
+    "notes": "Russian phonetic GraphQL",
+    "source": "web"
+  },
+  {
+    "from": "вебсокет",
+    "to": "websocket",
+    "notes": "Russian phonetic websocket",
+    "source": "web"
+  },
+  {
+    "from": "д жейсон",
+    "to": ".json",
+    "notes": "Split pronunciation of json",
+    "source": "files"
+  },
+  {
+    "from": "точка rs",
+    "to": ".rs",
+    "notes": "точка rs Rust extension",
+    "source": "files"
+  },
+  {
+    "from": "точка ts",
+    "to": ".ts",
+    "notes": "точка ts TypeScript extension",
+    "source": "files"
+  },
+  {
+    "from": "точка js",
+    "to": ".js",
+    "notes": "точка js JavaScript extension",
+    "source": "files"
+  },
+  {
+    "from": "точка py",
+    "to": ".py",
+    "notes": "точка py Python extension",
+    "source": "files"
+  },
+  {
+    "from": "дот yaml",
+    "to": ".yaml",
+    "notes": "dot yaml extension",
+    "source": "files"
+  },
+  {
+    "from": "дот html",
+    "to": ".html",
+    "notes": "dot html extension",
+    "source": "files"
+  },
+  {
+    "from": "дот lock",
+    "to": ".lock",
+    "notes": "dot lock lockfile extension",
+    "source": "files"
+  },
+  {
+    "from": "майкфайл",
+    "to": "Makefile",
+    "notes": "Makefile spoken as one Russian word",
+    "source": "files"
+  },
+  {
+    "from": "index ts",
+    "to": "index.ts",
+    "notes": "Common entry file with extension spoken",
+    "source": "files"
+  },
+  {
+    "from": "app html",
+    "to": "app.html",
+    "notes": "Common HTML entry filename",
+    "source": "files"
+  },
+  {
+    "from": "эс ар си",
+    "to": "src",
+    "notes": "src directory in Russian letter spelling",
+    "source": "files"
+  },
+  {
+    "from": "задеплой",
+    "to": "deploy",
+    "notes": "imperative; 'go deploy it'",
+    "source": "general"
+  },
+  {
+    "from": "дебажить",
+    "to": "debug",
+    "notes": "verb infinitive",
+    "source": "general"
+  },
+  {
+    "from": "фичефлаг",
+    "to": "feature flag",
+    "notes": "compound; toggle in code",
+    "source": "general"
+  },
+  {
+    "from": "рефактор",
+    "to": "refactor",
+    "notes": "verb stem or noun",
+    "source": "general"
+  },
+  {
+    "from": "фронтенд",
+    "to": "frontend",
+    "notes": "noun; client side",
+    "source": "general"
+  },
+  {
+    "from": "фронтэнд",
+    "to": "frontend",
+    "notes": "ASR variant",
+    "source": "general"
+  },
+  {
+    "from": "фул стек",
+    "to": "fullstack",
+    "notes": "two-word ASR split",
+    "source": "general"
+  },
+  {
+    "from": "мидлвейр",
+    "to": "middleware",
+    "notes": "ASR variant",
+    "source": "general"
+  },
+  {
+    "from": "миддлвер",
+    "to": "middleware",
+    "notes": "double-d mishearing",
+    "source": "general"
+  },
+  {
+    "from": "листенер",
+    "to": "listener",
+    "notes": "noun; event subscriber",
+    "source": "general"
+  },
+  {
+    "from": "синглтон",
+    "to": "singleton",
+    "notes": "design pattern",
+    "source": "general"
+  },
+  {
+    "from": "миграция",
+    "to": "migration",
+    "notes": "DB schema migration in IT context",
+    "source": "general"
+  },
+  {
+    "from": "юниттест",
+    "to": "unit test",
+    "notes": "compound ASR",
+    "source": "general"
+  },
+  {
+    "from": "замокать",
+    "to": "mock",
+    "notes": "verb; create a mock",
+    "source": "general"
+  },
+  {
+    "from": "фикстура",
+    "to": "fixture",
+    "notes": "test setup data",
+    "source": "general"
+  },
+  {
+    "from": "фикстуры",
+    "to": "fixtures",
+    "notes": "plural",
+    "source": "general"
+  },
+  {
+    "from": "ковередж",
+    "to": "coverage",
+    "notes": "test coverage metric",
+    "source": "general"
+  },
+  {
+    "from": "кавередж",
+    "to": "coverage",
+    "notes": "ASR vowel variant",
+    "source": "general"
+  },
+  {
+    "from": "покрытие",
+    "to": "coverage",
+    "notes": "when meaning test coverage",
+    "source": "general"
+  },
+  {
+    "from": "ти ди ди",
+    "to": "TDD",
+    "notes": "test-driven development acronym",
+    "source": "general"
+  },
+  {
+    "from": "ран тайм",
+    "to": "runtime",
+    "notes": "ASR word split",
+    "source": "general"
+  },
+  {
+    "from": "экзекьют",
+    "to": "execute",
+    "notes": "verb; run code",
+    "source": "general"
+  },
+  {
+    "from": "терминал",
+    "to": "terminal",
+    "notes": "CLI window",
+    "source": "general"
+  },
+  {
+    "from": "эндпойнт",
+    "to": "endpoint",
+    "notes": "ASR variant",
+    "source": "general"
+  },
+  {
+    "from": "откатить",
+    "to": "rollback",
+    "notes": "verb; roll back release",
+    "source": "general"
+  },
+  {
+    "from": "айдишник",
+    "to": "ID",
+    "notes": "colloquial for identifier",
+    "source": "general"
+  },
+  {
+    "from": "гит пул",
+    "to": "git pull",
+    "notes": "common command",
+    "source": "git"
+  },
+  {
+    "from": "гид пул",
+    "to": "git pull",
+    "notes": "гид mishearing",
+    "source": "git"
+  },
+  {
+    "from": "гит пуш",
+    "to": "git push",
+    "notes": "common command",
+    "source": "git"
+  },
+  {
+    "from": "гид пуш",
+    "to": "git push",
+    "notes": "гид mishearing",
+    "source": "git"
+  },
+  {
+    "from": "гит тэг",
+    "to": "git tag",
+    "notes": "tag release",
+    "source": "git"
+  },
+  {
+    "from": "гит тег",
+    "to": "git tag",
+    "notes": "тег spelling",
+    "source": "git"
+  },
+  {
+    "from": "гит лог",
+    "to": "git log",
+    "notes": "view history",
+    "source": "git"
+  },
+  {
+    "from": "гит адд",
+    "to": "git add",
+    "notes": "stage files",
+    "source": "git"
+  },
+  {
+    "from": "гит хук",
+    "to": "git hook",
+    "notes": "git hooks",
+    "source": "git"
+  },
+  {
+    "from": "хотфикс",
+    "to": "hotfix",
+    "notes": "urgent fix branch",
+    "source": "git"
+  },
+  {
+    "from": "гит лаб",
+    "to": "GitLab",
+    "notes": "split name",
+    "source": "git"
+  },
+  {
+    "from": "ориджин",
+    "to": "origin",
+    "notes": "remote name",
+    "source": "git"
+  },
+  {
+    "from": "чек аут",
+    "to": "checkout",
+    "notes": "split",
+    "source": "git"
+  },
+  {
+    "from": "фетчить",
+    "to": "fetch",
+    "notes": "verb",
+    "source": "git"
+  },
+  {
+    "from": "роллбэк",
+    "to": "rollback",
+    "notes": "rollback",
+    "source": "git"
+  },
+  {
+    "from": "форспуш",
+    "to": "force push",
+    "notes": "run-together",
+    "source": "git"
+  },
+  {
+    "from": "раст си",
+    "to": "Rust",
+    "notes": "Common Russian ASR for Rust",
+    "source": "rust"
+  },
+  {
+    "from": "руст си",
+    "to": "rustc",
+    "notes": "Transliterated rustc",
+    "source": "rust"
+  },
+  {
+    "from": "мьютекс",
+    "to": "Mutex",
+    "notes": "Russian phonetic for Mutex",
+    "source": "rust"
+  },
+  {
+    "from": "экспект",
+    "to": "expect",
+    "notes": "Russian phonetic for expect",
+    "source": "rust"
+  },
+  {
+    "from": "атрибут",
+    "to": "#[",
+    "notes": "Russian spoken attribute",
+    "source": "rust"
+  },
+  {
+    "from": "стрелка",
+    "to": "->",
+    "notes": "Russian spoken return type arrow",
+    "source": "rust"
+  },
+  {
+    "from": "сегфолт",
+    "to": "segfault",
+    "notes": "Russian phonetic for segfault",
+    "source": "rust"
+  },
+  {
+    "from": "компоуз",
+    "to": "compose",
+    "notes": "Standalone compose reference",
+    "source": "cloud"
+  },
+  {
+    "from": "куб ctl",
+    "to": "kubectl",
+    "notes": "Split pronunciation",
+    "source": "cloud"
+  },
+  {
+    "from": "кубектл",
+    "to": "kubectl",
+    "notes": "Merged mishearing",
+    "source": "cloud"
+  },
+  {
+    "from": "ингресс",
+    "to": "ingress",
+    "notes": "HTTP routing into cluster",
+    "source": "cloud"
+  },
+  {
+    "from": "инgress",
+    "to": "ingress",
+    "notes": "Mixed-script variant",
+    "source": "cloud"
+  },
+  {
+    "from": "сикретс",
+    "to": "secrets",
+    "notes": "Plural secrets",
+    "source": "cloud"
+  },
+  {
+    "from": "энжинкс",
+    "to": "nginx",
+    "notes": "Reverse proxy / web server",
+    "source": "cloud"
+  },
+  {
+    "from": "системд",
+    "to": "systemd",
+    "notes": "Linux init system",
+    "source": "cloud"
+  },
+  {
+    "from": "дот энв",
+    "to": ".env",
+    "notes": "Explicit dot-env",
+    "source": "cloud"
+  },
+  {
+    "from": "арго cd",
+    "to": "ArgoCD",
+    "notes": "GitOps continuous delivery",
+    "source": "cloud"
+  },
+  {
+    "from": "графана",
+    "to": "Grafana",
+    "notes": "Metrics dashboards",
+    "source": "cloud"
+  },
+  {
+    "from": "эластик",
+    "to": "Elasticsearch",
+    "notes": "Search and log store",
+    "source": "cloud"
+  },
+  {
+    "from": "npm run",
+    "to": "npm run",
+    "notes": "Keep canonical command",
+    "source": "web"
+  },
+  {
+    "from": "npm dev",
+    "to": "npm run dev",
+    "notes": "Common shorthand to full command",
+    "source": "web"
+  },
+  {
+    "from": "экспорт",
+    "to": "export",
+    "notes": "Russian word for export",
+    "source": "web"
+  },
+  {
+    "from": "джейсон",
+    "to": "JSON",
+    "notes": "Russian phonetic JSON",
+    "source": "web"
+  },
+  {
+    "from": "джей эс",
+    "to": "JS",
+    "notes": "Russian letter spelling JS",
+    "source": "web"
+  },
+  {
+    "from": "реад ми",
+    "to": "README.md",
+    "notes": "English readme spoken with Russian phonetics",
+    "source": "files"
+  },
+  {
+    "from": "at sign",
+    "to": "@",
+    "notes": "English at-sign prefix",
+    "source": "files"
+  },
+  {
+    "from": "дот yml",
+    "to": ".yml",
+    "notes": "dot yml extension",
+    "source": "files"
+  },
+  {
+    "from": "дот env",
+    "to": ".env",
+    "notes": "dot env environment file",
+    "source": "files"
+  },
+  {
+    "from": "дот css",
+    "to": ".css",
+    "notes": "dot css stylesheet extension",
+    "source": "files"
+  },
+  {
+    "from": "дот енв",
+    "to": ".env",
+    "notes": "dot env in Russian letters",
+    "source": "files"
+  },
+  {
+    "from": "main rs",
+    "to": "main.rs",
+    "notes": "Rust main entry file",
+    "source": "files"
+  },
+  {
+    "from": "мейн rs",
+    "to": "main.rs",
+    "notes": "main.rs in Russian phonetics",
+    "source": "files"
+  },
+  {
+    "from": "app css",
+    "to": "app.css",
+    "notes": "Common stylesheet filename",
+    "source": "files"
+  },
+  {
+    "from": "ченджес",
+    "to": "changes",
+    "notes": "plural noun; ASR Cyrillicizes English 'changes'",
+    "source": "general"
+  },
+  {
+    "from": "ченджиз",
+    "to": "changes",
+    "notes": "common mishearing of 'changes'",
+    "source": "general"
+  },
+  {
+    "from": "деплоим",
+    "to": "deploy",
+    "notes": "verb 1pl present; keep English root",
+    "source": "general"
+  },
+  {
+    "from": "отладка",
+    "to": "debug",
+    "notes": "when speaker means debugger session, not generic troubleshooting",
+    "source": "general"
+  },
+  {
+    "from": "фулстек",
+    "to": "fullstack",
+    "notes": "adjective or role title",
+    "source": "general"
+  },
+  {
+    "from": "мидлвар",
+    "to": "middleware",
+    "notes": "noun; pipeline layer",
+    "source": "general"
+  },
+  {
+    "from": "коллбэк",
+    "to": "callback",
+    "notes": "double-l mishearing",
+    "source": "general"
+  },
+  {
+    "from": "хендлер",
+    "to": "handler",
+    "notes": "noun; event processor",
+    "source": "general"
+  },
+  {
+    "from": "хэндлер",
+    "to": "handler",
+    "notes": "ASR variant",
+    "source": "general"
+  },
+  {
+    "from": "лисенер",
+    "to": "listener",
+    "notes": "ASR drops t",
+    "source": "general"
+  },
+  {
+    "from": "фэктори",
+    "to": "factory",
+    "notes": "design pattern; not Russian 'фабрика'",
+    "source": "general"
+  },
+  {
+    "from": "фактори",
+    "to": "factory",
+    "notes": "ASR variant",
+    "source": "general"
+  },
+  {
+    "from": "адаптер",
+    "to": "adapter",
+    "notes": "design pattern or interface wrapper",
+    "source": "general"
+  },
+  {
+    "from": "эскьюэл",
+    "to": "SQL",
+    "notes": "spoken acronym",
+    "source": "general"
+  },
+  {
+    "from": "кверить",
+    "to": "query",
+    "notes": "verb; run a query",
+    "source": "general"
+  },
+  {
+    "from": "постгре",
+    "to": "postgres",
+    "notes": "short spoken form",
+    "source": "general"
+  },
+  {
+    "from": "монгодб",
+    "to": "MongoDB",
+    "notes": "full product name",
+    "source": "general"
+  },
+  {
+    "from": "индексы",
+    "to": "indexes",
+    "notes": "plural DB indexes",
+    "source": "general"
+  },
+  {
+    "from": "рантайм",
+    "to": "runtime",
+    "notes": "execution environment",
+    "source": "general"
+  },
+  {
+    "from": "компайл",
+    "to": "compile",
+    "notes": "verb or noun",
+    "source": "general"
+  },
+  {
+    "from": "парсить",
+    "to": "parse",
+    "notes": "verb infinitive",
+    "source": "general"
+  },
+  {
+    "from": "очередь",
+    "to": "queue",
+    "notes": "when meaning MQ/task queue",
+    "source": "general"
+  },
+  {
+    "from": "процесс",
+    "to": "process",
+    "notes": "OS process",
+    "source": "general"
+  },
+  {
+    "from": "файрвол",
+    "to": "firewall",
+    "notes": "network security",
+    "source": "general"
+  },
+  {
+    "from": "фаервол",
+    "to": "firewall",
+    "notes": "ASR variant",
+    "source": "general"
+  },
+  {
+    "from": "собрать",
+    "to": "build",
+    "notes": "when meaning compile/package app",
+    "source": "general"
+  },
+  {
+    "from": "таймаут",
+    "to": "timeout",
+    "notes": "noun; request timeout",
+    "source": "general"
+  },
+  {
+    "from": "инстанс",
+    "to": "instance",
+    "notes": "server or class instance",
+    "source": "general"
+  },
+  {
+    "from": "семвер",
+    "to": "semver",
+    "notes": "version scheme",
+    "source": "git"
+  },
+  {
+    "from": "гитхаб",
+    "to": "GitHub",
+    "notes": "platform name",
+    "source": "git"
+  },
+  {
+    "from": "гитлаб",
+    "to": "GitLab",
+    "notes": "platform name",
+    "source": "git"
+  },
+  {
+    "from": "коммит",
+    "to": "commit",
+    "notes": "double M common",
+    "source": "git"
+  },
+  {
+    "from": "смердж",
+    "to": "merge",
+    "notes": "transliteration",
+    "source": "git"
+  },
+  {
+    "from": "ребейз",
+    "to": "rebase",
+    "notes": "transliteration",
+    "source": "git"
+  },
+  {
+    "from": "ребейс",
+    "to": "rebase",
+    "notes": "s instead of z",
+    "source": "git"
+  },
+  {
+    "from": "ремоут",
+    "to": "remote",
+    "notes": "transliteration",
+    "source": "git"
+  },
+  {
+    "from": "оритин",
+    "to": "origin",
+    "notes": "ASR typo",
+    "source": "git"
+  },
+  {
+    "from": "мастер",
+    "to": "master",
+    "notes": "default branch",
+    "source": "git"
+  },
+  {
+    "from": "чекаут",
+    "to": "checkout",
+    "notes": "switch branch",
+    "source": "git"
+  },
+  {
+    "from": "релиза",
+    "to": "release",
+    "notes": "genitive",
+    "source": "git"
+  },
+  {
+    "from": "реверт",
+    "to": "revert",
+    "notes": "revert commit",
+    "source": "git"
+  },
+  {
+    "from": "деплой",
+    "to": "deploy",
+    "notes": "deployment",
+    "source": "git"
+  },
+  {
+    "from": "экшенс",
+    "to": "actions",
+    "notes": "variant",
+    "source": "git"
+  },
+  {
+    "from": "раннер",
+    "to": "runner",
+    "notes": "CI runner",
+    "source": "git"
+  },
+  {
+    "from": "резолв",
+    "to": "resolve",
+    "notes": "resolve conflict",
+    "source": "git"
+  },
+  {
+    "from": "стейдж",
+    "to": "stage",
+    "notes": "staging area",
+    "source": "git"
+  },
+  {
+    "from": "структ",
+    "to": "struct",
+    "notes": "Russian phonetic for struct",
+    "source": "rust"
+  },
+  {
+    "from": "борроу",
+    "to": "borrow",
+    "notes": "Russian phonetic for borrow",
+    "source": "rust"
+  },
+  {
+    "from": "растап",
+    "to": "rustup",
+    "notes": "Russian phonetic for rustup",
+    "source": "rust"
+  },
+  {
+    "from": "рустап",
+    "to": "rustup",
+    "notes": "Transliterated rustup",
+    "source": "rust"
+  },
+  {
+    "from": "клиппи",
+    "to": "clippy",
+    "notes": "Russian phonetic for clippy",
+    "source": "rust"
+  },
+  {
+    "from": "таргет",
+    "to": "target",
+    "notes": "Russian phonetic for target",
+    "source": "rust"
+  },
+  {
+    "from": "паблик",
+    "to": "pub",
+    "notes": "Russian spoken pub",
+    "source": "rust"
+  },
+  {
+    "from": "статик",
+    "to": "static",
+    "notes": "Russian phonetic for static",
+    "source": "rust"
+  },
+  {
+    "from": "дерайв",
+    "to": "derive",
+    "notes": "Russian phonetic for derive",
+    "source": "rust"
+  },
+  {
+    "from": "дизайн",
+    "to": "thiserror",
+    "notes": "ASR misrecognition of thiserror",
+    "source": "rust"
+  },
+  {
+    "from": "вектор",
+    "to": "Vec",
+    "notes": "Russian spoken vector type",
+    "source": "rust"
+  },
+  {
+    "from": "стринг",
+    "to": "String",
+    "notes": "Russian phonetic for String",
+    "source": "rust"
+  },
+  {
+    "from": "анврап",
+    "to": "unwrap",
+    "notes": "Russian phonetic for unwrap",
+    "source": "rust"
+  },
+  {
+    "from": "квешен",
+    "to": "?",
+    "notes": "Russian spoken question mark operator",
+    "source": "rust"
+  },
+  {
+    "from": "дот рс",
+    "to": ".rs",
+    "notes": "Generic Rust extension pattern",
+    "source": "rust"
+  },
+  {
+    "from": "юнсейф",
+    "to": "unsafe",
+    "notes": "Russian phonetic for unsafe",
+    "source": "rust"
+  },
+  {
+    "from": "ансейф",
+    "to": "unsafe",
+    "notes": "ASR variant for unsafe",
+    "source": "rust"
+  },
+  {
+    "from": "куберн",
+    "to": "kubernetes",
+    "notes": "Truncated ASR form",
+    "source": "cloud"
+  },
+  {
+    "from": "сервис",
+    "to": "service",
+    "notes": "K8s network endpoint",
+    "source": "cloud"
+  },
+  {
+    "from": "сикрет",
+    "to": "secret",
+    "notes": "K8s secret resource",
+    "source": "cloud"
+  },
+  {
+    "from": "эс три",
+    "to": "S3",
+    "notes": "AWS object storage",
+    "source": "cloud"
+  },
+  {
+    "from": "и си 2",
+    "to": "EC2",
+    "notes": "AWS compute instances",
+    "source": "cloud"
+  },
+  {
+    "from": "э си 2",
+    "to": "EC2",
+    "notes": "Phonetic variant",
+    "source": "cloud"
+  },
+  {
+    "from": "лямбда",
+    "to": "Lambda",
+    "notes": "Serverless function",
+    "source": "cloud"
+  },
+  {
+    "from": "виписи",
+    "to": "VPC",
+    "notes": "Merged pronunciation",
+    "source": "cloud"
+  },
+  {
+    "from": "си дэн",
+    "to": "CDN",
+    "notes": "Content delivery network",
+    "source": "cloud"
+  },
+  {
+    "from": "нжинкс",
+    "to": "nginx",
+    "notes": "Dropped syllable variant",
+    "source": "cloud"
+  },
+  {
+    "from": "ансибл",
+    "to": "ansible",
+    "notes": "Configuration management",
+    "source": "cloud"
+  },
+  {
+    "from": "canary",
+    "to": "canary",
+    "notes": "Gradual rollout deploy",
+    "source": "cloud"
+  },
+  {
+    "from": "вебпак",
+    "to": "webpack",
+    "notes": "Russian phonetic webpack",
+    "source": "web"
+  },
+  {
+    "from": "бабель",
+    "to": "babel",
+    "notes": "Russian phonetic babel",
+    "source": "web"
+  },
+  {
+    "from": "эслинт",
+    "to": "eslint",
+    "notes": "Russian phonetic eslint",
+    "source": "web"
+  },
+  {
+    "from": "импорт",
+    "to": "import",
+    "notes": "Russian word for import",
+    "source": "web"
+  },
+  {
+    "from": "рид ми",
+    "to": "README.md",
+    "notes": "Split spoken form",
+    "source": "web"
+  },
+  {
+    "from": "аксиос",
+    "to": "axios",
+    "notes": "Russian phonetic axios",
+    "source": "web"
+  },
+  {
+    "from": "readme",
+    "to": "README.md",
+    "notes": "Lowercase readme without extension",
+    "source": "files"
+  },
+  {
+    "from": "собака",
+    "to": "@",
+    "notes": "Russian word for @ sign in chat paths",
+    "source": "files"
+  },
+  {
+    "from": "дот rs",
+    "to": ".rs",
+    "notes": "dot rs Rust extension",
+    "source": "files"
+  },
+  {
+    "from": "дот ts",
+    "to": ".ts",
+    "notes": "dot ts TypeScript extension",
+    "source": "files"
+  },
+  {
+    "from": "дот js",
+    "to": ".js",
+    "notes": "dot js JavaScript extension",
+    "source": "files"
+  },
+  {
+    "from": "дот py",
+    "to": ".py",
+    "notes": "dot py Python extension",
+    "source": "files"
+  },
+  {
+    "from": "lib rs",
+    "to": "lib.rs",
+    "notes": "Rust library root file",
+    "source": "files"
+  },
+  {
+    "from": "mod rs",
+    "to": "mod.rs",
+    "notes": "Rust module file",
+    "source": "files"
+  },
+  {
+    "from": "чейндж",
+    "to": "change",
+    "notes": "singular noun or verb stem",
+    "source": "general"
+  },
+  {
+    "from": "апдейт",
+    "to": "update",
+    "notes": "noun; Russian devs say 'апдейт' for software update",
+    "source": "general"
+  },
+  {
+    "from": "фиксим",
+    "to": "fix",
+    "notes": "1pl present",
+    "source": "general"
+  },
+  {
+    "from": "легаси",
+    "to": "legacy",
+    "notes": "adjective or noun; old codebase",
+    "source": "general"
+  },
+  {
+    "from": "лэгаси",
+    "to": "legacy",
+    "notes": "ASR spelling variant",
+    "source": "general"
+  },
+  {
+    "from": "бэкенд",
+    "to": "backend",
+    "notes": "noun; server side",
+    "source": "general"
+  },
+  {
+    "from": "бекенд",
+    "to": "backend",
+    "notes": "ASR drops soft sign",
+    "source": "general"
+  },
+  {
+    "from": "колбэк",
+    "to": "callback",
+    "notes": "noun; async handler",
+    "source": "general"
+  },
+  {
+    "from": "колбек",
+    "to": "callback",
+    "notes": "ASR drops ё",
+    "source": "general"
+  },
+  {
+    "from": "скуэль",
+    "to": "SQL",
+    "notes": "fast spoken form",
+    "source": "general"
+  },
+  {
+    "from": "запрос",
+    "to": "query",
+    "notes": "when meaning SQL query, prefer Latin",
+    "source": "general"
+  },
+  {
+    "from": "индекс",
+    "to": "index",
+    "notes": "DB index, not book index",
+    "source": "general"
+  },
+  {
+    "from": "прокси",
+    "to": "proxy",
+    "notes": "noun; reverse proxy etc.",
+    "source": "general"
+  },
+  {
+    "from": "випиэн",
+    "to": "VPN",
+    "notes": "spoken acronym",
+    "source": "general"
+  },
+  {
+    "from": "конфиг",
+    "to": "config",
+    "notes": "configuration",
+    "source": "general"
+  },
+  {
+    "from": "ретрай",
+    "to": "retry",
+    "notes": "noun or verb; repeat request",
+    "source": "general"
+  },
+  {
+    "from": "воркер",
+    "to": "worker",
+    "notes": "background worker process",
+    "source": "general"
+  },
+  {
+    "from": "жейсон",
+    "to": "JSON",
+    "notes": "ASR variant",
+    "source": "general"
+  },
+  {
+    "from": "комит",
+    "to": "commit",
+    "notes": "single M",
+    "source": "git"
+  },
+  {
+    "from": "запуш",
+    "to": "push",
+    "notes": "imperative/short",
+    "source": "git"
+  },
+  {
+    "from": "смерж",
+    "to": "merge",
+    "notes": "short merge",
+    "source": "git"
+  },
+  {
+    "from": "мердж",
+    "to": "merge",
+    "notes": "noun form",
+    "source": "git"
+  },
+  {
+    "from": "бранч",
+    "to": "branch",
+    "notes": "IT term",
+    "source": "git"
+  },
+  {
+    "from": "ветка",
+    "to": "branch",
+    "notes": "Russian for branch",
+    "source": "git"
+  },
+  {
+    "from": "ветку",
+    "to": "branch",
+    "notes": "accusative case",
+    "source": "git"
+  },
+  {
+    "from": "ремот",
+    "to": "remote",
+    "notes": "short form",
+    "source": "git"
+  },
+  {
+    "from": "риモут",
+    "to": "remote",
+    "notes": "phonetic slip",
+    "source": "git"
+  },
+  {
+    "from": "пи ар",
+    "to": "PR",
+    "notes": "abbreviation spoken",
+    "source": "git"
+  },
+  {
+    "from": "пиэра",
+    "to": "PR",
+    "notes": "run-together",
+    "source": "git"
+  },
+  {
+    "from": "релиз",
+    "to": "release",
+    "notes": "release version",
+    "source": "git"
+  },
+  {
+    "from": "аменд",
+    "to": "amend",
+    "notes": "amend commit",
+    "source": "git"
+  },
+  {
+    "from": "сквош",
+    "to": "squash",
+    "notes": "squash commits",
+    "source": "git"
+  },
+  {
+    "from": "экшнс",
+    "to": "actions",
+    "notes": "GitHub Actions",
+    "source": "git"
+  },
+  {
+    "from": "ранер",
+    "to": "runner",
+    "notes": "single N",
+    "source": "git"
+  },
+  {
+    "from": "транк",
+    "to": "trunk",
+    "notes": "trunk-based dev",
+    "source": "git"
+  },
+  {
+    "from": "карго",
+    "to": "cargo",
+    "notes": "Russian phonetic for cargo",
+    "source": "rust"
+  },
+  {
+    "from": "траит",
+    "to": "trait",
+    "notes": "Russian phonetic for trait",
+    "source": "rust"
+  },
+  {
+    "from": "асинк",
+    "to": "async",
+    "notes": "Russian phonetic for async",
+    "source": "rust"
+  },
+  {
+    "from": "авейт",
+    "to": "await",
+    "notes": "Russian phonetic for await",
+    "source": "rust"
+  },
+  {
+    "from": "крейт",
+    "to": "crate",
+    "notes": "Russian phonetic for crate",
+    "source": "rust"
+  },
+  {
+    "from": "овнер",
+    "to": "owner",
+    "notes": "Russian phonetic for owner",
+    "source": "rust"
+  },
+  {
+    "from": "конст",
+    "to": "const",
+    "notes": "Russian phonetic for const",
+    "source": "rust"
+  },
+  {
+    "from": "макро",
+    "to": "macro",
+    "notes": "Russian phonetic for macro",
+    "source": "rust"
+  },
+  {
+    "from": "дебаг",
+    "to": "Debug",
+    "notes": "Common derive trait",
+    "source": "rust"
+  },
+  {
+    "from": "токио",
+    "to": "tokio",
+    "notes": "Popular async runtime crate",
+    "source": "rust"
+  },
+  {
+    "from": "эррор",
+    "to": "Error",
+    "notes": "Russian phonetic for Error trait",
+    "source": "rust"
+  },
+  {
+    "from": "опция",
+    "to": "Option",
+    "notes": "Russian word for option",
+    "source": "rust"
+  },
+  {
+    "from": "канал",
+    "to": "channel",
+    "notes": "Russian spoken channel",
+    "source": "rust"
+  },
+  {
+    "from": "спавн",
+    "to": "spawn",
+    "notes": "Russian phonetic for spawn",
+    "source": "rust"
+  },
+  {
+    "from": "паник",
+    "to": "panic",
+    "notes": "Russian phonetic for panic",
+    "source": "rust"
+  },
+  {
+    "from": "фичер",
+    "to": "feature",
+    "notes": "Russian phonetic for feature",
+    "source": "rust"
+  },
+  {
+    "from": "докер",
+    "to": "docker",
+    "notes": "Core container runtime",
+    "source": "cloud"
+  },
+  {
+    "from": "имидж",
+    "to": "image",
+    "notes": "Docker image",
+    "source": "cloud"
+  },
+  {
+    "from": "волюм",
+    "to": "volume",
+    "notes": "Storage volume",
+    "source": "cloud"
+  },
+  {
+    "from": "кубер",
+    "to": "k8s",
+    "notes": "Kubernetes shorthand",
+    "source": "cloud"
+  },
+  {
+    "from": "э в с",
+    "to": "AWS",
+    "notes": "Amazon Web Services",
+    "source": "cloud"
+  },
+  {
+    "from": "а в с",
+    "to": "AWS",
+    "notes": "Phonetic Cyrillic variant",
+    "source": "cloud"
+  },
+  {
+    "from": "г ц п",
+    "to": "GCP",
+    "notes": "Google Cloud Platform",
+    "source": "cloud"
+  },
+  {
+    "from": "в п ц",
+    "to": "VPC",
+    "notes": "Virtual private cloud",
+    "source": "cloud"
+  },
+  {
+    "from": "ай эм",
+    "to": "IAM",
+    "notes": "Identity and access management",
+    "source": "cloud"
+  },
+  {
+    "from": "ci cd",
+    "to": "CI/CD",
+    "notes": "Continuous integration/delivery",
+    "source": "cloud"
+  },
+  {
+    "from": "редис",
+    "to": "Redis",
+    "notes": "In-memory cache/store",
+    "source": "cloud"
+  },
+  {
+    "from": "монго",
+    "to": "MongoDB",
+    "notes": "Document database",
+    "source": "cloud"
+  },
+  {
+    "from": "н п м",
+    "to": "npm",
+    "notes": "Abbreviated letter spelling",
+    "source": "web"
+  },
+  {
+    "from": "реакт",
+    "to": "react",
+    "notes": "Russian phonetic react",
+    "source": "web"
+  },
+  {
+    "from": "свелт",
+    "to": "svelte",
+    "notes": "Russian phonetic svelte",
+    "source": "web"
+  },
+  {
+    "from": "некст",
+    "to": "next",
+    "notes": "Russian phonetic next",
+    "source": "web"
+  },
+  {
+    "from": "ридми",
+    "to": "README.md",
+    "notes": "Russian phonetic readme",
+    "source": "web"
+  },
+  {
+    "from": "о аус",
+    "to": "OAuth",
+    "notes": "Split spoken form",
+    "source": "web"
+  },
+  {
+    "from": "ти эс",
+    "to": "TS",
+    "notes": "Russian letter spelling TS",
+    "source": "web"
+  },
+  {
+    "from": "точка",
+    "to": ".",
+    "notes": "Russian word for dot in filenames",
+    "source": "files"
+  },
+  {
+    "from": "тэчка",
+    "to": ".",
+    "notes": "Alternate Russian pronunciation of dot",
+    "source": "files"
+  },
+  {
+    "from": "эм дэ",
+    "to": ".md",
+    "notes": "Russian phonetics for .md extension",
+    "source": "files"
+  },
+  {
+    "from": "том л",
+    "to": ".toml",
+    "notes": "Split pronunciation of toml",
+    "source": "files"
+  },
+  {
+    "from": "фитча",
+    "to": "feature",
+    "notes": "ASR variant of 'фича'",
+    "source": "general"
+  },
+  {
+    "from": "фронт",
+    "to": "frontend",
+    "notes": "short form",
+    "source": "general"
+  },
+  {
+    "from": "квери",
+    "to": "query",
+    "notes": "noun or verb; DB request",
+    "source": "general"
+  },
+  {
+    "from": "монга",
+    "to": "mongo",
+    "notes": "MongoDB short name",
+    "source": "general"
+  },
+  {
+    "from": "рэдис",
+    "to": "redis",
+    "notes": "ASR variant",
+    "source": "general"
+  },
+  {
+    "from": "схема",
+    "to": "schema",
+    "notes": "DB schema, not diagram",
+    "source": "general"
+  },
+  {
+    "from": "скима",
+    "to": "schema",
+    "notes": "phonetic mishearing",
+    "source": "general"
+  },
+  {
+    "from": "поток",
+    "to": "thread",
+    "notes": "when meaning thread, not stream",
+    "source": "general"
+  },
+  {
+    "from": "сокет",
+    "to": "socket",
+    "notes": "network socket",
+    "source": "general"
+  },
+  {
+    "from": "в п н",
+    "to": "VPN",
+    "notes": "letter-by-letter",
+    "source": "general"
+  },
+  {
+    "from": "откат",
+    "to": "rollback",
+    "notes": "noun; revert deploy",
+    "source": "general"
+  },
+  {
+    "from": "джсон",
+    "to": "JSON",
+    "notes": "data format",
+    "source": "general"
+  },
+  {
+    "from": "токен",
+    "to": "token",
+    "notes": "auth or lexer token",
+    "source": "general"
+  },
+  {
+    "from": "пулл",
+    "to": "pull",
+    "notes": "double L",
+    "source": "git"
+  },
+  {
+    "from": "мейн",
+    "to": "main",
+    "notes": "default branch",
+    "source": "git"
+  },
+  {
+    "from": "мэйн",
+    "to": "main",
+    "notes": "y variant",
+    "source": "git"
+  },
+  {
+    "from": "стэш",
+    "to": "stash",
+    "notes": "git stash",
+    "source": "git"
+  },
+  {
+    "from": "сташ",
+    "to": "stash",
+    "notes": "stash variant",
+    "source": "git"
+  },
+  {
+    "from": "стеш",
+    "to": "stash",
+    "notes": "e spelling",
+    "source": "git"
+  },
+  {
+    "from": "клон",
+    "to": "clone",
+    "notes": "clone repo",
+    "source": "git"
+  },
+  {
+    "from": "форк",
+    "to": "fork",
+    "notes": "fork repo",
+    "source": "git"
+  },
+  {
+    "from": "фетч",
+    "to": "fetch",
+    "notes": "fetch remote",
+    "source": "git"
+  },
+  {
+    "from": "хуки",
+    "to": "hooks",
+    "notes": "plural",
+    "source": "git"
+  },
+  {
+    "from": "ишью",
+    "to": "issue",
+    "notes": "GitHub issue",
+    "source": "git"
+  },
+  {
+    "from": "дифф",
+    "to": "diff",
+    "notes": "git diff",
+    "source": "git"
+  },
+  {
+    "from": "импл",
+    "to": "impl",
+    "notes": "Russian phonetic for impl",
+    "source": "rust"
+  },
+  {
+    "from": "енум",
+    "to": "enum",
+    "notes": "Russian phonetic for enum",
+    "source": "rust"
+  },
+  {
+    "from": "матч",
+    "to": "match",
+    "notes": "Transliterated match",
+    "source": "rust"
+  },
+  {
+    "from": "фичи",
+    "to": "features",
+    "notes": "Cargo.toml [features] section",
+    "source": "rust"
+  },
+  {
+    "from": "раст",
+    "to": "Rust",
+    "notes": "Russian phonetic for Rust",
+    "source": "rust"
+  },
+  {
+    "from": "руст",
+    "to": "Rust",
+    "notes": "Transliterated Rust",
+    "source": "rust"
+  },
+  {
+    "from": "мири",
+    "to": "miri",
+    "notes": "Russian phonetic for miri",
+    "source": "rust"
+  },
+  {
+    "from": "васм",
+    "to": "wasm",
+    "notes": "Russian phonetic for wasm",
+    "source": "rust"
+  },
+  {
+    "from": "мьют",
+    "to": "mut",
+    "notes": "ASR variant for mut",
+    "source": "rust"
+  },
+  {
+    "from": "функ",
+    "to": "fn",
+    "notes": "Russian spoken function keyword",
+    "source": "rust"
+  },
+  {
+    "from": "серд",
+    "to": "serde",
+    "notes": "Popular Rust serialization crate",
+    "source": "rust"
+  },
+  {
+    "from": "опшн",
+    "to": "Option",
+    "notes": "Russian phonetic for Option",
+    "source": "rust"
+  },
+  {
+    "from": "бокс",
+    "to": "Box",
+    "notes": "Russian phonetic for Box",
+    "source": "rust"
+  },
+  {
+    "from": "диез",
+    "to": "#",
+    "notes": "Russian spoken hash for attributes",
+    "source": "rust"
+  },
+  {
+    "from": "бэнг",
+    "to": "!",
+    "notes": "Russian spoken macro bang",
+    "source": "rust"
+  },
+  {
+    "from": "поды",
+    "to": "pods",
+    "notes": "Plural pods",
+    "source": "cloud"
+  },
+  {
+    "from": "хелм",
+    "to": "helm",
+    "notes": "K8s package manager",
+    "source": "cloud"
+  },
+  {
+    "from": "чарт",
+    "to": "chart",
+    "notes": "Helm package",
+    "source": "cloud"
+  },
+  {
+    "from": "джоб",
+    "to": "job",
+    "notes": "One-off K8s task",
+    "source": "cloud"
+  },
+  {
+    "from": "ажур",
+    "to": "Azure",
+    "notes": "Microsoft cloud",
+    "source": "cloud"
+  },
+  {
+    "from": "азур",
+    "to": "Azure",
+    "notes": "Phonetic variant",
+    "source": "cloud"
+  },
+  {
+    "from": "эс 3",
+    "to": "S3",
+    "notes": "Digit pronunciation",
+    "source": "cloud"
+  },
+  {
+    "from": "и эм",
+    "to": "IAM",
+    "notes": "Phonetic variant",
+    "source": "cloud"
+  },
+  {
+    "from": "прод",
+    "to": "prod",
+    "notes": "Production environment",
+    "source": "cloud"
+  },
+  {
+    "from": "нода",
+    "to": "node",
+    "notes": "Russian phonetic node",
+    "source": "web"
+  },
+  {
+    "from": "вайт",
+    "to": "vite",
+    "notes": "Russian phonetic vite",
+    "source": "web"
+  },
+  {
+    "from": "грид",
+    "to": "grid",
+    "notes": "Russian phonetic grid",
+    "source": "web"
+  },
+  {
+    "from": "рест",
+    "to": "REST",
+    "notes": "Russian phonetic REST",
+    "source": "web"
+  },
+  {
+    "from": "оаус",
+    "to": "OAuth",
+    "notes": "Russian phonetic OAuth",
+    "source": "web"
+  },
+  {
+    "from": "корс",
+    "to": "CORS",
+    "notes": "Russian phonetic CORS",
+    "source": "web"
+  },
+  {
+    "from": "томл",
+    "to": ".toml",
+    "notes": "Russian phonetics for .toml",
+    "source": "files"
+  },
+  {
+    "from": "фикс",
+    "to": "fix",
+    "notes": "noun; bug fix",
+    "source": "general"
+  },
+  {
+    "from": "баги",
+    "to": "bugs",
+    "notes": "plural",
+    "source": "general"
+  },
+  {
+    "from": "фича",
+    "to": "feature",
+    "notes": "noun; new functionality",
+    "source": "general"
+  },
+  {
+    "from": "стаб",
+    "to": "stub",
+    "notes": "test double; not Russian 'stub' as stick",
+    "source": "general"
+  },
+  {
+    "from": "парс",
+    "to": "parse",
+    "notes": "verb stem",
+    "source": "general"
+  },
+  {
+    "from": "стек",
+    "to": "stack",
+    "notes": "data structure or tech stack",
+    "source": "general"
+  },
+  {
+    "from": "стэк",
+    "to": "stack",
+    "notes": "ASR variant",
+    "source": "general"
+  },
+  {
+    "from": "куча",
+    "to": "heap",
+    "notes": "when meaning memory heap, not 'a lot'",
+    "source": "general"
+  },
+  {
+    "from": "тред",
+    "to": "thread",
+    "notes": "OS thread",
+    "source": "general"
+  },
+  {
+    "from": "трэд",
+    "to": "thread",
+    "notes": "ASR variant",
+    "source": "general"
+  },
+  {
+    "from": "порт",
+    "to": "port",
+    "notes": "network port number",
+    "source": "general"
+  },
+  {
+    "from": "шелл",
+    "to": "shell",
+    "notes": "command shell",
+    "source": "general"
+  },
+  {
+    "from": "шэлл",
+    "to": "shell",
+    "notes": "ASR variant",
+    "source": "general"
+  },
+  {
+    "from": "пиар",
+    "to": "PR",
+    "notes": "short for pull request, not public relations",
+    "source": "general"
+  },
+  {
+    "from": "билд",
+    "to": "build",
+    "notes": "noun or verb; CI build",
+    "source": "general"
+  },
+  {
+    "from": "энвы",
+    "to": "env",
+    "notes": "plural env vars",
+    "source": "general"
+  },
+  {
+    "from": "логи",
+    "to": "logs",
+    "notes": "plural",
+    "source": "general"
+  },
+  {
+    "from": "крон",
+    "to": "cron",
+    "notes": "scheduled job",
+    "source": "general"
+  },
+  {
+    "from": "джит",
+    "to": "git",
+    "notes": "version control",
+    "source": "general"
+  },
+  {
+    "from": "репа",
+    "to": "repo",
+    "notes": "short slang",
+    "source": "general"
+  },
+  {
+    "from": "гид",
+    "to": "git",
+    "notes": "very common ASR error",
+    "source": "git"
+  },
+  {
+    "from": "гит",
+    "to": "git",
+    "notes": "Cyrillic git",
+    "source": "git"
+  },
+  {
+    "from": "пуш",
+    "to": "push",
+    "notes": "standalone",
+    "source": "git"
+  },
+  {
+    "from": "пул",
+    "to": "pull",
+    "notes": "short form",
+    "source": "git"
+  },
+  {
+    "from": "хук",
+    "to": "hook",
+    "notes": "git hook",
+    "source": "git"
+  },
+  {
+    "from": "ишу",
+    "to": "issue",
+    "notes": "short",
+    "source": "git"
+  },
+  {
+    "from": "тэг",
+    "to": "tag",
+    "notes": "git tag",
+    "source": "git"
+  },
+  {
+    "from": "тег",
+    "to": "tag",
+    "notes": "Russian spelling",
+    "source": "git"
+  },
+  {
+    "from": "хед",
+    "to": "HEAD",
+    "notes": "git HEAD pointer",
+    "source": "git"
+  },
+  {
+    "from": "хэд",
+    "to": "HEAD",
+    "notes": "e variant",
+    "source": "git"
+  },
+  {
+    "from": "мач",
+    "to": "match",
+    "notes": "Russian phonetic for match",
+    "source": "rust"
+  },
+  {
+    "from": "реф",
+    "to": "ref",
+    "notes": "Russian phonetic for ref",
+    "source": "rust"
+  },
+  {
+    "from": "мут",
+    "to": "mut",
+    "notes": "Russian phonetic for mut",
+    "source": "rust"
+  },
+  {
+    "from": "паб",
+    "to": "pub",
+    "notes": "Russian phonetic for pub",
+    "source": "rust"
+  },
+  {
+    "from": "мод",
+    "to": "mod",
+    "notes": "Russian phonetic for mod",
+    "source": "rust"
+  },
+  {
+    "from": "лет",
+    "to": "let",
+    "notes": "Russian phonetic for let",
+    "source": "rust"
+  },
+  {
+    "from": "век",
+    "to": "Vec",
+    "notes": "Russian phonetic for Vec",
+    "source": "rust"
+  },
+  {
+    "from": "стр",
+    "to": "str",
+    "notes": "Russian phonetic for str",
+    "source": "rust"
+  },
+  {
+    "from": "арс",
+    "to": "Arc",
+    "notes": "Russian phonetic for Arc",
+    "source": "rust"
+  },
+  {
+    "from": "мув",
+    "to": "move",
+    "notes": "Russian phonetic for move",
+    "source": "rust"
+  },
+  {
+    "from": "под",
+    "to": "pod",
+    "notes": "Smallest K8s unit",
+    "source": "cloud"
+  },
+  {
+    "from": "днс",
+    "to": "DNS",
+    "notes": "Domain name system",
+    "source": "cloud"
+  },
+  {
+    "from": "дев",
+    "to": "dev",
+    "notes": "Development environment",
+    "source": "cloud"
+  },
+  {
+    "from": "энв",
+    "to": ".env",
+    "notes": "Environment variables file",
+    "source": "cloud"
+  },
+  {
+    "from": "ярн",
+    "to": "yarn",
+    "notes": "Russian phonetic yarn",
+    "source": "web"
+  },
+  {
+    "from": "вью",
+    "to": "vue",
+    "notes": "Russian phonetic vue",
+    "source": "web"
+  },
+  {
+    "from": "дот",
+    "to": ".",
+    "notes": "English dot spoken in Russian flow",
+    "source": "files"
+  },
+  {
+    "from": "баг",
+    "to": "bug",
+    "notes": "noun; software defect",
+    "source": "general"
+  },
+  {
+    "from": "бэк",
+    "to": "backend",
+    "notes": "short form in speech",
+    "source": "general"
+  },
+  {
+    "from": "мок",
+    "to": "mock",
+    "notes": "test double",
+    "source": "general"
+  },
+  {
+    "from": "тдд",
+    "to": "TDD",
+    "notes": "Cyrillic acronym letters",
+    "source": "general"
+  },
+  {
+    "from": "кэш",
+    "to": "cache",
+    "notes": "noun or verb",
+    "source": "general"
+  },
+  {
+    "from": "кеш",
+    "to": "cache",
+    "notes": "ASR drops ё",
+    "source": "general"
+  },
+  {
+    "from": "кью",
+    "to": "queue",
+    "notes": "noun; message queue",
+    "source": "general"
+  },
+  {
+    "from": "хип",
+    "to": "heap",
+    "notes": "memory heap",
+    "source": "general"
+  },
+  {
+    "from": "ссш",
+    "to": "SSH",
+    "notes": "fast spoken form",
+    "source": "general"
+  },
+  {
+    "from": "баш",
+    "to": "bash",
+    "notes": "Bourne again shell",
+    "source": "general"
+  },
+  {
+    "from": "бэш",
+    "to": "bash",
+    "notes": "ASR variant",
+    "source": "general"
+  },
+  {
+    "from": "лог",
+    "to": "log",
+    "notes": "noun; application log",
+    "source": "general"
+  },
+  {
+    "from": "ямл",
+    "to": "YAML",
+    "notes": "config format",
+    "source": "general"
+  },
+  {
+    "from": "диф",
+    "to": "diff",
+    "notes": "code difference",
+    "source": "general"
+  },
+  {
+    "from": "юз",
+    "to": "use",
+    "notes": "Russian phonetic for use",
+    "source": "rust"
+  },
+  {
+    "from": "фн",
+    "to": "fn",
+    "notes": "Russian phonetic for fn",
+    "source": "rust"
+  },
+  {
+    "from": "рк",
+    "to": "Rc",
+    "notes": "Russian phonetic for Rc",
+    "source": "rust"
+  },
+  {
+    "from": "md",
+    "to": ".md",
+    "notes": "Bare md without leading dot",
+    "source": "files"
+  },
+  {
+    "from": "зш",
+    "to": "zsh",
+    "notes": "short spoken form",
+    "source": "general"
+  }
+]

@@ -3,9 +3,14 @@
   import { onMount } from "svelte";
   import { initLocaleFromSettings } from "$lib/i18n";
 
-  onMount(() => {
-    void initLocaleFromSettings();
+  let i18nReady = $state(false);
+
+  onMount(async () => {
+    await initLocaleFromSettings();
+    i18nReady = true;
   });
 </script>
 
-<slot />
+{#if i18nReady}
+  <slot />
+{/if}

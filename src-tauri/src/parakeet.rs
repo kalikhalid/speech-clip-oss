@@ -5,7 +5,7 @@ pub use crate::parakeet_install::{
 };
 use crate::parakeet_install::install_in_progress;
 
-use crate::audio::{decode_wav_bytes, resample_to_16k};
+use crate::audio::resample_to_16k;
 use once_cell::sync::OnceCell;
 use serde::Serialize;
 use std::path::PathBuf;
@@ -144,22 +144,30 @@ fn transcribe_samples(model_id: &str, model_dir: PathBuf, samples: Vec<f32>) -> 
     Ok(text)
 }
 
-pub async fn transcribe_audio(
+pub async fn ensure_model_ready(app: &AppHandle, model_id: &str) -> Result<(), String> {
+    let model_id = normalize_model_id(model_id);
+    let status = check_setup(app, &model_id).await?;
+    if status.ready {
+        return Ok(());
+    }
+    ensure_model(app, &model_id).await?;
+    let status = check_setup(app, &model_id).await?;
+    if status.ready {
+        Ok(())
+    } else {
+        Err(status.message)
+    }
+}
+
+pub async fn transcribe_decoded(
     app: &AppHandle,
-    audio_data: Vec<u8>,
+    samples: Vec<f32>,
+    sample_rate: u32,
     model_id: &str,
 ) -> Result<String, String> {
     let model_id = normalize_model_id(model_id);
-    let status = check_setup(app, &model_id).await?;
-    if !status.ready {
-        ensure_model(app, &model_id).await?;
-        let status = check_setup(app, &model_id).await?;
-        if !status.ready {
-            return Err(status.message);
-        }
-    }
+    ensure_model_ready(app, &model_id).await?;
 
-    let (samples, sample_rate) = decode_wav_bytes(&audio_data)?;
     let samples = resample_to_16k(&samples, sample_rate)?;
     let model_dir = model_path(app, &model_id)?;
 

@@ -1,0 +1,1158 @@
+[
+  {
+    "from": "дот енв",
+    "to": ".env"
+  },
+  {
+    "from": "main rs",
+    "to": "main.rs"
+  },
+  {
+    "from": "мейн rs",
+    "to": "main.rs"
+  },
+  {
+    "from": "app css",
+    "to": "app.css"
+  },
+  {
+    "from": "ченджес",
+    "to": "changes"
+  },
+  {
+    "from": "ченджиз",
+    "to": "changes"
+  },
+  {
+    "from": "деплоим",
+    "to": "deploy"
+  },
+  {
+    "from": "отладка",
+    "to": "debug"
+  },
+  {
+    "from": "фулстек",
+    "to": "fullstack"
+  },
+  {
+    "from": "мидлвар",
+    "to": "middleware"
+  },
+  {
+    "from": "коллбэк",
+    "to": "callback"
+  },
+  {
+    "from": "хендлер",
+    "to": "handler"
+  },
+  {
+    "from": "хэндлер",
+    "to": "handler"
+  },
+  {
+    "from": "лисенер",
+    "to": "listener"
+  },
+  {
+    "from": "фэктори",
+    "to": "factory"
+  },
+  {
+    "from": "фактори",
+    "to": "factory"
+  },
+  {
+    "from": "адаптер",
+    "to": "adapter"
+  },
+  {
+    "from": "эскьюэл",
+    "to": "SQL"
+  },
+  {
+    "from": "кверить",
+    "to": "query"
+  },
+  {
+    "from": "постгре",
+    "to": "postgres"
+  },
+  {
+    "from": "монгодб",
+    "to": "MongoDB"
+  },
+  {
+    "from": "индексы",
+    "to": "indexes"
+  },
+  {
+    "from": "рантайм",
+    "to": "runtime"
+  },
+  {
+    "from": "компайл",
+    "to": "compile"
+  },
+  {
+    "from": "парсить",
+    "to": "parse"
+  },
+  {
+    "from": "очередь",
+    "to": "queue"
+  },
+  {
+    "from": "процесс",
+    "to": "process"
+  },
+  {
+    "from": "файрвол",
+    "to": "firewall"
+  },
+  {
+    "from": "фаервол",
+    "to": "firewall"
+  },
+  {
+    "from": "собрать",
+    "to": "build"
+  },
+  {
+    "from": "таймаут",
+    "to": "timeout"
+  },
+  {
+    "from": "инстанс",
+    "to": "instance"
+  },
+  {
+    "from": "семвер",
+    "to": "semver"
+  },
+  {
+    "from": "гитхаб",
+    "to": "GitHub"
+  },
+  {
+    "from": "гитлаб",
+    "to": "GitLab"
+  },
+  {
+    "from": "коммит",
+    "to": "commit"
+  },
+  {
+    "from": "смердж",
+    "to": "merge"
+  },
+  {
+    "from": "ребейз",
+    "to": "rebase"
+  },
+  {
+    "from": "ребейс",
+    "to": "rebase"
+  },
+  {
+    "from": "ремоут",
+    "to": "remote"
+  },
+  {
+    "from": "оритин",
+    "to": "origin"
+  },
+  {
+    "from": "мастер",
+    "to": "master"
+  },
+  {
+    "from": "чекаут",
+    "to": "checkout"
+  },
+  {
+    "from": "релиза",
+    "to": "release"
+  },
+  {
+    "from": "реверт",
+    "to": "revert"
+  },
+  {
+    "from": "деплой",
+    "to": "deploy"
+  },
+  {
+    "from": "экшенс",
+    "to": "actions"
+  },
+  {
+    "from": "раннер",
+    "to": "runner"
+  },
+  {
+    "from": "резолв",
+    "to": "resolve"
+  },
+  {
+    "from": "стейдж",
+    "to": "stage"
+  },
+  {
+    "from": "структ",
+    "to": "struct"
+  },
+  {
+    "from": "борроу",
+    "to": "borrow"
+  },
+  {
+    "from": "растап",
+    "to": "rustup"
+  },
+  {
+    "from": "рустап",
+    "to": "rustup"
+  },
+  {
+    "from": "клиппи",
+    "to": "clippy"
+  },
+  {
+    "from": "таргет",
+    "to": "target"
+  },
+  {
+    "from": "паблик",
+    "to": "pub"
+  },
+  {
+    "from": "статик",
+    "to": "static"
+  },
+  {
+    "from": "дерайв",
+    "to": "derive"
+  },
+  {
+    "from": "дизайн",
+    "to": "thiserror"
+  },
+  {
+    "from": "вектор",
+    "to": "Vec"
+  },
+  {
+    "from": "стринг",
+    "to": "String"
+  },
+  {
+    "from": "анврап",
+    "to": "unwrap"
+  },
+  {
+    "from": "квешен",
+    "to": "?"
+  },
+  {
+    "from": "дот рс",
+    "to": ".rs"
+  },
+  {
+    "from": "юнсейф",
+    "to": "unsafe"
+  },
+  {
+    "from": "ансейф",
+    "to": "unsafe"
+  },
+  {
+    "from": "куберн",
+    "to": "kubernetes"
+  },
+  {
+    "from": "сервис",
+    "to": "service"
+  },
+  {
+    "from": "сикрет",
+    "to": "secret"
+  },
+  {
+    "from": "эс три",
+    "to": "S3"
+  },
+  {
+    "from": "и си 2",
+    "to": "EC2"
+  },
+  {
+    "from": "э си 2",
+    "to": "EC2"
+  },
+  {
+    "from": "лямбда",
+    "to": "Lambda"
+  },
+  {
+    "from": "виписи",
+    "to": "VPC"
+  },
+  {
+    "from": "си дэн",
+    "to": "CDN"
+  },
+  {
+    "from": "нжинкс",
+    "to": "nginx"
+  },
+  {
+    "from": "ансибл",
+    "to": "ansible"
+  },
+  {
+    "from": "canary",
+    "to": "canary"
+  },
+  {
+    "from": "вебпак",
+    "to": "webpack"
+  },
+  {
+    "from": "бабель",
+    "to": "babel"
+  },
+  {
+    "from": "эслинт",
+    "to": "eslint"
+  },
+  {
+    "from": "импорт",
+    "to": "import"
+  },
+  {
+    "from": "рид ми",
+    "to": "README.md"
+  },
+  {
+    "from": "аксиос",
+    "to": "axios"
+  },
+  {
+    "from": "readme",
+    "to": "README.md"
+  },
+  {
+    "from": "собака",
+    "to": "@"
+  },
+  {
+    "from": "дот rs",
+    "to": ".rs"
+  },
+  {
+    "from": "дот ts",
+    "to": ".ts"
+  },
+  {
+    "from": "дот js",
+    "to": ".js"
+  },
+  {
+    "from": "дот py",
+    "to": ".py"
+  },
+  {
+    "from": "lib rs",
+    "to": "lib.rs"
+  },
+  {
+    "from": "mod rs",
+    "to": "mod.rs"
+  },
+  {
+    "from": "чейндж",
+    "to": "change"
+  },
+  {
+    "from": "апдейт",
+    "to": "update"
+  },
+  {
+    "from": "фиксим",
+    "to": "fix"
+  },
+  {
+    "from": "легаси",
+    "to": "legacy"
+  },
+  {
+    "from": "лэгаси",
+    "to": "legacy"
+  },
+  {
+    "from": "бэкенд",
+    "to": "backend"
+  },
+  {
+    "from": "бекенд",
+    "to": "backend"
+  },
+  {
+    "from": "колбэк",
+    "to": "callback"
+  },
+  {
+    "from": "колбек",
+    "to": "callback"
+  },
+  {
+    "from": "скуэль",
+    "to": "SQL"
+  },
+  {
+    "from": "запрос",
+    "to": "query"
+  },
+  {
+    "from": "индекс",
+    "to": "index"
+  },
+  {
+    "from": "прокси",
+    "to": "proxy"
+  },
+  {
+    "from": "випиэн",
+    "to": "VPN"
+  },
+  {
+    "from": "конфиг",
+    "to": "config"
+  },
+  {
+    "from": "ретрай",
+    "to": "retry"
+  },
+  {
+    "from": "воркер",
+    "to": "worker"
+  },
+  {
+    "from": "жейсон",
+    "to": "JSON"
+  },
+  {
+    "from": "комит",
+    "to": "commit"
+  },
+  {
+    "from": "запуш",
+    "to": "push"
+  },
+  {
+    "from": "смерж",
+    "to": "merge"
+  },
+  {
+    "from": "мердж",
+    "to": "merge"
+  },
+  {
+    "from": "бранч",
+    "to": "branch"
+  },
+  {
+    "from": "ветка",
+    "to": "branch"
+  },
+  {
+    "from": "ветку",
+    "to": "branch"
+  },
+  {
+    "from": "ремот",
+    "to": "remote"
+  },
+  {
+    "from": "риモут",
+    "to": "remote"
+  },
+  {
+    "from": "пи ар",
+    "to": "PR"
+  },
+  {
+    "from": "пиэра",
+    "to": "PR"
+  },
+  {
+    "from": "релиз",
+    "to": "release"
+  },
+  {
+    "from": "аменд",
+    "to": "amend"
+  },
+  {
+    "from": "сквош",
+    "to": "squash"
+  },
+  {
+    "from": "экшнс",
+    "to": "actions"
+  },
+  {
+    "from": "ранер",
+    "to": "runner"
+  },
+  {
+    "from": "транк",
+    "to": "trunk"
+  },
+  {
+    "from": "карго",
+    "to": "cargo"
+  },
+  {
+    "from": "траит",
+    "to": "trait"
+  },
+  {
+    "from": "асинк",
+    "to": "async"
+  },
+  {
+    "from": "авейт",
+    "to": "await"
+  },
+  {
+    "from": "крейт",
+    "to": "crate"
+  },
+  {
+    "from": "овнер",
+    "to": "owner"
+  },
+  {
+    "from": "конст",
+    "to": "const"
+  },
+  {
+    "from": "макро",
+    "to": "macro"
+  },
+  {
+    "from": "дебаг",
+    "to": "Debug"
+  },
+  {
+    "from": "токио",
+    "to": "tokio"
+  },
+  {
+    "from": "эррор",
+    "to": "Error"
+  },
+  {
+    "from": "опция",
+    "to": "Option"
+  },
+  {
+    "from": "канал",
+    "to": "channel"
+  },
+  {
+    "from": "спавн",
+    "to": "spawn"
+  },
+  {
+    "from": "паник",
+    "to": "panic"
+  },
+  {
+    "from": "фичер",
+    "to": "feature"
+  },
+  {
+    "from": "докер",
+    "to": "docker"
+  },
+  {
+    "from": "имидж",
+    "to": "image"
+  },
+  {
+    "from": "волюм",
+    "to": "volume"
+  },
+  {
+    "from": "кубер",
+    "to": "k8s"
+  },
+  {
+    "from": "э в с",
+    "to": "AWS"
+  },
+  {
+    "from": "а в с",
+    "to": "AWS"
+  },
+  {
+    "from": "г ц п",
+    "to": "GCP"
+  },
+  {
+    "from": "в п ц",
+    "to": "VPC"
+  },
+  {
+    "from": "ай эм",
+    "to": "IAM"
+  },
+  {
+    "from": "ci cd",
+    "to": "CI/CD"
+  },
+  {
+    "from": "редис",
+    "to": "Redis"
+  },
+  {
+    "from": "монго",
+    "to": "MongoDB"
+  },
+  {
+    "from": "н п м",
+    "to": "npm"
+  },
+  {
+    "from": "реакт",
+    "to": "react"
+  },
+  {
+    "from": "свелт",
+    "to": "svelte"
+  },
+  {
+    "from": "некст",
+    "to": "next"
+  },
+  {
+    "from": "ридми",
+    "to": "README.md"
+  },
+  {
+    "from": "о аус",
+    "to": "OAuth"
+  },
+  {
+    "from": "ти эс",
+    "to": "TS"
+  },
+  {
+    "from": "точка",
+    "to": "."
+  },
+  {
+    "from": "тэчка",
+    "to": "."
+  },
+  {
+    "from": "эм дэ",
+    "to": ".md"
+  },
+  {
+    "from": "том л",
+    "to": ".toml"
+  },
+  {
+    "from": "фитча",
+    "to": "feature"
+  },
+  {
+    "from": "фронт",
+    "to": "frontend"
+  },
+  {
+    "from": "квери",
+    "to": "query"
+  },
+  {
+    "from": "монга",
+    "to": "mongo"
+  },
+  {
+    "from": "рэдис",
+    "to": "redis"
+  },
+  {
+    "from": "схема",
+    "to": "schema"
+  },
+  {
+    "from": "скима",
+    "to": "schema"
+  },
+  {
+    "from": "поток",
+    "to": "thread"
+  },
+  {
+    "from": "сокет",
+    "to": "socket"
+  },
+  {
+    "from": "в п н",
+    "to": "VPN"
+  },
+  {
+    "from": "откат",
+    "to": "rollback"
+  },
+  {
+    "from": "джсон",
+    "to": "JSON"
+  },
+  {
+    "from": "токен",
+    "to": "token"
+  },
+  {
+    "from": "пулл",
+    "to": "pull"
+  },
+  {
+    "from": "мейн",
+    "to": "main"
+  },
+  {
+    "from": "мэйн",
+    "to": "main"
+  },
+  {
+    "from": "стэш",
+    "to": "stash"
+  },
+  {
+    "from": "сташ",
+    "to": "stash"
+  },
+  {
+    "from": "стеш",
+    "to": "stash"
+  },
+  {
+    "from": "клон",
+    "to": "clone"
+  },
+  {
+    "from": "форк",
+    "to": "fork"
+  },
+  {
+    "from": "фетч",
+    "to": "fetch"
+  },
+  {
+    "from": "хуки",
+    "to": "hooks"
+  },
+  {
+    "from": "ишью",
+    "to": "issue"
+  },
+  {
+    "from": "дифф",
+    "to": "diff"
+  },
+  {
+    "from": "импл",
+    "to": "impl"
+  },
+  {
+    "from": "енум",
+    "to": "enum"
+  },
+  {
+    "from": "матч",
+    "to": "match"
+  },
+  {
+    "from": "фичи",
+    "to": "features"
+  },
+  {
+    "from": "раст",
+    "to": "Rust"
+  },
+  {
+    "from": "руст",
+    "to": "Rust"
+  },
+  {
+    "from": "мири",
+    "to": "miri"
+  },
+  {
+    "from": "васм",
+    "to": "wasm"
+  },
+  {
+    "from": "мьют",
+    "to": "mut"
+  },
+  {
+    "from": "функ",
+    "to": "fn"
+  },
+  {
+    "from": "серд",
+    "to": "serde"
+  },
+  {
+    "from": "опшн",
+    "to": "Option"
+  },
+  {
+    "from": "бокс",
+    "to": "Box"
+  },
+  {
+    "from": "диез",
+    "to": "#"
+  },
+  {
+    "from": "бэнг",
+    "to": "!"
+  },
+  {
+    "from": "поды",
+    "to": "pods"
+  },
+  {
+    "from": "хелм",
+    "to": "helm"
+  },
+  {
+    "from": "чарт",
+    "to": "chart"
+  },
+  {
+    "from": "джоб",
+    "to": "job"
+  },
+  {
+    "from": "ажур",
+    "to": "Azure"
+  },
+  {
+    "from": "азур",
+    "to": "Azure"
+  },
+  {
+    "from": "эс 3",
+    "to": "S3"
+  },
+  {
+    "from": "и эм",
+    "to": "IAM"
+  },
+  {
+    "from": "прод",
+    "to": "prod"
+  },
+  {
+    "from": "нода",
+    "to": "node"
+  },
+  {
+    "from": "вайт",
+    "to": "vite"
+  },
+  {
+    "from": "грид",
+    "to": "grid"
+  },
+  {
+    "from": "рест",
+    "to": "REST"
+  },
+  {
+    "from": "оаус",
+    "to": "OAuth"
+  },
+  {
+    "from": "корс",
+    "to": "CORS"
+  },
+  {
+    "from": "томл",
+    "to": ".toml"
+  },
+  {
+    "from": "фикс",
+    "to": "fix"
+  },
+  {
+    "from": "баги",
+    "to": "bugs"
+  },
+  {
+    "from": "фича",
+    "to": "feature"
+  },
+  {
+    "from": "стаб",
+    "to": "stub"
+  },
+  {
+    "from": "парс",
+    "to": "parse"
+  },
+  {
+    "from": "стек",
+    "to": "stack"
+  },
+  {
+    "from": "стэк",
+    "to": "stack"
+  },
+  {
+    "from": "куча",
+    "to": "heap"
+  },
+  {
+    "from": "тред",
+    "to": "thread"
+  },
+  {
+    "from": "трэд",
+    "to": "thread"
+  },
+  {
+    "from": "порт",
+    "to": "port"
+  },
+  {
+    "from": "шелл",
+    "to": "shell"
+  },
+  {
+    "from": "шэлл",
+    "to": "shell"
+  },
+  {
+    "from": "пиар",
+    "to": "PR"
+  },
+  {
+    "from": "билд",
+    "to": "build"
+  },
+  {
+    "from": "энвы",
+    "to": "env"
+  },
+  {
+    "from": "логи",
+    "to": "logs"
+  },
+  {
+    "from": "крон",
+    "to": "cron"
+  },
+  {
+    "from": "джит",
+    "to": "git"
+  },
+  {
+    "from": "репа",
+    "to": "repo"
+  },
+  {
+    "from": "гид",
+    "to": "git"
+  },
+  {
+    "from": "гит",
+    "to": "git"
+  },
+  {
+    "from": "пуш",
+    "to": "push"
+  },
+  {
+    "from": "пул",
+    "to": "pull"
+  },
+  {
+    "from": "хук",
+    "to": "hook"
+  },
+  {
+    "from": "ишу",
+    "to": "issue"
+  },
+  {
+    "from": "тэг",
+    "to": "tag"
+  },
+  {
+    "from": "тег",
+    "to": "tag"
+  },
+  {
+    "from": "хед",
+    "to": "HEAD"
+  },
+  {
+    "from": "хэд",
+    "to": "HEAD"
+  },
+  {
+    "from": "мач",
+    "to": "match"
+  },
+  {
+    "from": "реф",
+    "to": "ref"
+  },
+  {
+    "from": "мут",
+    "to": "mut"
+  },
+  {
+    "from": "паб",
+    "to": "pub"
+  },
+  {
+    "from": "мод",
+    "to": "mod"
+  },
+  {
+    "from": "лет",
+    "to": "let"
+  },
+  {
+    "from": "век",
+    "to": "Vec"
+  },
+  {
+    "from": "стр",
+    "to": "str"
+  },
+  {
+    "from": "арс",
+    "to": "Arc"
+  },
+  {
+    "from": "мув",
+    "to": "move"
+  },
+  {
+    "from": "под",
+    "to": "pod"
+  },
+  {
+    "from": "днс",
+    "to": "DNS"
+  },
+  {
+    "from": "дев",
+    "to": "dev"
+  },
+  {
+    "from": "энв",
+    "to": ".env"
+  },
+  {
+    "from": "ярн",
+    "to": "yarn"
+  },
+  {
+    "from": "вью",
+    "to": "vue"
+  },
+  {
+    "from": "дот",
+    "to": "."
+  },
+  {
+    "from": "баг",
+    "to": "bug"
+  },
+  {
+    "from": "бэк",
+    "to": "backend"
+  },
+  {
+    "from": "мок",
+    "to": "mock"
+  },
+  {
+    "from": "тдд",
+    "to": "TDD"
+  },
+  {
+    "from": "кэш",
+    "to": "cache"
+  },
+  {
+    "from": "кеш",
+    "to": "cache"
+  },
+  {
+    "from": "кью",
+    "to": "queue"
+  },
+  {
+    "from": "хип",
+    "to": "heap"
+  },
+  {
+    "from": "ссш",
+    "to": "SSH"
+  },
+  {
+    "from": "баш",
+    "to": "bash"
+  },
+  {
+    "from": "бэш",
+    "to": "bash"
+  },
+  {
+    "from": "лог",
+    "to": "log"
+  },
+  {
+    "from": "ямл",
+    "to": "YAML"
+  },
+  {
+    "from": "диф",
+    "to": "diff"
+  },
+  {
+    "from": "юз",
+    "to": "use"
+  },
+  {
+    "from": "фн",
+    "to": "fn"
+  },
+  {
+    "from": "рк",
+    "to": "Rc"
+  },
+  {
+    "from": "md",
+    "to": ".md"
+  },
+  {
+    "from": "зш",
+    "to": "zsh"
+  }
+]

@@ -1,10 +1,10 @@
 mod app_context;
 mod audio;
 mod commands;
-mod debug;
 mod dictionary;
 mod input;
-mod last_transcription;
+mod normalizer;
+mod normalizer_install;
 mod parakeet;
 mod parakeet_install;
 mod postprocess;
@@ -30,7 +30,7 @@ fn setup_global_shortcuts(app: &AppHandle) -> Result<(), Box<dyn std::error::Err
                 shortcuts::parse_shortcut(&fallback).expect("Default hotkey must be valid");
             if settings.hotkey != fallback {
                 settings.hotkey = fallback.clone();
-                let _ = settings::save_settings(app, &settings);
+                let _ = settings::save_settings_immediate(app, &settings);
             }
             shortcut
         }
@@ -51,6 +51,18 @@ pub fn run() {
             #[cfg(target_os = "macos")]
             crate::utils::macos::disable_app_nap();
 
+            let settings_store = std::sync::Arc::new(
+                settings::SettingsStore::load(&handle)
+                    .map_err(|e| -> Box<dyn std::error::Error> { e.into() })?,
+            );
+            handle.manage(settings_store);
+
+            let history_store = std::sync::Arc::new(
+                storage::HistoryStore::load(&handle)
+                    .map_err(|e| -> Box<dyn std::error::Error> { e.into() })?,
+            );
+            handle.manage(history_store);
+
             let _ = setup_global_shortcuts(&handle);
 
             if let Some(window) = handle.get_webview_window("main") {
@@ -61,7 +73,10 @@ pub fn run() {
             tauri::async_runtime::spawn(async move {
                 let settings = settings::load_settings(&warmup_handle).unwrap_or_default();
                 if settings.warmup_on_start {
-                    let _ = commands::warmup_parakeet(warmup_handle).await;
+                    let _ = commands::warmup_parakeet(warmup_handle.clone()).await;
+                    if settings.dictation_normalize {
+                        let _ = normalizer::warmup(&warmup_handle).await;
+                    }
                 }
             });
 
@@ -70,11 +85,9 @@ pub fn run() {
         })
         .invoke_handler(tauri::generate_handler![
             commands::show_overlay,
-            commands::hide_overlay,
             commands::resize_overlay,
-            commands::process_audio,
+            commands::set_overlay_pill_shown,
             commands::process_audio_with_history,
-            commands::repaste_last,
             commands::paste_text_command,
             commands::export_dictionary_csv,
             commands::import_dictionary_csv,
@@ -83,13 +96,14 @@ pub fn run() {
             commands::save_settings,
             commands::get_parakeet_status,
             commands::ensure_parakeet_runtime,
+            commands::get_normalizer_status,
+            commands::ensure_normalizer_model,
             commands::update_hotkey,
             commands::get_history,
+            commands::get_dictation_stats,
             commands::delete_history_entry,
             commands::clear_all_history,
-            commands::open_dashboard,
             commands::check_accessibility_permission,
-            commands::open_accessibility_settings,
             commands::set_guide_mode,
         ])
         .build(tauri::generate_context!())
