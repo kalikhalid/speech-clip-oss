@@ -170,10 +170,17 @@ stage_convert() {
     log "  source : ${hf_dir}"
     log "  output : ${TMP_F16}"
     ensure_gguf_python_pkg "$py"
+    # Qwen3.5 carries a multi-token-prediction (MTP) head the normalizer does not
+    # need; --no-mtp drops it (flag only valid for Qwen3.5/3.6 text variants).
+    local mtp_flag=()
+    if [[ "$NORMALIZER_MODEL_DIR" == *qwen* ]]; then
+        mtp_flag=(--no-mtp)
+    fi
     "$py" "${llama_dir}/convert_hf_to_gguf.py" \
         "$hf_dir" \
         --outfile "$TMP_F16" \
-        --outtype f16
+        --outtype f16 \
+        "${mtp_flag[@]}"
     [[ -f "$TMP_F16" ]] || die "convert_hf_to_gguf.py finished but ${TMP_F16} not found."
     ok "Conversion done: $(human_size "$TMP_F16")"
     echo "$TMP_F16"

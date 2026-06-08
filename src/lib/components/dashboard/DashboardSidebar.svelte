@@ -31,7 +31,10 @@
   class="dashboard-sidebar flex w-[188px] shrink-0 flex-col border-r border-[var(--dash-border)] bg-[var(--dash-sidebar-bg)] pb-4"
   aria-label={msg.nav.aria}
 >
-  <div class="dashboard-sidebar__header mb-6 flex items-center gap-2.5 px-4">
+  <div
+    class="dashboard-sidebar__header mb-6 flex items-center gap-2.5 px-4"
+    data-tauri-drag-region
+  >
     <img
       src="/logo.png"
       alt=""
@@ -50,7 +53,7 @@
     </div>
   </div>
 
-  <nav class="flex flex-1 flex-col gap-0.5 px-2">
+  <nav class="tauri-no-drag flex flex-1 flex-col gap-0.5 px-2">
     {#each NAV as item}
       {@const isActive = active === item.id}
       <button

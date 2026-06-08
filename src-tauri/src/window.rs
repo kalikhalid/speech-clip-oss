@@ -60,6 +60,7 @@ fn pill_hit_zone(hitbox: PillHitbox) -> (f64, f64) {
 
 // Make window visible on all desktops/spaces
 #[cfg(target_os = "macos")]
+#[allow(deprecated)]
 pub fn set_window_on_all_spaces(window: &tauri::WebviewWindow) -> Result<(), String> {
     use cocoa::base::id;
     use objc::{msg_send, sel, sel_impl};
@@ -77,9 +78,6 @@ pub fn set_window_on_all_spaces(window: &tauri::WebviewWindow) -> Result<(), Str
         // This makes the window appear on all Spaces, stationary, ignores cmd+tab cycle, and allows it over fullscreen apps
         let behavior: u64 = (1 << 0) | (1 << 4) | (1 << 6) | (1 << 8);
         let _: () = msg_send![ns_window, setCollectionBehavior: behavior];
-
-        #[cfg(debug_assertions)]
-        println!("✓ Window configured to appear on all Spaces (Overlay Mode)");
     }
 
     Ok(())
@@ -96,9 +94,7 @@ pub async fn show_overlay(app: AppHandle) -> Result<(), String> {
     window
         .set_ignore_cursor_events(true)
         .map_err(|e| e.to_string())?;
-    window
-        .set_always_on_top(true)
-        .map_err(|e| e.to_string())?;
+    window.set_always_on_top(true).map_err(|e| e.to_string())?;
 
     // Manually set size to full screen (Fake Fullscreen)
     if let Some(monitor) = window.primary_monitor().map_err(|e| e.to_string())? {
@@ -158,9 +154,7 @@ pub async fn set_window_size(app: &AppHandle, width: f64, height: f64) -> Result
         .set_ignore_cursor_events(false)
         .map_err(|e| e.to_string())?;
     // Guide must not float above the macOS accessibility prompt.
-    window
-        .set_always_on_top(false)
-        .map_err(|e| e.to_string())?;
+    window.set_always_on_top(false).map_err(|e| e.to_string())?;
 
     window
         .set_size(tauri::Size::Logical(tauri::LogicalSize { width, height }))
@@ -178,9 +172,7 @@ pub async fn set_window_size(app: &AppHandle, width: f64, height: f64) -> Result
 pub async fn step_aside_for_system_dialog(app: &AppHandle) -> Result<(), String> {
     let window = app.get_webview_window("main").ok_or("Window not found")?;
 
-    window
-        .set_always_on_top(false)
-        .map_err(|e| e.to_string())?;
+    window.set_always_on_top(false).map_err(|e| e.to_string())?;
 
     let monitor = window
         .primary_monitor()
@@ -263,17 +255,13 @@ fn start_hover_tracking(app: AppHandle) {
                     let screen_w = size.width as f64 / scale_factor;
                     let screen_h = size.height as f64 / scale_factor;
 
-                    let hitbox = PILL_HITBOX
-                        .lock()
-                        .map(|guard| *guard)
-                        .unwrap_or_default();
+                    let hitbox = PILL_HITBOX.lock().map(|guard| *guard).unwrap_or_default();
                     let (pill_width, pill_height) = pill_hit_zone(hitbox);
 
                     // Pill zone: centered horizontally, anchored above bottom-8.
                     let pill_x_start = (screen_w - pill_width) / 2.0;
                     let pill_x_end = pill_x_start + pill_width;
-                    let pill_y_start =
-                        screen_h - PILL_BOTTOM_OFFSET - pill_height;
+                    let pill_y_start = screen_h - PILL_BOTTOM_OFFSET - pill_height;
                     let pill_y_end = screen_h - PILL_BOTTOM_OFFSET;
 
                     if let Mouse::Position {

@@ -225,9 +225,7 @@ async fn ensure_model_inner(app: &AppHandle) -> Result<(), String> {
         .map_err(|e| format!("Failed to create normalizer models directory: {e}"))?;
 
     if !NORMALIZER_MODEL_URL.is_empty() {
-        return Err(
-            "Normalizer model download URL is not configured yet".to_string(),
-        );
+        return Err("Normalizer model download URL is not configured yet".to_string());
     }
 
     emit_progress(

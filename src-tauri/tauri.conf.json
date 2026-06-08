@@ -42,7 +42,8 @@
         "visible": false,
         "center": true,
         "hiddenTitle": true,
-        "titleBarStyle": "Overlay"
+        "titleBarStyle": "Overlay",
+        "acceptFirstMouse": true
       }
     ],
     "security": {

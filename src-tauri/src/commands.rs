@@ -10,6 +10,7 @@ use crate::normalizer_install::{self, NormalizerSetupStatus};
 use crate::parakeet::{self, ParakeetSetupStatus};
 use crate::postprocess;
 use crate::shortcuts;
+use crate::spoken_normalization;
 use crate::timing::TimingLogger;
 use crate::{settings, storage, window};
 use serde::Serialize;
@@ -62,15 +63,23 @@ async fn finalize_text(
     normalize: bool,
     app_settings: &settings::AppSettings,
 ) -> (String, Option<u64>) {
-    let mut text = raw.to_string();
+    let mut text = if app_settings.spoken_normalization_enabled {
+        spoken_normalization::normalize_text(raw)
+    } else {
+        raw.to_string()
+    };
     let mut normalizer_ms = None;
 
     if normalize && app_settings.dictation_normalize {
         let norm_start = Instant::now();
-        text = normalizer::normalize_text(app, raw).await;
+        let model_output = normalizer::normalize_text(app, &text).await;
+        text = spoken_normalization::guard_model_output(&text, &model_output);
         normalizer_ms = Some(norm_start.elapsed().as_millis() as u64);
     }
 
+    if app_settings.spoken_normalization_enabled {
+        text = spoken_normalization::normalize_text(&text);
+    }
     text = apply_dictionary(&text, &app_settings.dictionary_rules);
     if app_settings.strip_filler_words {
         text = postprocess::strip_filler_words(&text);
@@ -159,8 +168,7 @@ pub async fn process_audio(
     }
 
     let post_start = Instant::now();
-    let (final_text, normalizer_ms) =
-        finalize_text(&app, &raw_text, normalize, app_settings).await;
+    let (final_text, normalizer_ms) = finalize_text(&app, &raw_text, normalize, app_settings).await;
     let postprocess_ms = post_start.elapsed().as_millis() as u64;
 
     if final_text.is_empty() {
@@ -222,17 +230,7 @@ pub async fn process_audio_with_history(
     )
     .await;
 
-    if let Some(release_ts) = release_timestamp {
-        let now = std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_millis() as u64;
-        #[cfg(debug_assertions)]
-        println!(
-            "⏱️  TOTAL LATENCY (key release → done): {}ms",
-            now - release_ts
-        );
-    }
+    let _ = release_timestamp;
 
     match result {
         Ok(proc_result) => {

@@ -42,33 +42,24 @@ impl TimingLogger {
     fn open_log_file() -> Option<File> {
         let log_dir = Self::log_dir();
 
-        if let Err(e) = fs::create_dir_all(&log_dir) {
-            #[cfg(debug_assertions)]
-            eprintln!("Failed to create log directory: {}", e);
+        if fs::create_dir_all(&log_dir).is_err() {
             return None;
         }
 
         let date = Local::now().format("%Y%m%d");
         let log_path = log_dir.join(format!("timing_{}.log", date));
 
-        match OpenOptions::new().create(true).append(true).open(&log_path) {
-            Ok(file) => Some(file),
-            Err(e) => {
-                #[cfg(debug_assertions)]
-                eprintln!("Failed to open log file: {}", e);
-                None
-            }
-        }
+        OpenOptions::new()
+            .create(true)
+            .append(true)
+            .open(&log_path)
+            .ok()
     }
 
     /// Write a line to the log file
     fn write_line(&mut self, message: &str) {
         let timestamp = Utc::now().format("%Y-%m-%dT%H:%M:%S%.3fZ");
         let line = format!("[{}] {}", timestamp, message);
-
-        // Also print to stdout for dev visibility
-        #[cfg(debug_assertions)]
-        println!("{}", line);
 
         if let Some(ref mut file) = self.log_file {
             let _ = writeln!(file, "{}", line);

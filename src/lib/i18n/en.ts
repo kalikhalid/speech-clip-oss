@@ -143,6 +143,10 @@ export const en = {
     toggle: "Toggle",
     restoreClipboard: "Restore clipboard after paste",
     postProcessTitle: "Post-processing",
+    spokenNormalizationTitle: "Deterministic text fixes",
+    spokenNormalizationHint:
+      "Fix high-confidence filenames and spoken dev terms with local rules before the Qwen model.",
+    spokenNormalizationAria: "Enable deterministic text fixes",
     normalizeTitle: "Normalize tech terms",
     normalizeHint:
       "Fix English dev terms spoken in Russian (commit, push, @Cargo.toml) via local Qwen model before dictionary.",

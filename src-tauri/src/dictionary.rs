@@ -18,7 +18,8 @@ pub struct DictionaryEntry {
 }
 
 const SEED_DICTIONARY_JSON: &str = include_str!("../resources/seed_dictionary.json");
-const SEED_DICTIONARY_OVERFLOW_JSON: &str = include_str!("../resources/seed_dictionary_overflow.json");
+const SEED_DICTIONARY_OVERFLOW_JSON: &str =
+    include_str!("../resources/seed_dictionary_overflow.json");
 
 static SEED_ENTRIES: Lazy<Vec<DictionaryEntry>> = Lazy::new(load_seed_entries);
 
@@ -35,10 +36,7 @@ fn parse_seed_json(json: &str) -> Vec<DictionaryEntry> {
 fn dedupe_entries(entries: Vec<DictionaryEntry>) -> Vec<DictionaryEntry> {
     let mut out: Vec<DictionaryEntry> = Vec::with_capacity(entries.len());
     for entry in entries {
-        if out
-            .iter()
-            .any(|e| e.from.eq_ignore_ascii_case(&entry.from))
-        {
+        if out.iter().any(|e| e.from.eq_ignore_ascii_case(&entry.from)) {
             continue;
         }
         out.push(entry);
@@ -62,10 +60,7 @@ pub fn effective_dictionary_entries(
 
     let mut out = user.to_vec();
     for entry in SEED_ENTRIES.iter() {
-        if out
-            .iter()
-            .any(|e| e.from.eq_ignore_ascii_case(&entry.from))
-        {
+        if out.iter().any(|e| e.from.eq_ignore_ascii_case(&entry.from)) {
             continue;
         }
         out.push(entry.clone());
@@ -86,11 +81,7 @@ impl CompiledDictionaryRule {
             .iter()
             .filter(|e| !e.from.is_empty())
             .map(|e| Self {
-                from_lower: e
-                    .from
-                    .chars()
-                    .flat_map(|c| c.to_lowercase())
-                    .collect(),
+                from_lower: e.from.chars().flat_map(|c| c.to_lowercase()).collect(),
                 to: e.to.clone(),
             })
             .collect()
@@ -182,7 +173,10 @@ pub fn sanitize_entries(entries: Vec<DictionaryEntry>) -> Vec<DictionaryEntry> {
         if entry.to.len() > MAX_TO_LEN {
             entry.to.truncate(MAX_TO_LEN);
         }
-        if out.iter().any(|e: &DictionaryEntry| e.from.eq_ignore_ascii_case(&entry.from)) {
+        if out
+            .iter()
+            .any(|e: &DictionaryEntry| e.from.eq_ignore_ascii_case(&entry.from))
+        {
             continue;
         }
         out.push(entry);
@@ -207,17 +201,18 @@ pub fn export_csv(entries: &[DictionaryEntry]) -> String {
 
 fn csv_escape(value: &str) -> String {
     if value.contains(['"', ',', '\n', '\r']) {
-        format!(
-            "\"{}\"",
-            value.replace('"', "\"\"")
-        )
+        format!("\"{}\"", value.replace('"', "\"\""))
     } else {
         value.to_string()
     }
 }
 
 /// Parse CSV (header optional) and merge with existing entries when `merge` is true.
-pub fn import_csv(csv: &str, existing: &[DictionaryEntry], merge: bool) -> Result<Vec<DictionaryEntry>, String> {
+pub fn import_csv(
+    csv: &str,
+    existing: &[DictionaryEntry],
+    merge: bool,
+) -> Result<Vec<DictionaryEntry>, String> {
     let mut parsed = Vec::new();
     for (line_no, line) in csv.lines().enumerate() {
         let trimmed = line.trim();
@@ -306,10 +301,7 @@ mod tests {
 
     #[test]
     fn longest_match_first() {
-        let rules = compiled(vec![
-            rule("use", "USE"),
-            rule("use effect", "useEffect"),
-        ]);
+        let rules = compiled(vec![rule("use", "USE"), rule("use effect", "useEffect")]);
         assert_eq!(
             apply_dictionary("call use effect hook", &rules),
             "call useEffect hook"
@@ -340,11 +332,7 @@ mod tests {
 
     #[test]
     fn sanitize_dedupes_and_trims() {
-        let raw = vec![
-            rule("  foo ", "bar "),
-            rule("FOO", "baz"),
-            rule("", "x"),
-        ];
+        let raw = vec![rule("  foo ", "bar "), rule("FOO", "baz"), rule("", "x")];
         let out = sanitize_entries(raw);
         assert_eq!(out.len(), 1);
         assert_eq!(out[0].from, "foo");

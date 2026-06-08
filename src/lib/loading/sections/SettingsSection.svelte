@@ -169,6 +169,22 @@
       <div class="flex items-center justify-between gap-3 py-2.5">
         <div class="min-w-0 flex-1">
           <p class="text-xs font-medium text-white">
+            {msg.settingsPanel.spokenNormalizationTitle}
+          </p>
+          <p class="mt-0.5 text-[11px] leading-snug text-[var(--dash-text-subtle)]">
+            {msg.settingsPanel.spokenNormalizationHint}
+          </p>
+        </div>
+        {@render settingsSwitch(
+          dash.settings.spoken_normalization_enabled ?? true,
+          msg.settingsPanel.spokenNormalizationAria,
+          () => void dash.toggleSpokenNormalization(),
+        )}
+      </div>
+
+      <div class="flex items-center justify-between gap-3 py-2.5">
+        <div class="min-w-0 flex-1">
+          <p class="text-xs font-medium text-white">
             {msg.settingsPanel.normalizeTitle}
           </p>
           <p class="mt-0.5 text-[11px] leading-snug text-[var(--dash-text-subtle)]">

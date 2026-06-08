@@ -65,7 +65,16 @@ fn prompt_format_for(model_path: &Path) -> PromptFormat {
     }
 }
 
+/// Parakeet (ASR) inserts commas mid-phrase ("файл, Мэйн, точка Раст") which
+/// fragment filenames/terms and block normalization. Drop commas before
+/// prompting; the model assembles "@main.rs" reliably from the comma-free text.
+fn sanitize_input(raw: &str) -> String {
+    let no_commas: String = raw.chars().filter(|&c| c != ',').collect();
+    no_commas.split_whitespace().collect::<Vec<_>>().join(" ")
+}
+
 fn build_prompt(raw: &str, format: PromptFormat) -> String {
+    let raw = &sanitize_input(raw);
     match format {
         PromptFormat::Qwen => format!(
             "{QWEN_IM_START}system\n{SYSTEM_PROMPT}{QWEN_IM_END}\n\
@@ -85,6 +94,13 @@ fn strip_at_stop_token(mut text: String, format: PromptFormat) -> String {
     };
     if let Some((head, _)) = text.split_once(stop) {
         text = head.to_string();
+    }
+    // Qwen3.5 (enable_thinking=false) prefixes the answer with an empty
+    // `<think>\n\n</think>` block; keep only the text after it.
+    if format == PromptFormat::Qwen {
+        if let Some(idx) = text.rfind("</think>") {
+            text = text[idx + "</think>".len()..].to_string();
+        }
     }
     text.trim().to_string()
 }
@@ -126,7 +142,11 @@ where
     f(&cached.model, cached.format)
 }
 
-fn generate_normalized(model: &LlamaModel, raw: &str, format: PromptFormat) -> Result<String, String> {
+fn generate_normalized(
+    model: &LlamaModel,
+    raw: &str,
+    format: PromptFormat,
+) -> Result<String, String> {
     let prompt = build_prompt(raw, format);
     let stop_marker = match format {
         PromptFormat::Qwen => QWEN_IM_END,
@@ -145,10 +165,8 @@ fn generate_normalized(model: &LlamaModel, raw: &str, format: PromptFormat) -> R
         return Err("Normalizer prompt produced no tokens".to_string());
     }
 
-    let n_ctx = NonZeroU32::new(
-        (tokens.len() as u32 + MAX_NEW_TOKENS as u32 + 64).max(MIN_CTX),
-    )
-    .ok_or_else(|| "Invalid context size".to_string())?;
+    let n_ctx = NonZeroU32::new((tokens.len() as u32 + MAX_NEW_TOKENS as u32 + 64).max(MIN_CTX))
+        .ok_or_else(|| "Invalid context size".to_string())?;
 
     let backend = backend()?;
     let ctx_params = LlamaContextParams::default()
@@ -216,7 +234,9 @@ fn generate_normalized(model: &LlamaModel, raw: &str, format: PromptFormat) -> R
 }
 
 fn normalize_with_model(model_path: &Path, raw: &str) -> Result<String, String> {
-    with_model(model_path, |model, format| generate_normalized(model, raw, format))
+    with_model(model_path, |model, format| {
+        generate_normalized(model, raw, format)
+    })
 }
 
 /// Best-effort preload (warmup). Errors are non-fatal.
@@ -241,19 +261,13 @@ pub async fn normalize_text(app: &AppHandle, raw: &str) -> String {
         return raw_owned;
     }
 
-    if let Err(err) = normalizer_install::ensure_model(app).await {
-        #[cfg(debug_assertions)]
-        eprintln!("Normalizer model not available: {err}");
+    if normalizer_install::ensure_model(app).await.is_err() {
         return raw_owned;
     }
 
     let model_path = match gguf_path(app) {
         Ok(path) => path,
-        Err(err) => {
-            #[cfg(debug_assertions)]
-            eprintln!("Normalizer model path error: {err}");
-            return raw_owned;
-        }
+        Err(_) => return raw_owned,
     };
 
     let raw_for_task = raw_owned.clone();
@@ -262,16 +276,8 @@ pub async fn normalize_text(app: &AppHandle, raw: &str) -> String {
     match task.await {
         Ok(Ok(text)) if !text.trim().is_empty() => text,
         Ok(Ok(_)) => raw_owned,
-        Ok(Err(err)) => {
-            #[cfg(debug_assertions)]
-            eprintln!("Normalizer inference failed: {err}");
-            raw_owned
-        }
-        Err(err) => {
-            #[cfg(debug_assertions)]
-            eprintln!("Normalizer task failed: {err}");
-            raw_owned
-        }
+        Ok(Err(_)) => raw_owned,
+        Err(_) => raw_owned,
     }
 }
 
@@ -296,6 +302,32 @@ mod tests {
     }
 
     #[test]
+    fn sanitize_input_drops_commas_and_collapses_spaces() {
+        assert_eq!(
+            sanitize_input("Закамить изменения файл, Мэйн, точка Раст и создать тэг."),
+            "Закамить изменения файл Мэйн точка Раст и создать тэг."
+        );
+        assert_eq!(
+            sanitize_input("Глянь, пэкэдж, точка, Джейсон."),
+            "Глянь пэкэдж точка Джейсон."
+        );
+    }
+
+    #[test]
+    fn qwen_prompt_has_no_commas() {
+        let prompt = build_prompt("файл, Мэйн, точка Раст", PromptFormat::Qwen);
+        assert!(!prompt.contains("Мэйн,"));
+        assert!(prompt.contains("файл Мэйн точка Раст"));
+    }
+
+    #[test]
+    fn qwen_strips_think_block_and_stop_token() {
+        let raw = "<think>\n\n</think>\n\nсделай commit и push в master<|im_end|>".to_string();
+        let out = strip_at_stop_token(raw, PromptFormat::Qwen);
+        assert_eq!(out, "сделай commit и push в master");
+    }
+
+    #[test]
     fn gemma_prompt_uses_turn_markers() {
         let prompt = build_prompt("сделай коммит", PromptFormat::Gemma);
         assert!(prompt.contains("<start_of_turn>user"));
@@ -305,15 +337,11 @@ mod tests {
     #[test]
     fn detects_qwen_from_path() {
         assert_eq!(
-            prompt_format_for(Path::new(
-                "/models/qwen35-08b-norm/qwen35-08b-norm.gguf"
-            )),
+            prompt_format_for(Path::new("/models/qwen35-08b-norm/qwen35-08b-norm.gguf")),
             PromptFormat::Qwen
         );
         assert_eq!(
-            prompt_format_for(Path::new(
-                "/models/gemma3-270m-norm/gemma3-270m-norm.gguf"
-            )),
+            prompt_format_for(Path::new("/models/gemma3-270m-norm/gemma3-270m-norm.gguf")),
             PromptFormat::Gemma
         );
     }
@@ -329,10 +357,7 @@ mod tests {
                 "{home}/Library/Application Support/dev.speechclip.oss/models/gemma3-270m-norm/gemma3-270m-norm.gguf"
             ),
         ];
-        let model_path = models
-            .iter()
-            .map(PathBuf::from)
-            .find(|p| p.is_file());
+        let model_path = models.iter().map(PathBuf::from).find(|p| p.is_file());
         let Some(model_path) = model_path else {
             eprintln!("Skipping: no normalizer GGUF installed");
             return;
@@ -345,6 +370,9 @@ mod tests {
             lower.contains("commit"),
             "expected at least one normalized tech term, got: {output}"
         );
-        assert_ne!(output, input, "expected model to change input, got unchanged text");
+        assert_ne!(
+            output, input,
+            "expected model to change input, got unchanged text"
+        );
     }
 }

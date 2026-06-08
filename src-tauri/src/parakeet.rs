@@ -1,9 +1,9 @@
 //! Local Parakeet TDT 0.6B v3 via [transcribe-rs](https://github.com/cjpais/transcribe-rs) (ONNX).
 
+use crate::parakeet_install::install_in_progress;
 pub use crate::parakeet_install::{
     ensure_model, ensure_runtime, model_downloaded, model_path, DEFAULT_MODEL_ID,
 };
-use crate::parakeet_install::install_in_progress;
 
 use crate::audio::resample_to_16k;
 use once_cell::sync::OnceCell;
@@ -74,9 +74,7 @@ pub async fn check_setup(app: &AppHandle, model_id: &str) -> Result<ParakeetSetu
     let install_stage = install_stage_label(ready, in_progress);
 
     let message = if ready {
-        format!(
-            "Ready. Parakeet v3 ONNX model is installed at {model_dir}."
-        )
+        format!("Ready. Parakeet v3 ONNX model is installed at {model_dir}.")
     } else if in_progress {
         "Downloading Parakeet v3 model…".to_string()
     } else {
@@ -95,12 +93,15 @@ pub async fn check_setup(app: &AppHandle, model_id: &str) -> Result<ParakeetSetu
 }
 
 fn load_engine(model_id: &str, model_dir: PathBuf) -> Result<ParakeetModel, String> {
-    ParakeetModel::load(&model_dir, &Quantization::Int8).map_err(|e| {
-        format!("Failed to load Parakeet model \"{model_id}\": {e}")
-    })
+    ParakeetModel::load(&model_dir, &Quantization::Int8)
+        .map_err(|e| format!("Failed to load Parakeet model \"{model_id}\": {e}"))
 }
 
-fn transcribe_samples(model_id: &str, model_dir: PathBuf, samples: Vec<f32>) -> Result<String, String> {
+fn transcribe_samples(
+    model_id: &str,
+    model_dir: PathBuf,
+    samples: Vec<f32>,
+) -> Result<String, String> {
     let mut guard = engine_lock()
         .lock()
         .map_err(|_| "Speech engine lock poisoned".to_string())?;
@@ -196,7 +197,8 @@ mod tests {
         let wav = std::fs::read("/tmp/test-tone.wav").expect("read wav bytes");
         let (samples, sample_rate) = crate::audio::decode_wav_bytes(&wav).expect("decode");
         let samples = crate::audio::resample_to_16k(&samples, sample_rate).expect("resample");
-        let text = transcribe_samples("parakeet-tdt-0.6b-v3", model_dir, samples).expect("transcribe");
+        let text =
+            transcribe_samples("parakeet-tdt-0.6b-v3", model_dir, samples).expect("transcribe");
         assert!(text.is_empty() || !text.contains("AlignedResult"));
     }
 }

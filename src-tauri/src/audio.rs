@@ -62,10 +62,7 @@ pub fn resample_to_16k(samples: &[f32], sample_rate: u32) -> Result<Vec<f32>, St
     Ok(output)
 }
 
-fn read_samples(
-    mut reader: WavReader<Cursor<&[u8]>>,
-    spec: &WavSpec,
-) -> Result<Vec<f32>, String> {
+fn read_samples(mut reader: WavReader<Cursor<&[u8]>>, spec: &WavSpec) -> Result<Vec<f32>, String> {
     match (spec.channels, spec.sample_format) {
         (1, SampleFormat::Int) => reader
             .samples::<i16>()

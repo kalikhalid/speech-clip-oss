@@ -73,6 +73,7 @@
     seed_dictionary_count: 0,
     show_asr_raw_in_history: false,
     dictation_normalize: true,
+    spoken_normalization_enabled: true,
   });
   let dictionaryFrom = $state("");
   let dictionaryTo = $state("");
@@ -204,8 +205,8 @@
   async function pasteHistoryEntry(text: string) {
     try {
       await invoke("paste_text_command", { text });
-    } catch (e) {
-      console.error(e);
+    } catch {
+      // paste failed — no inline feedback for history replay
     }
   }
 
@@ -265,7 +266,6 @@
     } catch (e) {
       normalizerStatus = null;
       normalizerError = String(e);
-      console.error(e);
     }
   }
 
@@ -292,7 +292,6 @@
     } catch (e) {
       parakeetStatus = null;
       installError = String(e);
-      console.error(e);
     } finally {
       statusLoading = false;
       clearInstallProgressIfReady();
@@ -329,6 +328,7 @@
       ...s,
       ui_locale: normalizeLocale(s.ui_locale),
       dictation_normalize: s.dictation_normalize ?? true,
+      spoken_normalization_enabled: s.spoken_normalization_enabled ?? true,
     };
     hotkeyInput = s.hotkey;
     await setLocale(normalizeLocale(s.ui_locale));
@@ -367,8 +367,8 @@
         limit: null,
       });
       historyEntries = (h.entries ?? []).map(mapHistoryEntry);
-    } catch (e) {
-      console.error(e);
+    } catch {
+      // history load failed — list stays empty
     }
   }
 
@@ -376,8 +376,7 @@
     statsLoading = true;
     try {
       dictationStats = await invoke<DictationStats>("get_dictation_stats");
-    } catch (e) {
-      console.error(e);
+    } catch {
       dictationStats = { words_24h: 0, words_7d: 0, words_all_time: 0 };
     } finally {
       statsLoading = false;
@@ -489,6 +488,15 @@
     const saved = await saveSettings({ quiet: true });
     if (!saved) {
       settings.seed_dictionary_enabled = previous;
+    }
+  }
+
+  async function toggleSpokenNormalization() {
+    const previous = settings.spoken_normalization_enabled;
+    settings.spoken_normalization_enabled = !previous;
+    const saved = await saveSettings({ quiet: true });
+    if (!saved) {
+      settings.spoken_normalization_enabled = previous;
     }
   }
 
@@ -658,6 +666,7 @@
     toggleSoundEffects,
     toggleHideIdlePill,
     toggleSeedDictionary,
+    toggleSpokenNormalization,
     toggleShowAsrRawInHistory,
     toggleDictationNormalize,
     pasteHistoryEntry,
@@ -742,6 +751,11 @@
 <div
   class="dashboard-shell flex h-dvh min-w-[720px] flex-col bg-[var(--dash-bg)] font-sans text-[var(--dash-text)] antialiased"
 >
+  <div
+    class="dashboard-titlebar"
+    data-tauri-drag-region
+    aria-hidden="true"
+  ></div>
   <div class="flex min-h-0 flex-1">
     <DashboardSidebar
       active={section}

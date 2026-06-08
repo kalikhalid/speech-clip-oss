@@ -10,6 +10,7 @@ mod parakeet_install;
 mod postprocess;
 mod settings;
 mod shortcuts;
+mod spoken_normalization;
 mod storage;
 mod timing;
 mod utils;

@@ -7,8 +7,8 @@ use std::time::Duration;
 use tauri::{AppHandle, Manager};
 
 use crate::dictionary::{
-    effective_dictionary_entries, sanitize_entries, seed_dictionary_count,
-    CompiledDictionaryRule, DictionaryEntry,
+    effective_dictionary_entries, sanitize_entries, seed_dictionary_count, CompiledDictionaryRule,
+    DictionaryEntry,
 };
 use crate::parakeet::DEFAULT_MODEL_ID;
 
@@ -74,6 +74,10 @@ fn default_dictation_normalize() -> bool {
     true
 }
 
+fn default_spoken_normalization_enabled() -> bool {
+    true
+}
+
 pub const UI_LOCALE_EN: &str = "en";
 pub const UI_LOCALE_RU: &str = "ru";
 
@@ -123,6 +127,9 @@ pub struct AppSettings {
     /// LLM post-normalization of Russian dev dictation (tech terms → Latin).
     #[serde(default = "default_dictation_normalize")]
     pub dictation_normalize: bool,
+    /// Deterministic post-ASR fixes for spoken filenames and common dev terms.
+    #[serde(default = "default_spoken_normalization_enabled")]
+    pub spoken_normalization_enabled: bool,
     /// Pre-lowercased dictionary phrases (rebuilt on load/save).
     #[serde(skip, default)]
     pub dictionary_rules: Vec<CompiledDictionaryRule>,
@@ -147,16 +154,15 @@ impl Default for AppSettings {
             seed_dictionary_count: seed_dictionary_count(),
             show_asr_raw_in_history: default_show_asr_raw_in_history(),
             dictation_normalize: default_dictation_normalize(),
+            spoken_normalization_enabled: default_spoken_normalization_enabled(),
             dictionary_rules: Vec::new(),
         }
     }
 }
 
 fn compile_dictionary_rules(settings: &mut AppSettings) {
-    let effective = effective_dictionary_entries(
-        &settings.dictionary,
-        settings.seed_dictionary_enabled,
-    );
+    let effective =
+        effective_dictionary_entries(&settings.dictionary, settings.seed_dictionary_enabled);
     settings.dictionary_rules = CompiledDictionaryRule::compile_all(&effective);
     settings.seed_dictionary_count = seed_dictionary_count();
 }
@@ -199,8 +205,7 @@ pub fn load_settings_from_disk(app: &AppHandle) -> Result<AppSettings, String> {
     if !path.exists() {
         return Ok(AppSettings::default());
     }
-    let content =
-        fs::read_to_string(&path).map_err(|e| format!("Failed to read settings: {e}"))?;
+    let content = fs::read_to_string(&path).map_err(|e| format!("Failed to read settings: {e}"))?;
     let settings: AppSettings =
         serde_json::from_str(&content).map_err(|e| format!("Failed to parse settings: {e}"))?;
     Ok(normalize_loaded(settings).0)
@@ -211,8 +216,8 @@ fn write_settings_to_disk(app: &AppHandle, settings: &AppSettings) -> Result<(),
     if let Some(parent) = path.parent() {
         fs::create_dir_all(parent).map_err(|e| format!("Failed to create settings dir: {e}"))?;
     }
-    let json = serde_json::to_vec(settings)
-        .map_err(|e| format!("Failed to serialize settings: {e}"))?;
+    let json =
+        serde_json::to_vec(settings).map_err(|e| format!("Failed to serialize settings: {e}"))?;
     fs::write(&path, json).map_err(|e| format!("Failed to write settings: {e}"))
 }
 
@@ -267,7 +272,10 @@ impl SettingsStore {
                     return;
                 }
                 let snapshot = store.get();
-                let _ = tauri::async_runtime::spawn_blocking(move || write_settings_to_disk(&app, &snapshot)).await;
+                let _ = tauri::async_runtime::spawn_blocking(move || {
+                    write_settings_to_disk(&app, &snapshot)
+                })
+                .await;
             }
         });
     }

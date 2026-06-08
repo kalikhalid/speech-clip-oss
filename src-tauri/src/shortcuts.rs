@@ -1,6 +1,6 @@
+use std::sync::atomic::{AtomicU64, Ordering};
 use tauri::{AppHandle, Emitter};
 use tauri_plugin_global_shortcut::{GlobalShortcutExt, Shortcut, ShortcutState};
-use std::sync::atomic::{AtomicU64, Ordering};
 
 static LAST_HOTKEY_RELEASE_MS: AtomicU64 = AtomicU64::new(0);
 const HOTKEY_RELEASE_DEBOUNCE_MS: u64 = 400;

@@ -1,6 +1,7 @@
 // Get frontmost application name (macOS only).
 // Does not require special permissions — app name only, not window title.
 #[cfg(target_os = "macos")]
+#[allow(deprecated)]
 pub fn get_frontmost_app_name() -> Option<String> {
     use cocoa::base::{id, nil};
     use objc::{class, msg_send, sel, sel_impl};

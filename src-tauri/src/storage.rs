@@ -166,8 +166,8 @@ fn write_history_to_disk(app: &AppHandle, history: &TranscriptionHistory) -> Res
     if let Some(parent) = path.parent() {
         fs::create_dir_all(parent).map_err(|e| format!("Failed to create history dir: {}", e))?;
     }
-    let json = serde_json::to_vec(history)
-        .map_err(|e| format!("Failed to serialize history: {}", e))?;
+    let json =
+        serde_json::to_vec(history).map_err(|e| format!("Failed to serialize history: {}", e))?;
     fs::write(&path, json).map_err(|e| format!("Failed to write history: {}", e))?;
     Ok(())
 }
@@ -197,8 +197,6 @@ pub fn save_transcription(app: &AppHandle, entry: TranscriptionEntry) -> Result<
             if history.entries.len() > MAX_HISTORY_ENTRIES {
                 history.entries.truncate(MAX_HISTORY_ENTRIES);
             }
-            #[cfg(debug_assertions)]
-            println!("📜 History entry saved (total: {})", history.entries.len());
         });
         store.snapshot()
     })?;

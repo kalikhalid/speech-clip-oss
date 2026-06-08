@@ -147,6 +147,10 @@ export const ru = {
     toggle: "Переключатель",
     restoreClipboard: "Восстанавливать буфер после вставки",
     postProcessTitle: "Пост-обработка",
+    spokenNormalizationTitle: "Детерминированные исправления",
+    spokenNormalizationHint:
+      "Исправлять уверенные имена файлов и dev-термины локальными правилами до модели Qwen.",
+    spokenNormalizationAria: "Включить детерминированные исправления текста",
     normalizeTitle: "Нормализация терминов",
     normalizeHint:
       "Исправлять английские тех-термины, сказанные по-русски (commit, push, @Cargo.toml) локальной моделью Qwen до словаря.",

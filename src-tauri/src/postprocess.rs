@@ -4,10 +4,8 @@ use once_cell::sync::Lazy;
 use regex::Regex;
 
 static FILLER_RE: Lazy<Regex> = Lazy::new(|| {
-  Regex::new(
-        r"(?i)\b(um+|uh+|er+|ah+|hmm+|hm+)\b|\b(you know|i mean)\b",
-    )
-    .expect("filler regex must compile")
+    Regex::new(r"(?i)\b(um+|uh+|er+|ah+|hmm+|hm+)\b|\b(you know|i mean)\b")
+        .expect("filler regex must compile")
 });
 
 /// Remove common English filler words/phrases when enabled in settings.
@@ -44,10 +42,7 @@ mod tests {
 
     #[test]
     fn removes_you_know() {
-        assert_eq!(
-            strip_filler_words("so you know it works"),
-            "so it works"
-        );
+        assert_eq!(strip_filler_words("so you know it works"), "so it works");
     }
 
     #[test]

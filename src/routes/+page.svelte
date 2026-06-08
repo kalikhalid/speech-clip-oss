@@ -112,8 +112,8 @@
     try {
       const appSettings = await invoke<OverlaySettingsPayload>("get_settings");
       applyOverlaySettings(appSettings);
-    } catch (e) {
-      console.warn("Failed to load overlay settings:", e);
+    } catch {
+      // overlay settings unavailable — defaults apply
     }
   }
 
@@ -132,7 +132,6 @@
 
     const elapsed = Date.now() - recordingStartTime;
     if (elapsed >= MAX_DURATION_MS) {
-      console.warn("⏱️ Max duration reached, stopping recording");
       stopRecording();
       return;
     }
@@ -258,8 +257,8 @@
         if (e.data.size > 0) audioChunks.push(e.data);
       };
 
-    } catch (error) {
-      console.error("Failed to initialize audio:", error);
+    } catch {
+      // audio init failed — startRecording will abort if pipeline unavailable
     }
   }
 
@@ -276,8 +275,8 @@
         preloadSound("/loading.mp3"),
       ]);
       soundsReady = true;
-    } catch (e) {
-      console.warn("Failed to preload sounds:", e);
+    } catch {
+      // sound preload failed — recording still works without effects
     }
 
     // Check accessibility before overlay — guide mode needs a small centered window
@@ -287,8 +286,8 @@
         "check_accessibility_permission",
         { prompt: false },
       );
-    } catch (e) {
-      console.error("Failed to check accessibility permission:", e);
+    } catch {
+      // permission check failed — assume granted to avoid blocking overlay
     }
 
     if (!hasPermission) {
@@ -394,7 +393,6 @@
 
       // If initialization failed, abort
       if (!audioContext || !mediaStream || !mediaRecorder) {
-        console.error("Failed to initialize audio");
         appState = "idle";
         return;
       }
@@ -504,8 +502,7 @@
       } else {
         startProcessingOnce();
       }
-    } catch (error) {
-      console.error("Failed to stop recorder:", error);
+    } catch {
       startProcessingOnce();
     }
   }
@@ -552,8 +549,6 @@
         showEmptyFeedback(
           msg.toLowerCase().includes("short") ? "audio_too_short" : "empty_transcript",
         );
-      } else {
-        console.error("Processing error:", error);
       }
     } finally {
       isProcessingRecording = false;

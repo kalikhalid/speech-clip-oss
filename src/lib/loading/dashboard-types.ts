@@ -65,6 +65,7 @@ export type AppSettings = {
   seed_dictionary_count: number;
   show_asr_raw_in_history: boolean;
   dictation_normalize: boolean;
+  spoken_normalization_enabled: boolean;
 };
 
 export type SetupStage = {
@@ -134,6 +135,7 @@ export type DashboardContext = {
   toggleSoundEffects(): Promise<void>;
   toggleHideIdlePill(): Promise<void>;
   toggleSeedDictionary(): Promise<void>;
+  toggleSpokenNormalization(): Promise<void>;
   toggleShowAsrRawInHistory(): Promise<void>;
   toggleDictationNormalize(): Promise<void>;
   pasteHistoryEntry(text: string): Promise<void>;

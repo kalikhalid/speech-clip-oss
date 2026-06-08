@@ -110,7 +110,8 @@ async fn download_file(
 }
 
 fn verify_sha256(path: &Path, expected: &str) -> Result<(), String> {
-    let bytes = std::fs::read(path).map_err(|e| format!("Failed to read {}: {e}", path.display()))?;
+    let bytes =
+        std::fs::read(path).map_err(|e| format!("Failed to read {}: {e}", path.display()))?;
     let digest = Sha256::digest(&bytes);
     let actual = format!("{digest:x}");
     if actual != expected {
@@ -179,7 +180,12 @@ async fn ensure_model_inner(app: &AppHandle, model_id: &str) -> Result<(), Strin
     let archive_path = models_root.join(format!("{model_id}.tar.gz"));
     let extract_root = models_root.join(format!("{model_id}.extracting"));
 
-    emit_progress(app, "download", "Downloading Parakeet v3 model (~456 MB)…", 10);
+    emit_progress(
+        app,
+        "download",
+        "Downloading Parakeet v3 model (~456 MB)…",
+        10,
+    );
     download_file(
         app,
         DEFAULT_MODEL_URL,
