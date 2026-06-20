@@ -1,196 +1,1583 @@
 {
   "version": 1,
-  "dot_words": ["точка", "дот", "dot"],
-  "at_words": ["собака", "собачка", "эт"],
+  "dot_words": [
+    "точка",
+    "точке",
+    "дот",
+    "dot",
+    "пойнт",
+    "point"
+  ],
+  "at_words": [
+    "собака",
+    "собачка",
+    "эт"
+  ],
   "stems": [
-    { "from": ["хистори"], "to": "history" },
-    { "from": ["history"], "to": "history" },
-    { "from": ["мейн"], "to": "main" },
-    { "from": ["мэйн"], "to": "main" },
-    { "from": ["main"], "to": "main" },
-    { "from": ["клинап"], "to": "cleanup" },
-    { "from": ["cleanup"], "to": "cleanup" },
-    { "from": ["конфиг"], "to": "config" },
-    { "from": ["config"], "to": "config" },
-    { "from": ["ридми"], "to": "README" },
-    { "from": ["ритми"], "to": "README" },
-    { "from": ["readme"], "to": "README" },
-    { "from": ["пакедж"], "to": "package" },
-    { "from": ["package"], "to": "package" },
-    { "from": ["пакедж", "лок"], "to": "package-lock" },
-    { "from": ["package", "lock"], "to": "package-lock" },
-    { "from": ["индекс"], "to": "index" },
-    { "from": ["index"], "to": "index" },
-    { "from": ["карго"], "to": "Cargo" },
-    { "from": ["cargo"], "to": "Cargo" },
-    { "from": ["вайт", "конфиг"], "to": "vite.config" },
-    { "from": ["vite", "config"], "to": "vite.config" },
-    { "from": ["докер", "компоуз"], "to": "docker-compose" },
-    { "from": ["докер", "комполз"], "to": "docker-compose" },
-    { "from": ["docker", "compose"], "to": "docker-compose" },
-    { "from": ["докерфайл"], "to": "Dockerfile" },
-    { "from": ["dockerfile"], "to": "Dockerfile" },
-    { "from": ["командс"], "to": "commands" },
-    { "from": ["commands"], "to": "commands" },
-    { "from": ["нормалайзер"], "to": "normalizer" },
-    { "from": ["нормализатор"], "to": "normalizer" },
-    { "from": ["normalizer"], "to": "normalizer" },
-    { "from": ["сеттингс"], "to": "settings" },
-    { "from": ["settings"], "to": "settings" },
-    { "from": ["сторадж"], "to": "storage" },
-    { "from": ["storage"], "to": "storage" },
-    { "from": ["либ"], "to": "lib" },
-    { "from": ["lib"], "to": "lib" },
-    { "from": ["апп"], "to": "App" },
-    { "from": ["app"], "to": "App" },
-    { "from": ["стайлс"], "to": "styles" },
-    { "from": ["styles"], "to": "styles" },
-    { "from": ["тайпскрипт", "конфиг"], "to": "tsconfig" },
-    { "from": ["тиэс", "конфиг"], "to": "tsconfig" },
-    { "from": ["tsconfig"], "to": "tsconfig" }
+    {
+      "from": [
+        "хистори"
+      ],
+      "to": "history"
+    },
+    {
+      "from": [
+        "history"
+      ],
+      "to": "history"
+    },
+    {
+      "from": [
+        "мейн"
+      ],
+      "to": "main"
+    },
+    {
+      "from": [
+        "мэйн"
+      ],
+      "to": "main"
+    },
+    {
+      "from": [
+        "main"
+      ],
+      "to": "main"
+    },
+    {
+      "from": [
+        "клинап"
+      ],
+      "to": "cleanup"
+    },
+    {
+      "from": [
+        "cleanup"
+      ],
+      "to": "cleanup"
+    },
+    {
+      "from": [
+        "конфиг"
+      ],
+      "to": "config"
+    },
+    {
+      "from": [
+        "config"
+      ],
+      "to": "config"
+    },
+    {
+      "from": [
+        "ридми"
+      ],
+      "to": "README"
+    },
+    {
+      "from": [
+        "ритми"
+      ],
+      "to": "README"
+    },
+    {
+      "from": [
+        "readme"
+      ],
+      "to": "README"
+    },
+    {
+      "from": [
+        "реадми"
+      ],
+      "to": "README"
+    },
+    {
+      "from": [
+        "readmi"
+      ],
+      "to": "README"
+    },
+    {
+      "from": [
+        "reamdi"
+      ],
+      "to": "README"
+    },
+    {
+      "from": [
+        "пакедж"
+      ],
+      "to": "package"
+    },
+    {
+      "from": [
+        "package"
+      ],
+      "to": "package"
+    },
+    {
+      "from": [
+        "пакедж",
+        "лок"
+      ],
+      "to": "package-lock"
+    },
+    {
+      "from": [
+        "package",
+        "lock"
+      ],
+      "to": "package-lock"
+    },
+    {
+      "from": [
+        "индекс"
+      ],
+      "to": "index"
+    },
+    {
+      "from": [
+        "index"
+      ],
+      "to": "index"
+    },
+    {
+      "from": [
+        "карго"
+      ],
+      "to": "Cargo"
+    },
+    {
+      "from": [
+        "cargo"
+      ],
+      "to": "Cargo"
+    },
+    {
+      "from": [
+        "вайт",
+        "конфиг"
+      ],
+      "to": "vite.config"
+    },
+    {
+      "from": [
+        "vite",
+        "config"
+      ],
+      "to": "vite.config"
+    },
+    {
+      "from": [
+        "докер",
+        "компоуз"
+      ],
+      "to": "docker-compose"
+    },
+    {
+      "from": [
+        "докер",
+        "комполз"
+      ],
+      "to": "docker-compose"
+    },
+    {
+      "from": [
+        "docker",
+        "compose"
+      ],
+      "to": "docker-compose"
+    },
+    {
+      "from": [
+        "докерфайл"
+      ],
+      "to": "Dockerfile"
+    },
+    {
+      "from": [
+        "dockerfile"
+      ],
+      "to": "Dockerfile"
+    },
+    {
+      "from": [
+        "командс"
+      ],
+      "to": "commands"
+    },
+    {
+      "from": [
+        "commands"
+      ],
+      "to": "commands"
+    },
+    {
+      "from": [
+        "нормалайзер"
+      ],
+      "to": "normalizer"
+    },
+    {
+      "from": [
+        "нормализатор"
+      ],
+      "to": "normalizer"
+    },
+    {
+      "from": [
+        "normalizer"
+      ],
+      "to": "normalizer"
+    },
+    {
+      "from": [
+        "сеттингс"
+      ],
+      "to": "settings"
+    },
+    {
+      "from": [
+        "settings"
+      ],
+      "to": "settings"
+    },
+    {
+      "from": [
+        "сторадж"
+      ],
+      "to": "storage"
+    },
+    {
+      "from": [
+        "storage"
+      ],
+      "to": "storage"
+    },
+    {
+      "from": [
+        "либ"
+      ],
+      "to": "lib"
+    },
+    {
+      "from": [
+        "lib"
+      ],
+      "to": "lib"
+    },
+    {
+      "from": [
+        "апп"
+      ],
+      "to": "App"
+    },
+    {
+      "from": [
+        "app"
+      ],
+      "to": "App"
+    },
+    {
+      "from": [
+        "стайлс"
+      ],
+      "to": "styles"
+    },
+    {
+      "from": [
+        "styles"
+      ],
+      "to": "styles"
+    },
+    {
+      "from": [
+        "тайпскрипт",
+        "конфиг"
+      ],
+      "to": "tsconfig"
+    },
+    {
+      "from": [
+        "тиэс",
+        "конфиг"
+      ],
+      "to": "tsconfig"
+    },
+    {
+      "from": [
+        "tsconfig"
+      ],
+      "to": "tsconfig"
+    },
+    {
+      "from": [
+        "транскрайб"
+      ],
+      "to": "transcribe"
+    },
+    {
+      "from": [
+        "транскрайбер"
+      ],
+      "to": "transcribe"
+    },
+    {
+      "from": [
+        "transcribe"
+      ],
+      "to": "transcribe"
+    }
   ],
   "extensions": [
-    { "from": ["эм", "дэ"], "to": "md" },
-    { "from": ["эмдэ"], "to": "md" },
-    { "from": ["эмди"], "to": "md" },
-    { "from": ["мди"], "to": "md" },
-    { "from": ["md"], "to": "md" },
-    { "from": ["джейсон"], "to": "json" },
-    { "from": ["json"], "to": "json" },
-    { "from": ["раст"], "to": "rs" },
-    { "from": ["рс"], "to": "rs" },
-    { "from": ["rs"], "to": "rs" },
-    { "from": ["пай"], "to": "py" },
-    { "from": ["пи"], "to": "py" },
-    { "from": ["py"], "to": "py" },
-    { "from": ["ямл"], "to": "yaml" },
-    { "from": ["yaml"], "to": "yaml" },
-    { "from": ["игрек", "эм", "эл"], "to": "yml" },
-    { "from": ["yml"], "to": "yml" },
-    { "from": ["томл"], "to": "toml" },
-    { "from": ["toml"], "to": "toml" },
-    { "from": ["джей", "эс"], "to": "js" },
-    { "from": ["джейэс"], "to": "js" },
-    { "from": ["js"], "to": "js" },
-    { "from": ["ти", "эс"], "to": "ts" },
-    { "from": ["тиэс"], "to": "ts" },
-    { "from": ["ts"], "to": "ts" },
-    { "from": ["ти", "эс", "икс"], "to": "tsx" },
-    { "from": ["тиэсикс"], "to": "tsx" },
-    { "from": ["tsx"], "to": "tsx" },
-    { "from": ["джей", "эс", "икс"], "to": "jsx" },
-    { "from": ["джейэсикс"], "to": "jsx" },
-    { "from": ["jsx"], "to": "jsx" },
-    { "from": ["эм", "джей", "эс"], "to": "mjs" },
-    { "from": ["эмджейэс"], "to": "mjs" },
-    { "from": ["mjs"], "to": "mjs" },
-    { "from": ["си", "эс", "эс"], "to": "css" },
-    { "from": ["цсс"], "to": "css" },
-    { "from": ["css"], "to": "css" },
-    { "from": ["эйч", "ти", "эм", "эл"], "to": "html" },
-    { "from": ["аш", "ти", "эм", "эл"], "to": "html" },
-    { "from": ["html"], "to": "html" },
-    { "from": ["эс", "кью", "эль"], "to": "sql" },
-    { "from": ["скуэль"], "to": "sql" },
-    { "from": ["sql"], "to": "sql" },
-    { "from": ["го"], "to": "go" },
-    { "from": ["go"], "to": "go" },
-    { "from": ["шелл"], "to": "sh" },
-    { "from": ["sh"], "to": "sh" },
-    { "from": ["текст"], "to": "txt" },
-    { "from": ["txt"], "to": "txt" }
+    {
+      "from": [
+        "эм",
+        "дэ"
+      ],
+      "to": "md"
+    },
+    {
+      "from": [
+        "эмдэ"
+      ],
+      "to": "md"
+    },
+    {
+      "from": [
+        "эмди"
+      ],
+      "to": "md"
+    },
+    {
+      "from": [
+        "мди"
+      ],
+      "to": "md"
+    },
+    {
+      "from": [
+        "md"
+      ],
+      "to": "md"
+    },
+    {
+      "from": [
+        "джейсон"
+      ],
+      "to": "json"
+    },
+    {
+      "from": [
+        "json"
+      ],
+      "to": "json"
+    },
+    {
+      "from": [
+        "раст"
+      ],
+      "to": "rs"
+    },
+    {
+      "from": [
+        "рс"
+      ],
+      "to": "rs"
+    },
+    {
+      "from": [
+        "rs"
+      ],
+      "to": "rs"
+    },
+    {
+      "from": [
+        "пай"
+      ],
+      "to": "py"
+    },
+    {
+      "from": [
+        "пи"
+      ],
+      "to": "py"
+    },
+    {
+      "from": [
+        "py"
+      ],
+      "to": "py"
+    },
+    {
+      "from": [
+        "ямл"
+      ],
+      "to": "yaml"
+    },
+    {
+      "from": [
+        "yaml"
+      ],
+      "to": "yaml"
+    },
+    {
+      "from": [
+        "игрек",
+        "эм",
+        "эл"
+      ],
+      "to": "yml"
+    },
+    {
+      "from": [
+        "yml"
+      ],
+      "to": "yml"
+    },
+    {
+      "from": [
+        "томл"
+      ],
+      "to": "toml"
+    },
+    {
+      "from": [
+        "toml"
+      ],
+      "to": "toml"
+    },
+    {
+      "from": [
+        "джей",
+        "эс"
+      ],
+      "to": "js"
+    },
+    {
+      "from": [
+        "джейэс"
+      ],
+      "to": "js"
+    },
+    {
+      "from": [
+        "js"
+      ],
+      "to": "js"
+    },
+    {
+      "from": [
+        "ти",
+        "эс"
+      ],
+      "to": "ts"
+    },
+    {
+      "from": [
+        "тиэс"
+      ],
+      "to": "ts"
+    },
+    {
+      "from": [
+        "ts"
+      ],
+      "to": "ts"
+    },
+    {
+      "from": [
+        "ти",
+        "эс",
+        "икс"
+      ],
+      "to": "tsx"
+    },
+    {
+      "from": [
+        "тиэсикс"
+      ],
+      "to": "tsx"
+    },
+    {
+      "from": [
+        "tsx"
+      ],
+      "to": "tsx"
+    },
+    {
+      "from": [
+        "джей",
+        "эс",
+        "икс"
+      ],
+      "to": "jsx"
+    },
+    {
+      "from": [
+        "джейэсикс"
+      ],
+      "to": "jsx"
+    },
+    {
+      "from": [
+        "jsx"
+      ],
+      "to": "jsx"
+    },
+    {
+      "from": [
+        "эм",
+        "джей",
+        "эс"
+      ],
+      "to": "mjs"
+    },
+    {
+      "from": [
+        "эмджейэс"
+      ],
+      "to": "mjs"
+    },
+    {
+      "from": [
+        "mjs"
+      ],
+      "to": "mjs"
+    },
+    {
+      "from": [
+        "си",
+        "эс",
+        "эс"
+      ],
+      "to": "css"
+    },
+    {
+      "from": [
+        "цсс"
+      ],
+      "to": "css"
+    },
+    {
+      "from": [
+        "css"
+      ],
+      "to": "css"
+    },
+    {
+      "from": [
+        "эйч",
+        "ти",
+        "эм",
+        "эл"
+      ],
+      "to": "html"
+    },
+    {
+      "from": [
+        "аш",
+        "ти",
+        "эм",
+        "эл"
+      ],
+      "to": "html"
+    },
+    {
+      "from": [
+        "html"
+      ],
+      "to": "html"
+    },
+    {
+      "from": [
+        "эс",
+        "кью",
+        "эль"
+      ],
+      "to": "sql"
+    },
+    {
+      "from": [
+        "скуэль"
+      ],
+      "to": "sql"
+    },
+    {
+      "from": [
+        "sql"
+      ],
+      "to": "sql"
+    },
+    {
+      "from": [
+        "го"
+      ],
+      "to": "go"
+    },
+    {
+      "from": [
+        "go"
+      ],
+      "to": "go"
+    },
+    {
+      "from": [
+        "шелл"
+      ],
+      "to": "sh"
+    },
+    {
+      "from": [
+        "sh"
+      ],
+      "to": "sh"
+    },
+    {
+      "from": [
+        "текст"
+      ],
+      "to": "txt"
+    },
+    {
+      "from": [
+        "txt"
+      ],
+      "to": "txt"
+    }
   ],
   "terms": [
-    { "from": ["докер", "комполз"], "to": "docker compose" },
-    { "from": ["докер", "компоуз"], "to": "docker compose" },
-    { "from": ["гид", "сервер"], "to": "git server" },
-    { "from": ["гит"], "to": "git" },
-    { "from": ["гитхаб"], "to": "GitHub" },
-    { "from": ["коммит"], "to": "commit" },
-    { "from": ["комит"], "to": "commit" },
-    { "from": ["пуш"], "to": "push" },
-    { "from": ["пул", "реквест"], "to": "pull request" },
-    { "from": ["пулл", "реквест"], "to": "pull request" },
-    { "from": ["мастер"], "to": "master" },
-    { "from": ["мейн"], "to": "main" },
-    { "from": ["мэйн"], "to": "main" },
-    { "from": ["графана"], "to": "Grafana" },
-    { "from": ["графане"], "to": "Grafana" },
-    { "from": ["графану"], "to": "Grafana" },
-    { "from": ["графаны"], "to": "Grafana" },
-    { "from": ["конфиг"], "to": "config" },
-    { "from": ["раст"], "to": "Rust" },
-    { "from": ["карго"], "to": "cargo" },
-    { "from": ["пайтон"], "to": "Python" },
-    { "from": ["питон"], "to": "Python" },
-    { "from": ["пайплайн"], "to": "pipeline" },
-    { "from": ["пайплайна"], "to": "pipeline" },
-    { "from": ["прод"], "to": "prod" },
-    { "from": ["проде"], "to": "prod" },
-    { "from": ["прода"], "to": "prod" },
-    { "from": ["стейджинг"], "to": "staging" },
-    { "from": ["стейдже"], "to": "staging" },
-    { "from": ["стейдж"], "to": "staging" },
-    { "from": ["бекенд"], "to": "backend" },
-    { "from": ["бэкенд"], "to": "backend" },
-    { "from": ["бек", "энд"], "to": "backend" },
-    { "from": ["фронтенд"], "to": "frontend" },
-    { "from": ["фронт", "энд"], "to": "frontend" },
-    { "from": ["апи"], "to": "API" },
-    { "from": ["эндпоинт"], "to": "endpoint" },
-    { "from": ["эндпоинта"], "to": "endpoint" },
-    { "from": ["эндпоинты"], "to": "endpoints" },
-    { "from": ["реквест"], "to": "request" },
-    { "from": ["респонс"], "to": "response" },
-    { "from": ["джейсон"], "to": "JSON" },
-    { "from": ["редис"], "to": "Redis" },
-    { "from": ["постгрес"], "to": "Postgres" },
-    { "from": ["монго", "дб"], "to": "MongoDB" },
-    { "from": ["монгодб"], "to": "MongoDB" },
-    { "from": ["докер"], "to": "docker" },
-    { "from": ["кубернетес"], "to": "kubernetes" },
-    { "from": ["кубернетис"], "to": "kubernetes" },
-    { "from": ["кубектл"], "to": "kubectl" },
-    { "from": ["кубectl"], "to": "kubectl" },
-    { "from": ["терраформ"], "to": "Terraform" },
-    { "from": ["ансибл"], "to": "Ansible" },
-    { "from": ["реакт"], "to": "React" },
-    { "from": ["вью"], "to": "Vue" },
-    { "from": ["свелт"], "to": "Svelte" },
-    { "from": ["свелте"], "to": "Svelte" },
-    { "from": ["тейлвинд"], "to": "Tailwind" },
-    { "from": ["вайт"], "to": "Vite" },
-    { "from": ["вебпак"], "to": "Webpack" },
-    { "from": ["нпм"], "to": "npm" },
-    { "from": ["пнпм"], "to": "pnpm" },
-    { "from": ["ярн"], "to": "yarn" },
-    { "from": ["нод"], "to": "Node" },
-    { "from": ["го"], "to": "Go" },
-    { "from": ["свифт"], "to": "Swift" },
-    { "from": ["котлин"], "to": "Kotlin" },
-    { "from": ["дебаг"], "to": "debug" },
-    { "from": ["лог"], "to": "log" },
-    { "from": ["логи"], "to": "logs" },
-    { "from": ["стек", "трейс"], "to": "stack trace" },
-    { "from": ["мок"], "to": "mock" },
-    { "from": ["моки"], "to": "mocks" },
-    { "from": ["тест"], "to": "test" },
-    { "from": ["тесты"], "to": "tests" },
-    { "from": ["релиз"], "to": "release" },
-    { "from": ["роллбек"], "to": "rollback" },
-    { "from": ["роллбэк"], "to": "rollback" },
-    { "from": ["деплой"], "to": "deploy" },
-    { "from": ["деплое"], "to": "deploy" },
-    { "from": ["слак"], "to": "Slack" },
-    { "from": ["ноушн"], "to": "Notion" },
-    { "from": ["зум"], "to": "Zoom" },
-    { "from": ["фигма"], "to": "Figma" },
-    { "from": ["джира"], "to": "Jira" },
-    { "from": ["гитлаб"], "to": "GitLab" },
-    { "from": ["телеграм"], "to": "Telegram" },
-    { "from": ["вс", "код"], "to": "VS Code" },
-    { "from": ["вэс", "код"], "to": "VS Code" },
-    { "from": ["курсор"], "to": "Cursor" },
-    { "from": ["постман"], "to": "Postman" }
+    {
+      "from": [
+        "докер",
+        "комполз"
+      ],
+      "to": "docker compose"
+    },
+    {
+      "from": [
+        "докер",
+        "компоуз"
+      ],
+      "to": "docker compose"
+    },
+    {
+      "from": [
+        "карго",
+        "тест"
+      ],
+      "to": "cargo test"
+    },
+    {
+      "from": [
+        "карго",
+        "клиппи"
+      ],
+      "to": "cargo clippy"
+    },
+    {
+      "from": [
+        "карго",
+        "чек"
+      ],
+      "to": "cargo check"
+    },
+    {
+      "from": [
+        "бан",
+        "ран",
+        "чек"
+      ],
+      "to": "bun run check"
+    },
+    {
+      "from": [
+        "бан",
+        "ран",
+        "билд"
+      ],
+      "to": "bun run build"
+    },
+    {
+      "from": [
+        "нпм",
+        "ран",
+        "билд"
+      ],
+      "to": "npm run build"
+    },
+    {
+      "from": [
+        "нпм",
+        "ран",
+        "тест"
+      ],
+      "to": "npm run test"
+    },
+    {
+      "from": [
+        "пнпм",
+        "ран",
+        "чек"
+      ],
+      "to": "pnpm run check"
+    },
+    {
+      "from": [
+        "гит",
+        "дифф"
+      ],
+      "to": "git diff"
+    },
+    {
+      "from": [
+        "гит",
+        "статус"
+      ],
+      "to": "git status"
+    },
+    {
+      "from": [
+        "гит",
+        "лог"
+      ],
+      "to": "git log"
+    },
+    {
+      "from": [
+        "гит",
+        "пуш"
+      ],
+      "to": "git push"
+    },
+    {
+      "from": [
+        "гит",
+        "пул"
+      ],
+      "to": "git pull"
+    },
+    {
+      "from": [
+        "гид",
+        "сервер"
+      ],
+      "to": "git server"
+    },
+    {
+      "from": [
+        "гит"
+      ],
+      "to": "git"
+    },
+    {
+      "from": [
+        "гитхаб"
+      ],
+      "to": "GitHub"
+    },
+    {
+      "from": [
+        "коммит"
+      ],
+      "to": "commit"
+    },
+    {
+      "from": [
+        "комит"
+      ],
+      "to": "commit"
+    },
+    {
+      "from": [
+        "пуш"
+      ],
+      "to": "push"
+    },
+    {
+      "from": [
+        "пул",
+        "реквест"
+      ],
+      "to": "pull request"
+    },
+    {
+      "from": [
+        "пулл",
+        "реквест"
+      ],
+      "to": "pull request"
+    },
+    {
+      "from": [
+        "мейн"
+      ],
+      "to": "main"
+    },
+    {
+      "from": [
+        "мэйн"
+      ],
+      "to": "main"
+    },
+    {
+      "from": [
+        "графана"
+      ],
+      "to": "Grafana"
+    },
+    {
+      "from": [
+        "графане"
+      ],
+      "to": "Grafana"
+    },
+    {
+      "from": [
+        "графану"
+      ],
+      "to": "Grafana"
+    },
+    {
+      "from": [
+        "графаны"
+      ],
+      "to": "Grafana"
+    },
+    {
+      "from": [
+        "конфиг"
+      ],
+      "to": "config"
+    },
+    {
+      "from": [
+        "раст"
+      ],
+      "to": "Rust"
+    },
+    {
+      "from": [
+        "карго"
+      ],
+      "to": "cargo"
+    },
+    {
+      "from": [
+        "пайтон"
+      ],
+      "to": "Python"
+    },
+    {
+      "from": [
+        "питон"
+      ],
+      "to": "Python"
+    },
+    {
+      "from": [
+        "пайплайн"
+      ],
+      "to": "pipeline"
+    },
+    {
+      "from": [
+        "пайплайна"
+      ],
+      "to": "pipeline"
+    },
+    {
+      "from": [
+        "стейджинг"
+      ],
+      "to": "staging"
+    },
+    {
+      "from": [
+        "стейдже"
+      ],
+      "to": "staging"
+    },
+    {
+      "from": [
+        "стейдж"
+      ],
+      "to": "staging"
+    },
+    {
+      "from": [
+        "бекенд"
+      ],
+      "to": "backend"
+    },
+    {
+      "from": [
+        "бэкенд"
+      ],
+      "to": "backend"
+    },
+    {
+      "from": [
+        "бек",
+        "энд"
+      ],
+      "to": "backend"
+    },
+    {
+      "from": [
+        "фронтенд"
+      ],
+      "to": "frontend"
+    },
+    {
+      "from": [
+        "фронт",
+        "энд"
+      ],
+      "to": "frontend"
+    },
+    {
+      "from": [
+        "апи"
+      ],
+      "to": "API"
+    },
+    {
+      "from": [
+        "эндпоинт"
+      ],
+      "to": "endpoint"
+    },
+    {
+      "from": [
+        "эндпоинта"
+      ],
+      "to": "endpoint"
+    },
+    {
+      "from": [
+        "эндпоинты"
+      ],
+      "to": "endpoints"
+    },
+    {
+      "from": [
+        "роут"
+      ],
+      "to": "route"
+    },
+    {
+      "from": [
+        "роута"
+      ],
+      "to": "route"
+    },
+    {
+      "from": [
+        "роуты"
+      ],
+      "to": "routes"
+    },
+    {
+      "from": [
+        "хендлер"
+      ],
+      "to": "handler"
+    },
+    {
+      "from": [
+        "хендлера"
+      ],
+      "to": "handler"
+    },
+    {
+      "from": [
+        "хендлеры"
+      ],
+      "to": "handlers"
+    },
+    {
+      "from": [
+        "воркер"
+      ],
+      "to": "worker"
+    },
+    {
+      "from": [
+        "воркера"
+      ],
+      "to": "worker"
+    },
+    {
+      "from": [
+        "воркеры"
+      ],
+      "to": "workers"
+    },
+    {
+      "from": [
+        "рантайм"
+      ],
+      "to": "runtime"
+    },
+    {
+      "from": [
+        "рантайма"
+      ],
+      "to": "runtime"
+    },
+    {
+      "from": [
+        "аборт",
+        "сигнал"
+      ],
+      "to": "abort signal"
+    },
+    {
+      "from": [
+        "реквест"
+      ],
+      "to": "request"
+    },
+    {
+      "from": [
+        "респонс"
+      ],
+      "to": "response"
+    },
+    {
+      "from": [
+        "джейсон"
+      ],
+      "to": "JSON"
+    },
+    {
+      "from": [
+        "редис"
+      ],
+      "to": "Redis"
+    },
+    {
+      "from": [
+        "постгрес"
+      ],
+      "to": "Postgres"
+    },
+    {
+      "from": [
+        "монго",
+        "дб"
+      ],
+      "to": "MongoDB"
+    },
+    {
+      "from": [
+        "монгодб"
+      ],
+      "to": "MongoDB"
+    },
+    {
+      "from": [
+        "докер"
+      ],
+      "to": "docker"
+    },
+    {
+      "from": [
+        "кубернетес"
+      ],
+      "to": "kubernetes"
+    },
+    {
+      "from": [
+        "кубернетис"
+      ],
+      "to": "kubernetes"
+    },
+    {
+      "from": [
+        "кубектл"
+      ],
+      "to": "kubectl"
+    },
+    {
+      "from": [
+        "кубectl"
+      ],
+      "to": "kubectl"
+    },
+    {
+      "from": [
+        "терраформ"
+      ],
+      "to": "Terraform"
+    },
+    {
+      "from": [
+        "ансибл"
+      ],
+      "to": "Ansible"
+    },
+    {
+      "from": [
+        "реакт"
+      ],
+      "to": "React"
+    },
+    {
+      "from": [
+        "вью"
+      ],
+      "to": "Vue"
+    },
+    {
+      "from": [
+        "свелт"
+      ],
+      "to": "Svelte"
+    },
+    {
+      "from": [
+        "свелте"
+      ],
+      "to": "Svelte"
+    },
+    {
+      "from": [
+        "тейлвинд"
+      ],
+      "to": "Tailwind"
+    },
+    {
+      "from": [
+        "вайт"
+      ],
+      "to": "Vite"
+    },
+    {
+      "from": [
+        "вебпак"
+      ],
+      "to": "Webpack"
+    },
+    {
+      "from": [
+        "хук"
+      ],
+      "to": "hook"
+    },
+    {
+      "from": [
+        "хуки"
+      ],
+      "to": "hooks"
+    },
+    {
+      "from": [
+        "юз",
+        "эффект"
+      ],
+      "to": "useEffect"
+    },
+    {
+      "from": [
+        "юз",
+        "стейт"
+      ],
+      "to": "useState"
+    },
+    {
+      "from": [
+        "стейт"
+      ],
+      "to": "state"
+    },
+    {
+      "from": [
+        "пропсы"
+      ],
+      "to": "props"
+    },
+    {
+      "from": [
+        "пропс"
+      ],
+      "to": "props"
+    },
+    {
+      "from": [
+        "компонент"
+      ],
+      "to": "component"
+    },
+    {
+      "from": [
+        "компонента"
+      ],
+      "to": "component"
+    },
+    {
+      "from": [
+        "компоненты"
+      ],
+      "to": "components"
+    },
+    {
+      "from": [
+        "дебаунс"
+      ],
+      "to": "debounce"
+    },
+    {
+      "from": [
+        "троттлинг"
+      ],
+      "to": "throttling"
+    },
+    {
+      "from": [
+        "нпм"
+      ],
+      "to": "npm"
+    },
+    {
+      "from": [
+        "пнпм"
+      ],
+      "to": "pnpm"
+    },
+    {
+      "from": [
+        "ярн"
+      ],
+      "to": "yarn"
+    },
+    {
+      "from": [
+        "нод"
+      ],
+      "to": "Node"
+    },
+    {
+      "from": [
+        "го"
+      ],
+      "to": "Go"
+    },
+    {
+      "from": [
+        "свифт"
+      ],
+      "to": "Swift"
+    },
+    {
+      "from": [
+        "котлин"
+      ],
+      "to": "Kotlin"
+    },
+    {
+      "from": [
+        "дебаг"
+      ],
+      "to": "debug"
+    },
+    {
+      "from": [
+        "тайпчек"
+      ],
+      "to": "typecheck"
+    },
+    {
+      "from": [
+        "тайп",
+        "чек"
+      ],
+      "to": "typecheck"
+    },
+    {
+      "from": [
+        "линт"
+      ],
+      "to": "lint"
+    },
+    {
+      "from": [
+        "линтер"
+      ],
+      "to": "linter"
+    },
+    {
+      "from": [
+        "приттиер"
+      ],
+      "to": "Prettier"
+    },
+    {
+      "from": [
+        "форматтер"
+      ],
+      "to": "formatter"
+    },
+    {
+      "from": [
+        "дифф"
+      ],
+      "to": "diff"
+    },
+    {
+      "from": [
+        "диф"
+      ],
+      "to": "diff"
+    },
+    {
+      "from": [
+        "стек",
+        "трейс"
+      ],
+      "to": "stack trace"
+    },
+    {
+      "from": [
+        "мок"
+      ],
+      "to": "mock"
+    },
+    {
+      "from": [
+        "моки"
+      ],
+      "to": "mocks"
+    },
+    {
+      "from": [
+        "регрессионный",
+        "тест"
+      ],
+      "to": "regression test"
+    },
+    {
+      "from": [
+        "юнит",
+        "тест"
+      ],
+      "to": "unit test"
+    },
+    {
+      "from": [
+        "интеграционный",
+        "тест"
+      ],
+      "to": "integration test"
+    },
+    {
+      "from": [
+        "релиз"
+      ],
+      "to": "release"
+    },
+    {
+      "from": [
+        "роллбек"
+      ],
+      "to": "rollback"
+    },
+    {
+      "from": [
+        "роллбэк"
+      ],
+      "to": "rollback"
+    },
+    {
+      "from": [
+        "деплой"
+      ],
+      "to": "deploy"
+    },
+    {
+      "from": [
+        "деплое"
+      ],
+      "to": "deploy"
+    },
+    {
+      "from": [
+        "слак"
+      ],
+      "to": "Slack"
+    },
+    {
+      "from": [
+        "ноушн"
+      ],
+      "to": "Notion"
+    },
+    {
+      "from": [
+        "зум"
+      ],
+      "to": "Zoom"
+    },
+    {
+      "from": [
+        "фигма"
+      ],
+      "to": "Figma"
+    },
+    {
+      "from": [
+        "джира"
+      ],
+      "to": "Jira"
+    },
+    {
+      "from": [
+        "гитлаб"
+      ],
+      "to": "GitLab"
+    },
+    {
+      "from": [
+        "телеграм"
+      ],
+      "to": "Telegram"
+    },
+    {
+      "from": [
+        "вс",
+        "код"
+      ],
+      "to": "VS Code"
+    },
+    {
+      "from": [
+        "вэс",
+        "код"
+      ],
+      "to": "VS Code"
+    },
+    {
+      "from": [
+        "постман"
+      ],
+      "to": "Postman"
+    },
+    {
+      "from": [
+        "гид",
+        "дифф"
+      ],
+      "to": "git diff"
+    },
+    {
+      "from": [
+        "гид",
+        "diff"
+      ],
+      "to": "git diff"
+    },
+    {
+      "from": [
+        "гит",
+        "div"
+      ],
+      "to": "git diff"
+    },
+    {
+      "from": [
+        "git",
+        "div"
+      ],
+      "to": "git diff"
+    },
+    {
+      "from": [
+        "git",
+        "дифф"
+      ],
+      "to": "git diff"
+    },
+    {
+      "from": [
+        "гит",
+        "див"
+      ],
+      "to": "git diff"
+    },
+    {
+      "from": [
+        "гид",
+        "див"
+      ],
+      "to": "git diff"
+    },
+    {
+      "from": [
+        "банчек"
+      ],
+      "to": "bun run check"
+    },
+    {
+      "from": [
+        "бан",
+        "чек"
+      ],
+      "to": "bun run check"
+    },
+    {
+      "from": [
+        "bun",
+        "check"
+      ],
+      "to": "bun run check"
+    },
+    {
+      "from": [
+        "регрессивный",
+        "тест"
+      ],
+      "to": "regression test"
+    },
+    {
+      "from": [
+        "регрешн",
+        "тест"
+      ],
+      "to": "regression test"
+    },
+    {
+      "from": [
+        "дэбаунс"
+      ],
+      "to": "debounce"
+    },
+    {
+      "from": [
+        "юс",
+        "эффект"
+      ],
+      "to": "useEffect"
+    },
+    {
+      "from": [
+        "юз",
+        "эфект"
+      ],
+      "to": "useEffect"
+    },
+    {
+      "from": [
+        "юсэфект"
+      ],
+      "to": "useEffect"
+    },
+    {
+      "from": [
+        "юзэфект"
+      ],
+      "to": "useEffect"
+    }
   ]
 }

@@ -37,7 +37,7 @@ fn setup_global_shortcuts(app: &AppHandle) -> Result<(), Box<dyn std::error::Err
         }
     };
 
-    shortcuts::register_hotkey(app, shortcut).map_err(|e| Box::<dyn std::error::Error>::from(e))?;
+    shortcuts::register_hotkey(app, shortcut).map_err(Box::<dyn std::error::Error>::from)?;
     Ok(())
 }
 
@@ -82,6 +82,10 @@ pub fn run() {
             });
 
             app.set_activation_policy(tauri::ActivationPolicy::Regular);
+
+            #[cfg(target_os = "macos")]
+            crate::utils::macos::install_activation_handler(handle.clone());
+
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -89,6 +93,7 @@ pub fn run() {
             commands::resize_overlay,
             commands::set_overlay_pill_shown,
             commands::process_audio_with_history,
+            commands::process_pcm16k_with_history,
             commands::paste_text_command,
             commands::export_dictionary_csv,
             commands::import_dictionary_csv,

@@ -1,4 +1,4 @@
-/** Off-thread resample + WAV encode (decode stays on main thread). */
+/** Off-thread resample + optional WAV encode (decode stays on main thread). */
 
 const TARGET_SAMPLE_RATE = 16000;
 
@@ -66,16 +66,24 @@ function encodeMonoWav(samples: Float32Array, sampleRate: number): Uint8Array {
 export type WavWorkerRequest = {
   samples: Float32Array;
   sampleRate: number;
+  format?: "pcm_f32" | "wav";
 };
 
-export type WavWorkerResponse = {
-  wav: Uint8Array;
-};
+export type WavWorkerResponse =
+  | { format: "pcm_f32"; samples: Float32Array }
+  | { format: "wav"; wav: Uint8Array };
 
 self.onmessage = (event: MessageEvent<WavWorkerRequest>) => {
-  const { samples, sampleRate } = event.data;
+  const { samples, sampleRate, format = "wav" } = event.data;
   const resampled = resampleLinear(samples, sampleRate, TARGET_SAMPLE_RATE);
+
+  if (format === "pcm_f32") {
+    const response: WavWorkerResponse = { format, samples: resampled };
+    self.postMessage(response, { transfer: [resampled.buffer] });
+    return;
+  }
+
   const wav = encodeMonoWav(resampled, TARGET_SAMPLE_RATE);
-  const response: WavWorkerResponse = { wav };
+  const response: WavWorkerResponse = { format, wav };
   self.postMessage(response, { transfer: [wav.buffer] });
 };

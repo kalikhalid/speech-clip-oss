@@ -32,6 +32,11 @@ pub struct DictionaryImportResult {
 
 static AUDIO_PROCESSING: AtomicBool = AtomicBool::new(false);
 
+enum RecordedAudio {
+    Wav(Vec<u8>),
+    PcmF32Le16k(Vec<u8>),
+}
+
 fn emit_settings_updated(app: &AppHandle, settings: &settings::AppSettings) {
     if let Some(main) = app.get_webview_window("main") {
         let _ = main.emit("settings-updated", settings);
@@ -61,6 +66,7 @@ async fn finalize_text(
     app: &AppHandle,
     raw: &str,
     normalize: bool,
+    app_name: Option<&str>,
     app_settings: &settings::AppSettings,
 ) -> (String, Option<u64>) {
     let mut text = if app_settings.spoken_normalization_enabled {
@@ -84,6 +90,7 @@ async fn finalize_text(
     if app_settings.strip_filler_words {
         text = postprocess::strip_filler_words(&text);
     }
+    text = postprocess::strip_messenger_terminal_period(&text, app_name);
     (text.trim().to_string(), normalizer_ms)
 }
 
@@ -145,6 +152,17 @@ pub async fn process_audio(
     app_settings: &settings::AppSettings,
 ) -> Result<ProcessingResult, String> {
     let (samples, sample_rate) = audio::decode_wav_bytes(&audio_data)?;
+    process_decoded_audio(app, samples, sample_rate, normalize, app_name, app_settings).await
+}
+
+async fn process_decoded_audio(
+    app: AppHandle,
+    samples: Vec<f32>,
+    sample_rate: u32,
+    normalize: bool,
+    app_name: Option<String>,
+    app_settings: &settings::AppSettings,
+) -> Result<ProcessingResult, String> {
     if audio::samples_too_short(samples.len()) {
         emit_transcription_empty(&app, "audio_too_short");
         return Err("Recording too short".to_string());
@@ -168,7 +186,14 @@ pub async fn process_audio(
     }
 
     let post_start = Instant::now();
-    let (final_text, normalizer_ms) = finalize_text(&app, &raw_text, normalize, app_settings).await;
+    let (final_text, normalizer_ms) = finalize_text(
+        &app,
+        &raw_text,
+        normalize,
+        app_name.as_deref(),
+        app_settings,
+    )
+    .await;
     let postprocess_ms = post_start.elapsed().as_millis() as u64;
 
     if final_text.is_empty() {
@@ -199,10 +224,9 @@ pub async fn process_audio(
     })
 }
 
-#[tauri::command]
-pub async fn process_audio_with_history(
+async fn process_recorded_audio_with_history(
     app: AppHandle,
-    audio_data: Vec<u8>,
+    audio: RecordedAudio,
     normalize: bool,
     release_timestamp: Option<u64>,
 ) -> Result<String, String> {
@@ -221,14 +245,30 @@ pub async fn process_audio_with_history(
     let app_name = get_frontmost_app_name();
     let app_settings = settings::load_settings(&app)?;
 
-    let result = process_audio(
-        app.clone(),
-        audio_data,
-        normalize,
-        app_name.clone(),
-        &app_settings,
-    )
-    .await;
+    let result = match audio {
+        RecordedAudio::Wav(audio_data) => {
+            process_audio(
+                app.clone(),
+                audio_data,
+                normalize,
+                app_name.clone(),
+                &app_settings,
+            )
+            .await
+        }
+        RecordedAudio::PcmF32Le16k(audio_data) => {
+            let samples = audio::decode_pcm_f32le_16k(&audio_data)?;
+            process_decoded_audio(
+                app.clone(),
+                samples,
+                audio::PARAKEET_SAMPLE_RATE,
+                normalize,
+                app_name.clone(),
+                &app_settings,
+            )
+            .await
+        }
+    };
 
     let _ = release_timestamp;
 
@@ -254,6 +294,38 @@ pub async fn process_audio_with_history(
         }
         Err(e) => Err(e),
     }
+}
+
+#[tauri::command]
+pub async fn process_audio_with_history(
+    app: AppHandle,
+    audio_data: Vec<u8>,
+    normalize: bool,
+    release_timestamp: Option<u64>,
+) -> Result<String, String> {
+    process_recorded_audio_with_history(
+        app,
+        RecordedAudio::Wav(audio_data),
+        normalize,
+        release_timestamp,
+    )
+    .await
+}
+
+#[tauri::command]
+pub async fn process_pcm16k_with_history(
+    app: AppHandle,
+    audio_data: Vec<u8>,
+    normalize: bool,
+    release_timestamp: Option<u64>,
+) -> Result<String, String> {
+    process_recorded_audio_with_history(
+        app,
+        RecordedAudio::PcmF32Le16k(audio_data),
+        normalize,
+        release_timestamp,
+    )
+    .await
 }
 
 #[tauri::command]

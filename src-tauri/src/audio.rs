@@ -20,6 +20,22 @@ pub fn decode_wav_bytes(data: &[u8]) -> Result<(Vec<f32>, u32), String> {
     Ok((samples, spec.sample_rate))
 }
 
+pub fn decode_pcm_f32le_16k(data: &[u8]) -> Result<Vec<f32>, String> {
+    if !data.len().is_multiple_of(std::mem::size_of::<f32>()) {
+        return Err("Invalid PCM audio: byte length is not divisible by 4".to_string());
+    }
+
+    let mut samples = Vec::with_capacity(data.len() / std::mem::size_of::<f32>());
+    for chunk in data.chunks_exact(std::mem::size_of::<f32>()) {
+        let sample = f32::from_le_bytes([chunk[0], chunk[1], chunk[2], chunk[3]]);
+        if !sample.is_finite() {
+            return Err("Invalid PCM audio: non-finite sample".to_string());
+        }
+        samples.push(sample.clamp(-1.0, 1.0));
+    }
+    Ok(samples)
+}
+
 pub fn resample_to_16k(samples: &[f32], sample_rate: u32) -> Result<Vec<f32>, String> {
     if sample_rate == PARAKEET_SAMPLE_RATE {
         return Ok(samples.to_vec());
@@ -72,7 +88,6 @@ fn read_samples(mut reader: WavReader<Cursor<&[u8]>>, spec: &WavSpec) -> Result<
         (2, SampleFormat::Int) => {
             let interleaved = reader
                 .samples::<i16>()
-                .map(|s| s.map_err(|e| hound::Error::from(e)))
                 .collect::<Result<Vec<_>, _>>()
                 .map_err(|e| format!("Failed to read WAV samples: {e}"))?;
             let mut mono = Vec::with_capacity(interleaved.len() / 2);
@@ -90,5 +105,38 @@ fn read_samples(mut reader: WavReader<Cursor<&[u8]>>, spec: &WavSpec) -> Result<
         (channels, format) => Err(format!(
             "Unsupported WAV format ({channels} channels, {format:?}). Use mono 16-bit PCM."
         )),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn decode_pcm_f32le_16k_reads_little_endian_samples() {
+        let input = [0.0_f32, 0.5, -0.25, 1.25, -1.25];
+        let bytes = input
+            .iter()
+            .flat_map(|sample| sample.to_le_bytes())
+            .collect::<Vec<_>>();
+
+        let samples = decode_pcm_f32le_16k(&bytes).expect("decode pcm");
+
+        assert_eq!(samples, vec![0.0, 0.5, -0.25, 1.0, -1.0]);
+    }
+
+    #[test]
+    fn decode_pcm_f32le_16k_rejects_partial_sample() {
+        let err = decode_pcm_f32le_16k(&[0, 1, 2]).expect_err("partial sample");
+
+        assert!(err.contains("divisible by 4"));
+    }
+
+    #[test]
+    fn decode_pcm_f32le_16k_rejects_non_finite_samples() {
+        let bytes = f32::NAN.to_le_bytes();
+        let err = decode_pcm_f32le_16k(&bytes).expect_err("nan sample");
+
+        assert!(err.contains("non-finite"));
     }
 }

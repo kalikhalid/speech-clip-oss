@@ -137,12 +137,22 @@ fn transcribe_samples(
         .transcribe_with(&samples, &params)
         .map_err(|e| format!("Parakeet transcription failed: {e}"))?;
 
-    let text = result.text.split_whitespace().collect::<Vec<_>>().join(" ");
+    let text = strip_unk_tokens(&result.text);
     if text.is_empty() {
         return Err("No speech detected. Try speaking a bit longer.".to_string());
     }
 
     Ok(text)
+}
+
+/// Parakeet sometimes emits the literal `<unk>` token (standalone or inside a word).
+fn strip_unk_tokens(text: &str) -> String {
+    text.split_whitespace()
+        .filter(|token| *token != "<unk>")
+        .map(|token| token.replace("<unk>", ""))
+        .filter(|token| !token.is_empty())
+        .collect::<Vec<_>>()
+        .join(" ")
 }
 
 pub async fn ensure_model_ready(app: &AppHandle, model_id: &str) -> Result<(), String> {
@@ -182,6 +192,16 @@ pub async fn transcribe_decoded(
 mod tests {
     use super::*;
     use std::path::PathBuf;
+
+    #[test]
+    fn strip_unk_tokens_removes_standalone_and_embedded() {
+        assert_eq!(
+            strip_unk_tokens("Учитывая вс<unk>, что ты знаешь"),
+            "Учитывая вс, что ты знаешь"
+        );
+        assert_eq!(strip_unk_tokens("hello <unk> world"), "hello world");
+        assert_eq!(strip_unk_tokens("no tokens here"), "no tokens here");
+    }
 
     #[test]
     fn transcribes_16k_wav_with_installed_model() {

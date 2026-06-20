@@ -5,7 +5,10 @@
   import { fade } from "svelte/transition";
   import PermissionGuide from "$lib/components/PermissionGuide.svelte";
   import ShortcutHint from "$lib/components/ShortcutHint.svelte";
-  import { convertRecordingToWav } from "$lib/audio/convert-recording";
+  import {
+    convertRecordingToPcm16k,
+    convertRecordingToWav,
+  } from "$lib/audio/convert-recording";
   import { config } from "$lib/config";
   import {
     locale,
@@ -40,6 +43,8 @@
   let lastVisualUpdate = 0;
   let mediaStream: MediaStream | null = $state(null);
   let mediaRecorder: MediaRecorder | null = null;
+  let mediaSource: MediaStreamAudioSourceNode | null = null;
+  let audioPipelineInit: Promise<void> | null = null;
   let audioChunks: Blob[] = [];
   let isHovered = $state(false);
   let showShortcutHint = $state(false);
@@ -61,6 +66,7 @@
   let emptyFeedback = $state("");
   let isProcessingRecording = false;
   let isStoppingRecording = false;
+  let abortPendingStart = false;
   let lastHotkeyReleaseAt = 0;
   const MAX_DURATION_MS = 15 * 60 * 1000; // 15 minutes
 
@@ -214,52 +220,103 @@
     return sum / (endBin - startBin + 1) / 255;
   }
 
-  // Initialize audio pipeline
-  async function initAudioPipeline() {
-    try {
-      // Request microphone access
-      mediaStream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          echoCancellation: true,
-          noiseSuppression: true,
-          autoGainControl: true,
-        },
-      });
+  function hasLiveAudioPipeline() {
+    return (
+      !!audioContext &&
+      audioContext.state !== "closed" &&
+      !!mediaStream &&
+      mediaStream.active &&
+      !!mediaRecorder
+    );
+  }
 
-      // Reuse AudioContext if it exists (faster), or create new one
-      if (!audioContext || audioContext.state === "closed") {
-        audioContext = new AudioContext();
-      }
-
-      analyser = audioContext.createAnalyser();
-      analyser.fftSize = 256;
-      analyser.smoothingTimeConstant = 0.65;
-
-      const source = audioContext.createMediaStreamSource(mediaStream);
-      source.connect(analyser);
-
-      const supportedMimeTypes = [
-        "audio/mp4;codecs=mp4a.40.2",
-        "audio/mp4",
-        "audio/webm;codecs=pcm",
-        "audio/ogg;codecs=vorbis",
-        "audio/webm;codecs=opus",
-        "audio/ogg;codecs=opus",
-      ];
-      const mimeType =
-        supportedMimeTypes.find((t) => MediaRecorder.isTypeSupported(t)) ||
-        "audio/webm;codecs=opus";
-
-      mediaRecorder = new MediaRecorder(mediaStream, { mimeType });
-      audioChunks = [];
-
-      mediaRecorder.ondataavailable = (e) => {
-        if (e.data.size > 0) audioChunks.push(e.data);
-      };
-
-    } catch {
-      // audio init failed — startRecording will abort if pipeline unavailable
+  function disposeAudioPipeline(clearPendingInit = true) {
+    if (clearPendingInit) {
+      audioPipelineInit = null;
     }
+
+    if (mediaRecorder) {
+      mediaRecorder.ondataavailable = null;
+      mediaRecorder.onstop = null;
+      if (mediaRecorder.state === "recording") {
+        try {
+          mediaRecorder.stop();
+        } catch {
+          // best-effort teardown
+        }
+      }
+      mediaRecorder = null;
+    }
+
+    mediaSource?.disconnect();
+    mediaSource = null;
+
+    analyser?.disconnect();
+    analyser = null;
+
+    mediaStream?.getTracks().forEach((track) => track.stop());
+    mediaStream = null;
+
+    if (audioContext && audioContext.state !== "closed") {
+      void audioContext.close();
+    }
+    audioContext = null;
+  }
+
+  // Initialize on demand and dispose after recording so idle never looks like listening.
+  async function initAudioPipeline() {
+    if (hasLiveAudioPipeline()) return;
+    if (audioPipelineInit) return audioPipelineInit;
+
+    audioPipelineInit = (async () => {
+      try {
+        disposeAudioPipeline(false);
+
+        // Request microphone access
+        mediaStream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true,
+          },
+        });
+
+        audioContext = new AudioContext();
+
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 256;
+        analyser.smoothingTimeConstant = 0.65;
+
+        mediaSource = audioContext.createMediaStreamSource(mediaStream);
+        mediaSource.connect(analyser);
+
+        const supportedMimeTypes = [
+          "audio/mp4;codecs=mp4a.40.2",
+          "audio/mp4",
+          "audio/webm;codecs=pcm",
+          "audio/ogg;codecs=vorbis",
+          "audio/webm;codecs=opus",
+          "audio/ogg;codecs=opus",
+        ];
+        const mimeType =
+          supportedMimeTypes.find((t) => MediaRecorder.isTypeSupported(t)) ||
+          "audio/webm;codecs=opus";
+
+        mediaRecorder = new MediaRecorder(mediaStream, { mimeType });
+        audioChunks = [];
+
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data.size > 0) audioChunks.push(e.data);
+        };
+      } catch {
+        disposeAudioPipeline(false);
+        // audio init failed — startRecording will abort if pipeline unavailable
+      } finally {
+        audioPipelineInit = null;
+      }
+    })();
+
+    return audioPipelineInit;
   }
 
   onMount(async () => {
@@ -296,9 +353,6 @@
     } else {
       await invoke("show_overlay");
     }
-
-    // DON'T initialize audio here - only when first recording starts
-    // This prevents the microphone indicator from showing immediately
 
     unlistenPressed = await listen("hotkey-pressed", () => {
       if (recordingMode === "push_to_talk") {
@@ -373,62 +427,69 @@
     }
     if (mediaRecorder) {
       mediaRecorder.onstop = null;
-      mediaRecorder = null;
     }
-    mediaStream?.getTracks().forEach((t) => t.stop());
-    mediaStream = null;
-    audioContext?.close();
-    audioContext = null;
-    analyser = null;
+    disposeAudioPipeline();
   });
 
   async function startRecording() {
     if (appState !== "idle" || isProcessingRecording) return;
 
+    abortPendingStart = false;
     appState = "recording";
 
-    // STEP 1: Initialize audio pipeline FIRST (if needed)
-    if (!audioContext || !mediaStream || !mediaRecorder) {
+    // STEP 1: Open the microphone only for the active dictation session.
+    if (!hasLiveAudioPipeline()) {
       await initAudioPipeline();
 
+      if (appState !== "recording" || abortPendingStart) {
+        abortPendingStart = false;
+        disposeAudioPipeline();
+        appState = "idle";
+        return;
+      }
+
       // If initialization failed, abort
-      if (!audioContext || !mediaStream || !mediaRecorder) {
+      if (!hasLiveAudioPipeline()) {
+        disposeAudioPipeline();
         appState = "idle";
         return;
       }
     }
 
-    // STEP 2: Ensure AudioContext is active
-    if (audioContext?.state === "suspended") {
-      await audioContext.resume();
-    }
-
-    // STEP 2.5: Play start sound
-    playSound(startSound);
-
-    // STEP 3: START RECORDING IMMEDIATELY (critical for zero latency)
+    // STEP 2: START RECORDING IMMEDIATELY (critical for zero latency)
     audioChunks = [];
     recordingStartTime = Date.now(); // Track duration
-    if (mediaRecorder.state === "inactive") {
-      mediaRecorder.start(100); // Collect chunks every 100ms
+    const recorder = mediaRecorder;
+    if (!recorder || recorder.state !== "inactive") {
+      appState = "idle";
+      return;
     }
+    try {
+      recorder.start(100); // Collect chunks every 100ms
+    } catch {
+      disposeAudioPipeline();
+      appState = "idle";
+      return;
+    }
+
+    if (audioContext?.state === "suspended") {
+      void audioContext.resume();
+    }
+    playSound(startSound);
 
     // Start duration check timer
     checkDuration();
 
-    // STEP 3.5: Small delay to ensure audio buffer is capturing
-    await new Promise((resolve) => setTimeout(resolve, 50));
-
     if (appState !== "recording") return;
 
-    // STEP 4: Update UI (sequential - after recording started)
-    await invoke("resize_overlay", {
+    // STEP 3: Update UI after recording has started.
+    void invoke("resize_overlay", {
       recording: true,
       width: config.recording.width,
       height: config.recording.height,
-    });
+    }).catch(() => {});
 
-    // STEP 5: Start visualization (~18 Hz DOM updates, rAF for analyser only)
+    // STEP 4: Start visualization (~18 Hz DOM updates, rAF for analyser only)
     lastVisualUpdate = 0;
     animationFrameId = requestAnimationFrame(visualize);
   }
@@ -474,7 +535,13 @@
   }
 
   async function stopRecording() {
-    if (appState !== "recording" || !mediaRecorder || isStoppingRecording) return;
+    if (appState !== "recording" || isStoppingRecording) return;
+
+    if (!mediaRecorder || mediaRecorder.state !== "recording") {
+      abortPendingStart = true;
+      appState = "idle";
+      return;
+    }
 
     isStoppingRecording = true;
     appState = "processing";
@@ -529,10 +596,16 @@
         type: capturedChunks[0].type,
       });
 
-      // Always send WAV to backend for stable local decoding.
-      const audioData = await convertRecordingToWav(audioBlob, audioContext);
+      let audioData: Uint8Array;
+      let command = "process_pcm16k_with_history";
+      try {
+        audioData = await convertRecordingToPcm16k(audioBlob, audioContext);
+      } catch {
+        audioData = await convertRecordingToWav(audioBlob, audioContext);
+        command = "process_audio_with_history";
+      }
 
-      await invoke<string>("process_audio_with_history", {
+      await invoke<string>(command, {
         audioData,
         normalize: dictationNormalize,
         releaseTimestamp,
@@ -571,25 +644,7 @@
       animationFrameId = null;
     }
 
-    // Detach onstop handler BEFORE stopping to prevent re-triggering processRecording
-    if (mediaRecorder) {
-      mediaRecorder.onstop = null;
-      if (mediaRecorder.state !== "inactive") {
-        mediaRecorder.stop();
-      }
-      mediaRecorder = null;
-    }
-
-    // Stop media stream tracks
-    if (mediaStream) {
-      mediaStream.getTracks().forEach((track) => track.stop());
-      mediaStream = null;
-    }
-
-    if (analyser) {
-      analyser.disconnect();
-      analyser = null;
-    }
+    disposeAudioPipeline();
 
     audioChunks = [];
 

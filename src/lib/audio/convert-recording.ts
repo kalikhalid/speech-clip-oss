@@ -1,4 +1,5 @@
 import WavWorker from "./wav-worker?worker";
+import type { WavWorkerResponse } from "./wav-worker";
 
 let worker: Worker | null = null;
 
@@ -28,16 +29,31 @@ function mixToMono(audioBuffer: AudioBuffer): Float32Array {
   return mono;
 }
 
-function encodeInWorker(
+function convertInWorker(
   samples: Float32Array,
   sampleRate: number,
-): Promise<Uint8Array> {
+  format: "pcm_f32",
+): Promise<Float32Array>;
+function convertInWorker(
+  samples: Float32Array,
+  sampleRate: number,
+  format: "wav",
+): Promise<Uint8Array>;
+function convertInWorker(
+  samples: Float32Array,
+  sampleRate: number,
+  format: "pcm_f32" | "wav",
+): Promise<Float32Array | Uint8Array> {
   return new Promise((resolve, reject) => {
     const w = getWorker();
-    const onMessage = (event: MessageEvent<{ wav: Uint8Array }>) => {
+    const onMessage = (event: MessageEvent<WavWorkerResponse>) => {
       w.removeEventListener("message", onMessage);
       w.removeEventListener("error", onError);
-      resolve(event.data.wav);
+      if (event.data.format === "pcm_f32") {
+        resolve(event.data.samples);
+      } else {
+        resolve(event.data.wav);
+      }
     };
     const onError = (err: ErrorEvent) => {
       w.removeEventListener("message", onMessage);
@@ -46,15 +62,14 @@ function encodeInWorker(
     };
     w.addEventListener("message", onMessage);
     w.addEventListener("error", onError);
-    w.postMessage({ samples, sampleRate }, [samples.buffer]);
+    w.postMessage({ samples, sampleRate, format }, [samples.buffer]);
   });
 }
 
-/** Decode on main thread; resample + WAV encode in a Web Worker. */
-export async function convertRecordingToWav(
+async function decodeRecordingToMono(
   audioBlob: Blob,
   existingContext?: AudioContext | null,
-): Promise<Uint8Array> {
+): Promise<{ samples: Float32Array; sampleRate: number }> {
   const encodedBuffer = await audioBlob.arrayBuffer();
   let decoderContext: AudioContext | null = null;
   let shouldCloseContext = false;
@@ -66,13 +81,11 @@ export async function convertRecordingToWav(
       shouldCloseContext = true;
     }
 
-    const decodedBuffer = await decoderContext.decodeAudioData(
-      encodedBuffer.slice(0),
-    );
+    const decodedBuffer = await decoderContext.decodeAudioData(encodedBuffer);
     const samples = mixToMono(decodedBuffer);
-    return encodeInWorker(samples, decodedBuffer.sampleRate);
+    return { samples, sampleRate: decodedBuffer.sampleRate };
   } catch (error) {
-    throw new Error(`Failed to convert recording to WAV: ${String(error)}`);
+    throw new Error(`Failed to decode recording: ${String(error)}`);
   } finally {
     if (decoderContext && shouldCloseContext) {
       try {
@@ -81,5 +94,34 @@ export async function convertRecordingToWav(
         /* ignore */
       }
     }
+  }
+}
+
+/** Decode on main thread; resample to 16 kHz mono f32 in a Web Worker. */
+export async function convertRecordingToPcm16k(
+  audioBlob: Blob,
+  existingContext?: AudioContext | null,
+): Promise<Uint8Array> {
+  const { samples, sampleRate } = await decodeRecordingToMono(
+    audioBlob,
+    existingContext,
+  );
+  const pcm = await convertInWorker(samples, sampleRate, "pcm_f32");
+  return new Uint8Array(pcm.buffer, pcm.byteOffset, pcm.byteLength);
+}
+
+/** Decode on main thread; resample + WAV encode in a Web Worker. */
+export async function convertRecordingToWav(
+  audioBlob: Blob,
+  existingContext?: AudioContext | null,
+): Promise<Uint8Array> {
+  try {
+    const { samples, sampleRate } = await decodeRecordingToMono(
+      audioBlob,
+      existingContext,
+    );
+    return convertInWorker(samples, sampleRate, "wav");
+  } catch (error) {
+    throw new Error(`Failed to convert recording to WAV: ${String(error)}`);
   }
 }

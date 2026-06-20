@@ -196,11 +196,11 @@ fn normalize_core(value: &str) -> String {
 }
 
 fn is_at_word(token: &Token, rules: &Ruleset) -> bool {
-    rules.at_words.iter().any(|word| token.norm == *word)
+    rules.at_words.contains(&token.norm)
 }
 
 fn is_dot_word(token: &Token, rules: &Ruleset) -> bool {
-    rules.dot_words.iter().any(|word| token.norm == *word)
+    rules.dot_words.contains(&token.norm)
 }
 
 fn match_file_at(tokens: &[Token], start: usize, rules: &Ruleset) -> Option<(String, usize)> {
@@ -279,6 +279,22 @@ mod tests {
     }
 
     #[test]
+    fn assembles_readme_md_from_observed_asr() {
+        assert_eq!(
+            normalize_text("добавить как видос в реадми точке эмди"),
+            "добавить как видос в @README.md"
+        );
+        assert_eq!(
+            normalize_text("добавить демонстрацию продукта в Реадми точка Эмди"),
+            "добавить демонстрацию продукта в @README.md"
+        );
+        assert_eq!(
+            normalize_text("добавить демонстрацию продуктов в Reamdi Point Эмди"),
+            "добавить демонстрацию продуктов в @README.md"
+        );
+    }
+
+    #[test]
     fn assembles_known_source_files() {
         assert_eq!(normalize_text("открой Мэйн точка Раст"), "открой @main.rs");
         assert_eq!(
@@ -337,6 +353,52 @@ mod tests {
     }
 
     #[test]
+    fn normalizes_agent_workflow_prompts() {
+        assert_eq!(
+            normalize_text(
+                "найди почему падает регрессионный тест не трогай апи и запусти карго тест"
+            ),
+            "найди почему падает regression test не трогай API и запусти cargo test"
+        );
+        assert_eq!(
+            normalize_text("проверь гит дифф и потом бан ран чек"),
+            "проверь git diff и потом bun run check"
+        );
+        assert_eq!(
+            normalize_text("Проверь, Git, Div, потом банчек."),
+            "Проверь, git diff, потом bun run check."
+        );
+        assert_eq!(
+            normalize_text("посмотри Гид, diff, найди где сломался пайплайн"),
+            "посмотри git diff, найди где сломался pipeline"
+        );
+        assert_eq!(
+            normalize_text("добавь дебаунс на инпут и проверь юз эффект"),
+            "добавь debounce на инпут и проверь useEffect"
+        );
+        assert_eq!(
+            normalize_text("добавь Дэбаунс на инпут и проверь Юс эффект"),
+            "добавь debounce на инпут и проверь useEffect"
+        );
+        assert_eq!(
+            normalize_text("почему падает регрессивный тест"),
+            "почему падает regression test"
+        );
+        assert_eq!(
+            normalize_text("обнови хендлер и передай аборт сигнал в воркер"),
+            "обнови handler и передай abort signal в worker"
+        );
+    }
+
+    #[test]
+    fn assembles_transcribe_rs_from_observed_asr() {
+        assert_eq!(
+            normalize_text("Открой, пожалуйста, Транскрайб Точка рс."),
+            "Открой, пожалуйста, @transcribe.rs."
+        );
+    }
+
+    #[test]
     fn does_not_assemble_unknown_files() {
         assert_eq!(normalize_text("Вася точка мди"), "Вася точка мди");
         assert_eq!(
@@ -350,6 +412,22 @@ mod tests {
         assert_eq!(
             normalize_text("позвони маме после обеда"),
             "позвони маме после обеда"
+        );
+    }
+
+    #[test]
+    fn preserves_ambiguous_short_words() {
+        assert_eq!(normalize_text("это просто тест"), "это просто тест");
+        assert_eq!(normalize_text("лог событий"), "лог событий");
+        assert_eq!(normalize_text("курсор мыши"), "курсор мыши");
+        assert_eq!(normalize_text("подай сигнал"), "подай сигнал");
+        assert_eq!(
+            normalize_text("мастер по ремонту пришел"),
+            "мастер по ремонту пришел"
+        );
+        assert_eq!(
+            normalize_text("прод отдел согласовал"),
+            "прод отдел согласовал"
         );
     }
 

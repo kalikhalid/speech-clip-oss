@@ -1,0 +1,183 @@
+{
+  "version": 1,
+  "default_profile": "general",
+  "profiles": [
+    {
+      "id": "general",
+      "title": "General dictation",
+      "audience": "Everyday users who dictate messages, notes, search queries, and short instructions.",
+      "default_enabled": true,
+      "normalization_goals": [
+        "Preserve ordinary language without converting common words into domain terms.",
+        "Fix spacing, obvious ASR punctuation words, and safe casing only when confidence is high.",
+        "Avoid developer-specific replacements such as test, log, Cursor, Rust, or API."
+      ],
+      "avoid_replacements": [
+        "тест -> test",
+        "лог -> log",
+        "курсор -> Cursor",
+        "сигнал -> signal",
+        "апи -> API"
+      ],
+      "example_inputs": [
+        "позвони маме после обеда",
+        "напиши короткое письмо клиенту",
+        "добавь это в список покупок",
+        "сделай заметку что завтра встреча в десять"
+      ]
+    },
+    {
+      "id": "developer",
+      "title": "Developer prompts",
+      "audience": "Developers and vibe coders dictating prompts to Codex, Claude Code, Cursor, terminals, PRs, and issue trackers.",
+      "default_enabled": false,
+      "normalization_goals": [
+        "Normalize Russian-spoken dev terms into canonical English forms.",
+        "Preserve critical constraints and negations such as не трогай, не меняй, не добавляй.",
+        "Normalize common agent workflow commands and test/build commands.",
+        "Assemble high-confidence spoken filenames from known stems and extensions."
+      ],
+      "priority_terms": [
+        "cargo test",
+        "cargo clippy",
+        "bun run check",
+        "git diff",
+        "API",
+        "endpoint",
+        "handler",
+        "worker",
+        "runtime",
+        "useEffect",
+        "props",
+        "debounce",
+        "typecheck",
+        "lint"
+      ],
+      "example_inputs": [
+        "найди почему падает тест не трогай публичный апи и запусти карго тест",
+        "сделай минимальный дифф добавь регрессионный тест и проверь бан ран чек",
+        "обнови хендлер передай аборт сигнал в воркер",
+        "открой хистори точка эмди и проверь гит дифф"
+      ]
+    },
+    {
+      "id": "writing",
+      "title": "Writing and editing",
+      "audience": "Users dictating articles, docs, summaries, social posts, emails, and long-form notes.",
+      "default_enabled": false,
+      "normalization_goals": [
+        "Keep natural Russian intact.",
+        "Improve structure markers such as заголовок, список, пункт, цитата, вывод.",
+        "Prefer readable paragraphs over code-like replacements.",
+        "Avoid changing brand names unless the user has explicitly added dictionary rules."
+      ],
+      "prompt_markers": [
+        "заголовок",
+        "подзаголовок",
+        "список",
+        "пункт",
+        "цитата",
+        "кратко",
+        "подробнее",
+        "вывод"
+      ],
+      "example_inputs": [
+        "заголовок итоги недели потом список из трех пунктов",
+        "напиши дружелюбное письмо без канцелярита",
+        "сделай краткое резюме этой идеи",
+        "добавь вывод в конце"
+      ]
+    },
+    {
+      "id": "support_sales",
+      "title": "Support and sales",
+      "audience": "Support, success, sales, and operations teams dictating replies, CRM notes, call summaries, and follow-ups.",
+      "default_enabled": false,
+      "normalization_goals": [
+        "Normalize common business terms while preserving customer wording.",
+        "Support CRM and follow-up vocabulary without developer terms.",
+        "Avoid over-polishing facts, numbers, dates, names, and commitments."
+      ],
+      "priority_terms": [
+        "CRM",
+        "SLA",
+        "follow-up",
+        "lead",
+        "deal",
+        "pipeline",
+        "invoice",
+        "renewal",
+        "customer success",
+        "support ticket"
+      ],
+      "example_inputs": [
+        "создай фоллоу ап после звонка",
+        "добавь заметку в си эр эм",
+        "клиент просит инвойс и сроки по эс эл эй",
+        "обнови статус лида в пайплайне"
+      ]
+    },
+    {
+      "id": "legal_lite",
+      "title": "Legal notes",
+      "audience": "Users dictating contracts, legal notes, case summaries, and review comments.",
+      "default_enabled": false,
+      "normalization_goals": [
+        "Preserve exact wording and negations.",
+        "Normalize only common document markers and safe abbreviations.",
+        "Do not infer legal meaning or rewrite clauses."
+      ],
+      "safety_notes": [
+        "This profile should not provide legal advice.",
+        "Prefer exact transcription over aggressive cleanup.",
+        "Numbers, dates, names, and defined terms should remain conservative."
+      ],
+      "priority_terms": [
+        "NDA",
+        "DPA",
+        "SLA",
+        "clause",
+        "section",
+        "appendix",
+        "redline"
+      ],
+      "example_inputs": [
+        "проверь раздел конфиденциальность и не меняй определение сторон",
+        "добавь комментарий к пункту три",
+        "оставь формулировку без изменений",
+        "сделай редлайн только по срокам"
+      ]
+    },
+    {
+      "id": "medical_lite",
+      "title": "Clinical notes",
+      "audience": "Users dictating clinical notes, visit summaries, and patient-facing drafts.",
+      "default_enabled": false,
+      "normalization_goals": [
+        "Preserve exact wording, measurements, medication names, dosages, dates, and negations.",
+        "Normalize only safe formatting markers and common note sections.",
+        "Avoid guessing clinical terms from ambiguous audio."
+      ],
+      "safety_notes": [
+        "This profile should not provide medical advice.",
+        "High-confidence transcription is more important than aggressive normalization.",
+        "Medication names, dosages, allergies, and negations require conservative handling."
+      ],
+      "prompt_markers": [
+        "жалобы",
+        "анамнез",
+        "осмотр",
+        "план",
+        "рекомендации",
+        "аллергии",
+        "дозировка"
+      ],
+      "example_inputs": [
+        "жалобы боль в горле третий день температуры нет",
+        "аллергии не отрицает",
+        "план контроль через неделю",
+        "рекомендации оставить без изменения дозировки"
+      ]
+    }
+  ]
+}

@@ -1,7 +1,20 @@
-//! Post-dictionary text cleanup (filler word removal).
+//! Post-dictionary text cleanup.
 
 use once_cell::sync::Lazy;
 use regex::Regex;
+
+const MESSENGER_APP_NAMES: &[&str] = &[
+    "discord",
+    "mattermost",
+    "messages",
+    "messenger",
+    "signal",
+    "slack",
+    "telegram",
+    "viber",
+    "whatsapp",
+    "сообщения",
+];
 
 static FILLER_RE: Lazy<Regex> = Lazy::new(|| {
     Regex::new(r"(?i)\b(um+|uh+|er+|ah+|hmm+|hm+)\b|\b(you know|i mean)\b")
@@ -12,6 +25,32 @@ static FILLER_RE: Lazy<Regex> = Lazy::new(|| {
 pub fn strip_filler_words(text: &str) -> String {
     let stripped = FILLER_RE.replace_all(text, "");
     collapse_whitespace(&stripped)
+}
+
+/// In messengers, CIS users often write short messages without a final period.
+pub fn strip_messenger_terminal_period(text: &str, app_name: Option<&str>) -> String {
+    if !is_messenger_app(app_name) {
+        return text.to_string();
+    }
+
+    let trimmed = text.trim_end();
+    let Some(without_period) = trimmed.strip_suffix('.') else {
+        return text.trim().to_string();
+    };
+    if without_period.ends_with('.') {
+        return text.trim().to_string();
+    }
+    without_period.trim_end().to_string()
+}
+
+fn is_messenger_app(app_name: Option<&str>) -> bool {
+    let Some(app_name) = app_name else {
+        return false;
+    };
+    let app_name = app_name.trim().to_lowercase();
+    MESSENGER_APP_NAMES
+        .iter()
+        .any(|messenger| app_name.contains(messenger))
 }
 
 fn collapse_whitespace(text: &str) -> String {
@@ -48,5 +87,42 @@ mod tests {
     #[test]
     fn preserves_real_words() {
         assert_eq!(strip_filler_words("I like this"), "I like this");
+    }
+
+    #[test]
+    fn removes_terminal_period_in_messengers() {
+        assert_eq!(
+            strip_messenger_terminal_period("Привет, я уже тут.", Some("Telegram")),
+            "Привет, я уже тут"
+        );
+        assert_eq!(
+            strip_messenger_terminal_period("Буду через 5 минут.   ", Some("WhatsApp")),
+            "Буду через 5 минут"
+        );
+    }
+
+    #[test]
+    fn keeps_terminal_period_outside_messengers() {
+        assert_eq!(
+            strip_messenger_terminal_period("Готово.", Some("Cursor")),
+            "Готово."
+        );
+        assert_eq!(strip_messenger_terminal_period("Готово.", None), "Готово.");
+    }
+
+    #[test]
+    fn keeps_non_period_sentence_endings_in_messengers() {
+        assert_eq!(
+            strip_messenger_terminal_period("Ты где?", Some("Slack")),
+            "Ты где?"
+        );
+        assert_eq!(
+            strip_messenger_terminal_period("Отлично!", Some("Discord")),
+            "Отлично!"
+        );
+        assert_eq!(
+            strip_messenger_terminal_period("Подожди...", Some("Signal")),
+            "Подожди..."
+        );
     }
 }
